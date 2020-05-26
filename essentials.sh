@@ -61,7 +61,9 @@ while true; do
                 sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
                 sudo chmod +x /usr/local/bin/docker-compose
                 docker -v
-                echo "Docker Installed";
+                echo "Docker Installed. System will reboot now."
+                echo "After Reboot, re-run this script and skip (answer with No) the first two steps (including Docker)"
+                sudo reboot;
                 break;;
         [Nn]* ) break;;
         [Aa]* ) exit;;
@@ -394,7 +396,7 @@ while true; do
 
                 mkdir -p ~/shairport 
                 cd ~/shairport 
-                git clone https://github.com/mikebrady/alac.git 
+                git clone "https://github.com/mikebrady/alac.git"
                 cd ~/shairport/alac 
                 autoreconf -fi 
                 ./configure 
@@ -402,7 +404,7 @@ while true; do
                 sudo make install 
                 sudo ldconfig 
                 cd ~/shairport 
-                git clone https://github.com/mikebrady/shairport-sync.git 
+                git clone "https://github.com/mikebrady/shairport-sync.git" 
                 cd ~/shairport/shairport-sync 
                 autoreconf -fi 
                 ./configure --sysconfdir=/etc --with-alsa --with-pa --with-avahi --with-ssl=openssl --with-metadata --with-soxr --with-libdaemon --with-stdout --with-pipe --with-convolution --with-apple-alac 
@@ -462,7 +464,7 @@ while true; do
                 echo "This is an interactive install. Please follow steps on screen."
                 echo "You must skip all MariaDB Steps. (Answer No)"
                 cd ~
-                git clone https://gitlab.com/Shinobi-Systems/Shinobi.git Shinobi
+                git clone "https://gitlab.com/Shinobi-Systems/Shinobi.git" Shinobi
                 cd Shinobi
                 chmod +x INSTALL/ubuntu.sh && sudo INSTALL/ubuntu.sh
                 sudo mysql -e "CREATE DATABASE IF NOT EXISTS ccio"
@@ -486,33 +488,59 @@ while true; do
     esac
 done
 
-echo "==========================="
-echo "   Install HomeAssistant   "
-echo "==========================="
+echo "====================="
+echo "   Install Mopidy   "
+echo "====================="
 while true; do
-    read -p "Do you wish to install HomeAssistant? (Y)es (N)o (A)bort" yn
+    read -p "Do you wish to install Mopidy? (Y)es (N)o (A)bort" yn
     case $yn in
-        [Yy]* ) echo "Installing HomeAssistant"
-                mkdir -p ~/homeassistant
-                curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/homeassistant/docker-compose.yml" -o ~/homeassistant/docker-compose.yml
-                cd ~/homeassistant
-                docker-compose up -d
-                mkdir -p ~/addons
-                curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/addons/docker-compose.yml" -o ~/addons/docker-compose.yml
-                cd ~/addons
+        [Yy]* ) echo "Installing Mopidy"
+                wget -q -O - https://apt.mopidy.com/mopidy.gpg | sudo apt-key add -
+                sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/buster.list
+                sudo apt update && sudo apt install -y mopidy mopidy-local mopidy-mpd mopidy-tunein
+                sudo python3 -m pip install Mopidy-MusicBox-Webclient Mopidy-Iris
+                sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old
+                sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf
+                sudo systemctl enable mopidy
+                sudo usermod -aG pulse,pulse-access,audio,bluetooth mopidy
+                sudo systemctl restart mopidy
+                sudo mopidyctl config
+                echo "Mopidy Installed";
+                break;;
+        [Nn]* ) break;;
+        [Aa]* ) exit;;
+        * ) echo "Please answer (y)es or (n)o or (a)bort";;
+    esac
+done
+
+echo "====================================="
+echo "   Install HomeAssistant Ecosystem   "
+echo "====================================="
+while true; do
+    read -p "Do you wish to install HomeAssistant Ecosystem? (Y)es (N)o (A)bort" yn
+    case $yn in
+        [Yy]* ) echo "Installing HomeAssistant Ecosystem"
+                cd ~
+                git clone "https://github.com/mssaleh/binaries.git"
+                cp -r ~/binaries/homeassistant ~/homeassistant
+                cp -r ~/binaries/addons ~/addons
                 read -p "Enter your domain name: (e.g. user.smart-home.app)" domain_name
                 echo "You entered this domain: $domain_name"
-                sed -i "s/domain_name/$domain_name/g" docker-compose.yml
+                sed -i "s/domain_name/$domain_name/g" ~/addons/docker-compose.yml
+                sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/site-confs/default
+                sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/adguard.subdomain.conf
+                sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf
                 mkdir -p ~/addons/letsencrypt/config/dns-conf
                 read -p "Enter Digital Ocean Access Token" digitalocean_token
                 echo "You entered this token: $digitalocean_token"
                 echo "dns_digitalocean_token = $digitalocean_token" > ~/addons/letsencrypt/config/dns-conf/digitalocean.ini
-                mkdir -p ~/addons/letsencrypt/config/geoip2db
-                curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/addons/GeoLite2-City.mmdb" -o ~/addons/letsencrypt/config/geoip2db/GeoLite2-City.mmdb
-                mkdir -p ~/addons/mosquitto/config
-                curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/addons/mosquitto.conf" -o ~/addons/mosquitto/config/mosquitto.conf
-
-                echo "HomeAssistant Installed";
+                cd ~/homeassistant && docker-compose up -d
+                cd ~/addons && docker-compose up -d
+                read -p "Enter Mosquitto MQTT Broker User Name" mosquitto_user
+                echo "Mosquitto User Name is: $mosquitto_user"
+                echo "Enter Mosquitto Password for $mosquitto_user"
+                cd ~/addons && docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/config/mosquitto.passwd $mosquitto_user
+                echo "HomeAssistant Ecosystem Installed";
                 break;;
         [Nn]* ) break;;
         [Aa]* ) exit;;
