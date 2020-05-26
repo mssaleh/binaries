@@ -19,7 +19,7 @@ case $yn1 in
         apt-show-versions apt-transport-https apt-utils apulse at avahi-daemon base-files base-passwd \
         bash bcache-tools btrfs-progs build-essential byobu bzip2 ca-certificates cloud-guest-utils \
         cloud-init cloud-initramfs-copymods cloud-initramfs-dyn-netconf console-setup curl dash dbus \
-        debconf debconf-i18n diffutils dirmngr docker-ce e2fsprogs efibootmgr eject ethtool faac \
+        debconf debconf-i18n diffutils dirmngr e2fsprogs efibootmgr eject ethtool faac \
         fdisk ffmpeg findutils firmware-b43-installer fonts-ubuntu-console frei0r-plugins fwupd \
         gdisk git gnupg gnupg2 gnupg-agent grep grub-efi-amd64 grub-efi-amd64-signed gstreamer1.0-alsa \
         gstreamer1.0-plugins-bad gstreamer1.0-plugins-good gstreamer1.0-plugins-rtp gstreamer1.0-pulseaudio \
@@ -28,12 +28,12 @@ case $yn1 in
         kmod less libasound2-plugins-extra libauthen-pam-perl libavahi-compat-libdnssd-dev libavdevice58 \
         libavfilter-extra libavresample4 libavresample4  libcdio-cdda2 libcdio-cdda2  libcdio-paranoia2 \
         libcdio-paranoia2  libdebconfclient0 libfdisk1 libfdk-aac1 libffi-dev libio-pty-perl libmfx1 \
-        libmfx1  libnet-ssleay-perl libpam-runtime libpython3-dev libsodium23 libsoxr-lsr0 libsoxr-lsr0 \
-        libudev-dev libwebpdemux2 linux-generic lm-sensors locales lsb-release lsmount lvm2 mariadb-server \
+        libmfx1 libnet-ssleay-perl libpam-runtime libpython3-dev libsodium23 libsoxr-lsr0 libsoxr-lsr0 \
+        libudev-dev libwebpdemux2 linux-generic lm-sensors locales lsb-release lsmount lvm2 \
         mawk mdadm mediainfo mesa-utils-extra mount ncdu ncurses-base ncurses-bin netbase netcat-openbsd \
         netplan.io nvme-cli open-iscsi openjdk-8-jdk-headless openjdk-8-jre-headless openssh-server \
-        openssl open-vm-tools overlayroot passwd patch perl pkg-config pollinate procps pulseaudio \
-        pulseaudio-module-zeroconf pulseaudio-utils python3 python3-dev python3-nacl python3-pip \
+        openssl open-vm-tools overlayroot passwd patch perl pkg-config pollinate procps \
+        python3 python3-dev python3-nacl python3-pip \
         python3-pymacaroons rsyslog screen sensible-utils shim-signed software-properties-common \
         sosreport sudo sysvinit-utils tmux tzdata ubuntu-keyring ubuntu-restricted-extras ubuntu-standard \
         udev unzip update-notifier-common vim vim-tiny virtualenv wget whiptail xfsprogs zip zlib1g-dev 
