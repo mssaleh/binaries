@@ -1,0 +1,2 @@
+shairport-sync
+compiled without systemd flag for use with PulseAudio in user mode
