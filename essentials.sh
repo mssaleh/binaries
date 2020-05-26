@@ -559,12 +559,15 @@ case $yn11 in
         sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/buster.list 
         sudo apt update && sudo apt install -y mopidy mopidy-local mopidy-mpd mopidy-tunein 
         sudo python3 -m pip install Mopidy-MusicBox-Webclient Mopidy-Iris 
+        mkdir -p ~/media/music
+        mkdir -p ~/media/m3u
         sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old 
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf 
         sudo systemctl enable mopidy 
         sudo usermod -aG pulse,pulse-access,audio,bluetooth mopidy 
         sudo systemctl restart mopidy 
         sudo mopidyctl config 
+        sudo mopidyctl local scan
         echo "Mopidy Installed"
         break
         ;;
