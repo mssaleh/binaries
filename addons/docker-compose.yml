@@ -9,7 +9,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Asia/Dubai
-      - URL=matar.smart-home.app #change to correct domain
+      - URL=domain_name #change to correct domain
       - SUBDOMAINS=wildcard
       - VALIDATION=dns
       - DNSPLUGIN=digitalocean
