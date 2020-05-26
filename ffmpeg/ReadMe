@@ -1,0 +1,5 @@
+FFMPEG
+======
+Version: 4.2.3
+Arch: amd64
+HWAccels: vdpau, cuda, vaapi, drm, opencl, qsv
