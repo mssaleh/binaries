@@ -10,7 +10,7 @@ sudo apt purge -y snapd lxd-agent-loader ubuntu-advantage-tools multipath-tools 
 echo "=========================="
 echo " Install Useful Packages "
 echo "=========================="
-read -p "Do you wish to install some useful packages? (Y)es (N)o (A)bort" yn1
+read -p "Do you wish to install some useful packages? (Y)es (N)o (A)bort...   " yn1
 case $yn1 in
     Y|y|yes) 
         echo "Installing packages"
@@ -55,7 +55,7 @@ esac
 echo "======================"
 echo "    Install Docker    "
 echo "======================"
-read -p "Do you wish to install Docker? (Y)es (N)o (A)bort" yn2
+read -p "Do you wish to install Docker? (Y)es (N)o (A)bort...   " yn2
 case $yn2 in
     Y|y|yes) 
         echo "Installing Docker"
@@ -87,7 +87,7 @@ esac
 echo "======================"
 echo "   Install Node.js    "
 echo "======================"
-read -p "Do you wish to install Node.js? (Y)es (N)o (A)bort" yn3
+read -p "Do you wish to install Node.js? (Y)es (N)o (A)bort...   " yn3
 case $yn3 in
     Y|y|yes) 
         echo "Installing Node.js" 
@@ -112,7 +112,7 @@ esac
 echo "======================"
 echo "   Install MariaDB    "
 echo "======================"
-read -p "Do you wish to install MariaDB? (Y)es (N)o (A)bort" yn4
+read -p "Do you wish to install MariaDB? (Y)es (N)o (A)bort...   " yn4
 case $yn4 in
     Y|y|yes) 
         echo "Installing MariaDB" 
@@ -144,7 +144,7 @@ esac
 echo "============================="
 echo "   Install FFMPEG Non-free   "
 echo "============================="
-read -p "Do you wish to install FFMPEG? (Y)es (N)o (A)bort" yn5
+read -p "Do you wish to install FFMPEG? (Y)es (N)o (A)bort...   " yn5
 case $yn5 in
     Y|y|yes) 
         echo "Installing Non-free FFMPEG" 
@@ -327,7 +327,7 @@ esac
 echo "========================"
 echo "   Install Pulseaudio   "
 echo "========================"
-read -p "Do you wish to install Pulseaudio? (Y)es (N)o (A)bort" yn6
+read -p "Do you wish to install Pulseaudio? (Y)es (N)o (A)bort...   " yn6
 case $yn6 in
     Y|y|yes) 
         echo "Installing Pulseaudio" 
@@ -365,7 +365,7 @@ esac
 echo "======================="
 echo "   Install Bluetooth   "
 echo "======================="
-read -p "Do you wish to install Bluetooth? (Y)es (N)o (A)bort" yn7
+read -p "Do you wish to install Bluetooth? (Y)es (N)o (A)bort...   " yn7
 case $yn7 in
     Y|y|yes) 
         echo "Installing Bluetooth" 
@@ -394,7 +394,7 @@ esac
 echo "====================="
 echo "   Install Aircast   "
 echo "====================="
-read -p "Do you wish to install Aircast? (Y)es (N)o (A)bort" yn8
+read -p "Do you wish to install Aircast? (Y)es (N)o (A)bort...   " yn8
 case $yn8 in
     Y|y|yes) 
         echo "Installing Aircast" 
@@ -426,7 +426,7 @@ esac
 echo "============================"
 echo "   Install shairport-sync   "
 echo "============================"
-read -p "Do you wish to install shairport-sync? (Y)es (N)o (A)bort" yn9
+read -p "Do you wish to install shairport-sync? (Y)es (N)o (A)bort...   " yn9
 case $yn9 in
     Y|y|yes) 
         echo "Installing shairport-sync" 
@@ -511,7 +511,7 @@ esac
 echo "====================="
 echo "   Install Shinobi   "
 echo "====================="
-read -p "Do you wish to install Shinobi? (Y)es (N)o (A)bort" yn10
+read -p "Do you wish to install Shinobi? (Y)es (N)o (A)bort...   " yn10
 case $yn10 in
     Y|y|yes) 
         echo "Installing Shinobi" 
@@ -521,7 +521,7 @@ case $yn10 in
         cd Shinobi 
         chmod +x INSTALL/ubuntu.sh && sudo INSTALL/ubuntu.sh 
         sudo mysql -e "CREATE DATABASE IF NOT EXISTS ccio" 
-        read -p "Enter password for Shinobi Database:" shinobi_db_pw 
+        read -p "Enter password for Shinobi Database:  " shinobi_db_pw 
         shinobi_db_pw=${shinobi_db_pw:-majesticflame} 
         echo $shinobi_db_pw 
         sudo mysql -e "CREATE USER IF NOT EXISTS 'majesticflame'@'127.0.0.1' IDENTIFIED BY '$shinobi_db_pw'" 
@@ -551,7 +551,7 @@ esac
 echo "====================="
 echo "   Install Mopidy   "
 echo "====================="
-read -p "Do you wish to install Mopidy? (Y)es (N)o (A)bort" yn11
+read -p "Do you wish to install Mopidy? (Y)es (N)o (A)bort...   " yn11
 case $yn11 in
     Y|y|yes) 
         echo "Installing Mopidy" 
@@ -583,14 +583,14 @@ esac
 echo "====================================="
 echo "   Install HomeAssistant Ecosystem   "
 echo "====================================="
-read -p "Do you wish to install HomeAssistant Ecosystem? (Y)es (N)o (A)bort" yn12
+read -p "Do you wish to install HomeAssistant Ecosystem? (Y)es (N)o (A)bort...   " yn12
 case $yn12 in
     Y|y|yes) 
         echo "Installing HomeAssistant Ecosystem" 
         cd ~ && git clone "https://github.com/mssaleh/binaries.git" 
         cp -r ~/binaries/homeassistant ~/homeassistant 
         cp -r ~/binaries/addons ~/addons 
-        read -p "Enter your domain name: (e.g. user.smart-home.app)" domain_name 
+        read -p "Enter your domain name: (e.g. user.smart-home.app):   " domain_name 
         echo "You entered this domain: $domain_name" 
         sed -i "s/domain_name/$domain_name/g" ~/addons/docker-compose.yml 
         sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/site-confs/default 
@@ -602,7 +602,7 @@ case $yn12 in
         echo "dns_digitalocean_token = $digitalocean_token" > ~/addons/letsencrypt/config/dns-conf/digitalocean.ini 
         cd ~/homeassistant && docker-compose up -d 
         cd ~/addons && docker-compose up -d 
-        read -p "Enter Mosquitto MQTT Broker User Name" mosquitto_user 
+        read -p "Enter Mosquitto MQTT Broker User Name:   " mosquitto_user 
         echo "Mosquitto User Name is: $mosquitto_user" 
         echo "Enter Mosquitto Password for $mosquitto_user" 
         cd ~/addons && docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/config/mosquitto.passwd $mosquitto_user 
