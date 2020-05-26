@@ -10,7 +10,8 @@ sudo apt purge -y snapd lxd-agent-loader ubuntu-advantage-tools multipath-tools 
 echo "=========================="
 echo " Install Useful Packages "
 echo "=========================="
-while true do
+while true
+do
     read -p "Do you wish to install some useful packages? (Y)es (N)o (A)bort" yn
     case $yn in
         [Yy]* ) 
@@ -56,7 +57,8 @@ done
 echo "======================"
 echo "    Install Docker    "
 echo "======================"
-while true do
+while true
+do
     read -p "Do you wish to install Docker? (Y)es (N)o (A)bort" yn
     case $yn in
         [Yy]* ) 
@@ -89,7 +91,8 @@ done
 echo "======================"
 echo "   Install Node.js    "
 echo "======================"
-while true do
+while true
+do
     read -p "Do you wish to install Node.js? (Y)es (N)o (A)bort" yn
     case $yn in
         [Yy]* ) 
@@ -115,7 +118,8 @@ done
 echo "======================"
 echo "   Install MariaDB    "
 echo "======================"
-while true do
+while true
+do
     read -p "Do you wish to install MariaDB? (Y)es (N)o (A)bort" yn
     case $yn in
         [Yy]* ) 
@@ -148,7 +152,8 @@ done
 echo "============================="
 echo "   Install FFMPEG Non-free   "
 echo "============================="
-while true do
+while true
+do
     read -p "Do you wish to install FFMPEG? (Y)es (N)o (A)bort" yn
     case $yn in
         [Yy]* ) 
@@ -332,7 +337,8 @@ done
 echo "========================"
 echo "   Install Pulseaudio   "
 echo "========================"
-while true do
+while true
+do
     read -p "Do you wish to install Pulseaudio? (Y)es (N)o (A)bort" yn
     case $yn in
         [Yy]* ) 
@@ -371,7 +377,8 @@ done
 echo "======================="
 echo "   Install Bluetooth   "
 echo "======================="
-while true do
+while true
+do
     read -p "Do you wish to install Bluetooth? (Y)es (N)o (A)bort" yn
     case $yn in
         [Yy]* ) 
@@ -401,7 +408,8 @@ done
 echo "====================="
 echo "   Install Aircast   "
 echo "====================="
-while true do
+while true
+do
     read -p "Do you wish to install Aircast? (Y)es (N)o (A)bort" yn
     case $yn in
         [Yy]* ) 
@@ -434,7 +442,8 @@ done
 echo "============================"
 echo "   Install shairport-sync   "
 echo "============================"
-while true do
+while true
+do
     read -p "Do you wish to install shairport-sync? (Y)es (N)o (A)bort" yn
     case $yn in
         [Yy]* ) 
@@ -520,7 +529,8 @@ done
 echo "====================="
 echo "   Install Shinobi   "
 echo "====================="
-while true do
+while true
+do
     read -p "Do you wish to install Shinobi? (Y)es (N)o (A)bort" yn
     case $yn in
         [Yy]* ) 
@@ -561,7 +571,8 @@ done
 echo "====================="
 echo "   Install Mopidy   "
 echo "====================="
-while true do
+while true
+do
     read -p "Do you wish to install Mopidy? (Y)es (N)o (A)bort" yn
     case $yn in
         [Yy]* ) 
@@ -594,7 +605,8 @@ done
 echo "====================================="
 echo "   Install HomeAssistant Ecosystem   "
 echo "====================================="
-while true do
+while true
+do
     read -p "Do you wish to install HomeAssistant Ecosystem? (Y)es (N)o (A)bort" yn
     case $yn in
         [Yy]* ) 
