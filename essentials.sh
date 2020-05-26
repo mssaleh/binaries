@@ -1,7 +1,6 @@
 echo "=========================="
 echo "  OS Update and Clean-up  "
 echo "=========================="
-sleep 1
 sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y --purge && sudo apt autoclean && sudo apt clean
 sudo snap remove lxd
 sudo snap remove core18
@@ -14,7 +13,7 @@ echo "=========================="
 while true; do
     read -p "Do you wish to install some useful packages? (Y)es (N)o (A)bort" yn
     case $yn in
-        [Yy]* ) echo "Installing packages"
+        [Yy]* ) echo "Installing packages";
                 sudo apt install -y \
                 adduser alac-decoder alsa-firmware-loaders alsa-utils apparmor-utils apport apt apt-offline \
                 apt-show-versions apt-transport-https apt-utils apulse at avahi-daemon base-files base-passwd \
@@ -37,7 +36,7 @@ while true; do
                 pulseaudio-module-zeroconf pulseaudio-utils python3 python3-dev python3-nacl python3-pip \
                 python3-pymacaroons rsyslog screen sensible-utils shim-signed software-properties-common \
                 sosreport sudo sysvinit-utils tmux tzdata ubuntu-keyring ubuntu-restricted-extras ubuntu-standard \
-                udev unzip update-notifier-common vim vim-tiny virtualenv wget whiptail xfsprogs zip zlib1g-dev
+                udev unzip update-notifier-common vim vim-tiny virtualenv wget whiptail xfsprogs zip zlib1g-dev ;
                 echo "Packages Installed";
                 break;;
         [Nn]* ) break;;
@@ -52,17 +51,17 @@ echo "======================"
 while true; do
     read -p "Do you wish to install Docker? (Y)es (N)o (A)bort" yn
     case $yn in
-        [Yy]* ) echo "Installing Docker"
-                sudo apt update && sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-                curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-                sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-                sudo apt update && sudo apt install -y docker-ce
-                sudo usermod -aG docker $USER
-                sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-                sudo chmod +x /usr/local/bin/docker-compose
-                docker -v
-                echo "Docker Installed. System will reboot now."
-                echo "After Reboot, re-run this script and skip (answer with No) the first two steps (including Docker)"
+        [Yy]* ) echo "Installing Docker";
+                sudo apt update && sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common ;
+                curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - ;
+                sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" ;
+                sudo apt update && sudo apt install -y docker-ce ;
+                sudo usermod -aG docker $USER ;
+                sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose ;
+                sudo chmod +x /usr/local/bin/docker-compose ;
+                docker -v ;
+                echo "Docker Installed. System will reboot now." ;
+                echo "After Reboot, re-run this script and skip (answer with No) the first two steps (including Docker)" ;
                 sudo reboot;
                 break;;
         [Nn]* ) break;;
@@ -77,10 +76,10 @@ echo "======================"
 while true; do
     read -p "Do you wish to install Node.js? (Y)es (N)o (A)bort" yn
     case $yn in
-        [Yy]* ) echo "Installing Node.js"
-                curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-                sudo apt update && sudo apt install -y nodejs
-                node -v
+        [Yy]* ) echo "Installing Node.js" ;
+                curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - ;
+                sudo apt update && sudo apt install -y nodejs ;
+                node -v ;
                 echo "Node.js Installed";
                 break;;
         [Nn]* ) break;;
@@ -95,17 +94,17 @@ echo "======================"
 while true; do
     read -p "Do you wish to install MariaDB? (Y)es (N)o (A)bort" yn
     case $yn in
-        [Yy]* ) echo "Installing MariaDB"
-                sudo apt update && sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-                sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
-                sudo add-apt-repository 'deb [arch=amd64] http://ftp.hosteurope.de/mirror/mariadb.org/repo/10.5/ubuntu focal main'
-                sudo apt update && sudo apt install -y mariadb-server
-                echo "================================"
-                echo " Next Steps Require User Input "
-                echo "================================"
-                sudo /usr/bin/mysql_secure_installation
-                sudo service mysql start
-                mariadb -V
+        [Yy]* ) echo "Installing MariaDB" ;
+                sudo apt update && sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common ;
+                sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' ;
+                sudo add-apt-repository 'deb [arch=amd64] http://ftp.hosteurope.de/mirror/mariadb.org/repo/10.5/ubuntu focal main' ;
+                sudo apt update && sudo apt install -y mariadb-server ;
+                echo "================================" ;
+                echo " Next Steps Require User Input  " ;
+                echo "================================" ;
+                sudo /usr/bin/mysql_secure_installation ;
+                sudo service mysql start ;
+                mariadb -V ;
                 echo "MariaDB Installed";
                 break;;
         [Nn]* ) break;;
@@ -120,7 +119,7 @@ echo "============================="
 while true; do
     read -p "Do you wish to install FFMPEG? (Y)es (N)o (A)bort" yn
     case $yn in
-        [Yy]* ) echo "Installing Non-free FFMPEG"
+        [Yy]* ) echo "Installing Non-free FFMPEG" ;
                 sudo apt update && sudo apt install -y \
                 autoconf automake autotools-dev cmake cmake-data comerr-dev flite1-dev frei0r-plugins-dev \
                 ghc gir1.2-freedesktop gir1.2-gdkpixbuf-2.0 gir1.2-harfbuzz-0.0 gir1.2-ibus-1.0 gir1.2-rsvg-2.0 \
@@ -162,13 +161,12 @@ while true; do
                 lv2-dev m4 nasm nettle-dev ocl-icd-opencl-dev opencl-c-headers tex-common texinfo uuid-dev \
                 x11proto-core-dev x11proto-dev x11proto-input-dev x11proto-randr-dev x11proto-scrnsaver-dev \
                 x11proto-xext-dev x11proto-xf86vidmode-dev x11proto-xinerama-dev xml2 xorg-sgml-doctools \
-                xtrans-dev yasm libxml2 libflite1 libgsm1 libssl-dev
-
-                mkdir -p ~/ffmpeg_sources ~/bin 
-                cd ~/ffmpeg_sources 
-                wget -O ffmpeg-4.2.3.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.2.3.tar.bz2 
-                tar xjvf ffmpeg-4.2.3.tar.bz2 
-                cd ffmpeg-4.2.3 
+                xtrans-dev yasm libxml2 libflite1 libgsm1 libssl-dev ;
+                mkdir -p ~/ffmpeg_sources ~/bin  ;
+                cd ~/ffmpeg_sources  ;
+                wget -O ffmpeg-4.2.3.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.2.3.tar.bz2  ;
+                tar xjvf ffmpeg-4.2.3.tar.bz2  ;
+                cd ffmpeg-4.2.3  ;
                 PATH="/usr/local/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
                 --toolchain=hardened \
                 --prefix="$HOME/ffmpeg_build" \
@@ -234,12 +232,10 @@ while true; do
                 --enable-openssl \
                 --enable-sdl2 \
                 --enable-shared \
-                --enable-vaapi
-
-                PATH="/usr/local/bin:$PATH" make -j $(nproc)
-                sudo make install
-                hash -r
-
+                --enable-vaapi ;
+                PATH="/usr/local/bin:$PATH" make -j $(nproc) ;
+                sudo make install ;
+                hash -r ;
                 sudo apt purge -y \
                 autoconf automake autotools-dev cmake cmake-data comerr-dev flite1-dev frei0r-plugins-dev \
                 ghc gir1.2-freedesktop gir1.2-gdkpixbuf-2.0 gir1.2-harfbuzz-0.0 gir1.2-ibus-1.0 gir1.2-rsvg-2.0 \
@@ -281,11 +277,10 @@ while true; do
                 lv2-dev m4 nasm nettle-dev ocl-icd-opencl-dev opencl-c-headers tex-common texinfo uuid-dev \
                 x11proto-core-dev x11proto-dev x11proto-input-dev x11proto-randr-dev x11proto-scrnsaver-dev \
                 x11proto-xext-dev x11proto-xf86vidmode-dev x11proto-xinerama-dev xml2 xorg-sgml-doctools \
-                xtrans-dev yasm
-
-                sudo apt purge ffmpeg && sudo apt autoremove  --purge -y && sudo apt autoclean && sudo apt clean
-                sudo rm -R ~/ffmpeg_build/* ~/ffmpeg_sources/* ~/.cache/*
-                ffmpeg -hwaccels
+                xtrans-dev yasm ;
+                sudo apt purge ffmpeg && sudo apt autoremove  --purge -y && sudo apt autoclean && sudo apt clean ;
+                sudo rm -R ~/ffmpeg_build/* ~/ffmpeg_sources/* ~/.cache/* ;
+                ffmpeg -hwaccels ;
                 echo "FFMPEG Installed";
                 break;;
         [Nn]* ) break;;
@@ -300,23 +295,23 @@ echo "========================"
 while true; do
     read -p "Do you wish to install Pulseaudio? (Y)es (N)o (A)bort" yn
     case $yn in
-        [Yy]* ) echo "Installing Pulseaudio"
+        [Yy]* ) echo "Installing Pulseaudio" ;
                 sudo apt update && sudo apt install -y apulse avahi-daemon pulseaudio \
-                gstreamer1.0-pulseaudio pulseaudio-module-zeroconf pulseaudio-utils
-                sudo mv /etc/pulse/default.pa /etc/pulse/default.old
-                sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/pulseaudio/default.pa" -o /etc/pulse/default.pa
-                pulseaudio --kill
-                pulseaudio --start
-                pulseaudio --kill
-                systemctl --user daemon-reload
-                sudo systemctl daemon-reload
-                systemctl --user enable pulseaudio.socket
-                systemctl --user enable pulseaudio.service
-                sudo usermod -aG pulse,pulse-access,audio,bluetooth root
-                sudo usermod -aG pulse,pulse-access,audio,bluetooth $USER
-                systemctl --user restart pulseaudio.socket
-                systemctl --user restart pulseaudio.service
-                systemctl --user status pulseaudio.service
+                gstreamer1.0-pulseaudio pulseaudio-module-zeroconf pulseaudio-utils ;
+                sudo mv /etc/pulse/default.pa /etc/pulse/default.old ;
+                sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/pulseaudio/default.pa" -o /etc/pulse/default.pa ;
+                pulseaudio --kill ;
+                pulseaudio --start ;
+                pulseaudio --kill ;
+                systemctl --user daemon-reload ;
+                sudo systemctl daemon-reload ;
+                systemctl --user enable pulseaudio.socket ;
+                systemctl --user enable pulseaudio.service ;
+                sudo usermod -aG pulse,pulse-access,audio,bluetooth root ;
+                sudo usermod -aG pulse,pulse-access,audio,bluetooth $USER ;
+                systemctl --user restart pulseaudio.socket ;
+                systemctl --user restart pulseaudio.service ;
+                systemctl --user status pulseaudio.service ;
                 echo "Pulseaudio Installed";
                 break;;
         [Nn]* ) break;;
@@ -331,14 +326,14 @@ echo "======================="
 while true; do
     read -p "Do you wish to install Bluetooth? (Y)es (N)o (A)bort" yn
     case $yn in
-        [Yy]* ) echo "Installing Bluetooth"
+        [Yy]* ) echo "Installing Bluetooth" ;
                 sudo apt update && sudo apt install -y bluetooth bluez bluez-tools bluez-hcidump \
-                libbluetooth-dev pulseaudio-module-bluetooth python3-bluez avahi-daemon
-                sudo usermod -aG audio,bluetooth root
-                sudo usermod -aG audio,bluetooth $USER
-                sudo service bluetooth enable
-                sudo service bluetooth restart
-                sudo service bluetooth status
+                libbluetooth-dev pulseaudio-module-bluetooth python3-bluez avahi-daemon ;
+                sudo usermod -aG audio,bluetooth root ;
+                sudo usermod -aG audio,bluetooth $USER ;
+                sudo service bluetooth enable ;
+                sudo service bluetooth restart ;
+                sudo service bluetooth status ;
                 echo "Bluetooth Installed";
                 break;;
         [Nn]* ) break;;
@@ -353,17 +348,17 @@ echo "====================="
 while true; do
     read -p "Do you wish to install Aircast? (Y)es (N)o (A)bort" yn
     case $yn in
-        [Yy]* ) echo "Installing Aircast"
-                sudo curl -L "https://raw.githubusercontent.com/philippe44/AirConnect/master/bin/aircast-x86-64" -o /usr/local/bin/aircast
-                sudo chmod +x /usr/local/bin/aircast
-                sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/aircast/aircast.service" -o /usr/lib/systemd/user/aircast.service
-                sudo mkdir -p /etc/aircast
-                sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/aircast/aircast.xml" -o /etc/aircast/aircast.xml
-                systemctl --user daemon-reload
-                sudo systemctl daemon-reload
-                systemctl --user enable aircast.service
-                systemctl --user restart aircast.service
-                systemctl --user status aircast.service
+        [Yy]* ) echo "Installing Aircast" ;
+                sudo curl -L "https://raw.githubusercontent.com/philippe44/AirConnect/master/bin/aircast-x86-64" -o /usr/local/bin/aircast ;
+                sudo chmod +x /usr/local/bin/aircast ;
+                sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/aircast/aircast.service" -o /usr/lib/systemd/user/aircast.service ;
+                sudo mkdir -p /etc/aircast ;
+                sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/aircast/aircast.xml" -o /etc/aircast/aircast.xml ;
+                systemctl --user daemon-reload ;
+                sudo systemctl daemon-reload ;
+                systemctl --user enable aircast.service ;
+                systemctl --user restart aircast.service ;
+                systemctl --user status aircast.service ;
                 echo "Aircast Installed";
                 break;;
         [Nn]* ) break;;
@@ -378,7 +373,7 @@ echo "============================"
 while true; do
     read -p "Do you wish to install shairport-sync? (Y)es (N)o (A)bort" yn
     case $yn in
-        [Yy]* ) echo "Installing shairport-sync"
+        [Yy]* ) echo "Installing shairport-sync" ;
                 sudo apt install -y --no-install-recommends \
                 autoconf automake autotools-dev avahi-daemon build-essential \
                 git libaacs-dev libasound2-dev libauthen-sasl-perl libavahi-client-dev \
@@ -392,25 +387,23 @@ while true; do
                 libpopt-dev libpulse-dev libpulse-mainloop-glib0 libsndfile1-dev \
                 libsoxr-dev libsoxr-lsr0 libssl-dev libtool libtry-tiny-perl \
                 libvo-aacenc-dev libvorbis-dev libwww-perl \
-                libwww-robotrules-perl libxml-parser-perl m4 xmltoman
-
-                mkdir -p ~/shairport 
-                cd ~/shairport 
-                git clone "https://github.com/mikebrady/alac.git"
-                cd ~/shairport/alac 
-                autoreconf -fi 
-                ./configure 
-                make 
-                sudo make install 
-                sudo ldconfig 
-                cd ~/shairport 
-                git clone "https://github.com/mikebrady/shairport-sync.git" 
-                cd ~/shairport/shairport-sync 
-                autoreconf -fi 
-                ./configure --sysconfdir=/etc --with-alsa --with-pa --with-avahi --with-ssl=openssl --with-metadata --with-soxr --with-libdaemon --with-stdout --with-pipe --with-convolution --with-apple-alac 
-                make 
-                sudo make install 
-
+                libwww-robotrules-perl libxml-parser-perl m4 xmltoman ;
+                mkdir -p ~/shairport ;
+                cd ~/shairport  ;
+                git clone "https://github.com/mikebrady/alac.git" ;
+                cd ~/shairport/alac  ;
+                autoreconf -fi  ;
+                ./configure  ;
+                make  ;
+                sudo make install  ;
+                sudo ldconfig  ;
+                cd ~/shairport  ;
+                git clone "https://github.com/mikebrady/shairport-sync.git"  ;
+                cd ~/shairport/shairport-sync  ;
+                autoreconf -fi  ;
+                ./configure --sysconfdir=/etc --with-alsa --with-pa --with-avahi --with-ssl=openssl --with-metadata --with-soxr --with-libdaemon --with-stdout --with-pipe --with-convolution --with-apple-alac  ;
+                make  ;
+                sudo make install  ;
                 sudo apt purge -y \
                 autoconf automake autotools-dev libaacs-dev libasound2-dev \
                 libauthen-sasl-perl libblkid-dev libconfig-dev libconfig-doc \
@@ -430,22 +423,20 @@ while true; do
                 libsepol1-dev libsndfile1-dev libsoxr-dev libssl-dev \
                 libtimedate-perl libtool libtry-tiny-perl liburi-perl \
                 libvo-aacenc-dev libvorbis-dev libwww-perl libwww-robotrules-perl \
-                libxml-parser-perl m4 uuid-dev xmltoman 
-
+                libxml-parser-perl m4 uuid-dev xmltoman  ;
                 sudo apt install -y --no-install-recommends \
                 avahi-daemon libasound2 libavahi-client3 libavahi-common3 \
                 libc6 libconfig9 libdaemon0 libgcc-s1 libglib2.0-0 libjack-jackd2-0 \
-                libmosquitto1 libpopt0 libpulse0 libsndfile1 libsoxr0 libssl1.1 libstdc++6
-
-                sudo rm -R ~/shairport ~/.cache/*
-                sudo mv /etc/shairport-sync.conf /etc/shairport-sync.old
-                sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.conf" -o /etc/shairport-sync.conf
-                sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.service" -o /usr/lib/systemd/user/shairport-sync.service
-                systemctl --user daemon-reload
-                sudo systemctl daemon-reload
-                systemctl --user enable shairport-sync.service
-                systemctl --user restart shairport-sync.service
-                systemctl --user status shairport-sync.service
+                libmosquitto1 libpopt0 libpulse0 libsndfile1 libsoxr0 libssl1.1 libstdc++6 ;
+                sudo rm -R ~/shairport ~/.cache/* ;
+                sudo mv /etc/shairport-sync.conf /etc/shairport-sync.old ;
+                sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.conf" -o /etc/shairport-sync.conf ;
+                sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.service" -o /usr/lib/systemd/user/shairport-sync.service ;
+                systemctl --user daemon-reload ;
+                sudo systemctl daemon-reload ;
+                systemctl --user enable shairport-sync.service ;
+                systemctl --user restart shairport-sync.service ;
+                systemctl --user status shairport-sync.service ;
                 echo "shairport-sync Installed";
                 break;;
         [Nn]* ) break;;
@@ -460,26 +451,25 @@ echo "====================="
 while true; do
     read -p "Do you wish to install Shinobi? (Y)es (N)o (A)bort" yn
     case $yn in
-        [Yy]* ) echo "Installing Shinobi"
-                echo "This is an interactive install. Please follow steps on screen."
-                echo "You must skip all MariaDB Steps. (Answer No)"
-                cd ~
-                git clone "https://gitlab.com/Shinobi-Systems/Shinobi.git" Shinobi
-                cd Shinobi
-                chmod +x INSTALL/ubuntu.sh && sudo INSTALL/ubuntu.sh
-                sudo mysql -e "CREATE DATABASE IF NOT EXISTS ccio"
-                read -p "Enter password for Shinobi Database:" shinobi_db_pw
-                shinobi_db_pw=${shinobi_db_pw:-majesticflame}
-                echo $shinobi_db_pw
-                sudo mysql -e "CREATE USER IF NOT EXISTS 'majesticflame'@'127.0.0.1' IDENTIFIED BY '$shinobi_db_pw'"
-                sudo mysql -e "GRANT ALL PRIVILEGES ON ccio.* TO 'majesticflame'@'127.0.0.1'"
-                sudo mysql -e "FLUSH PRIVILEGES"
-                sudo mysql -e "source sql/framework.sql"
-                node tools/modifyConfiguration.js databaseType=mysql
-                sed -i.old "12s;\"\";\""$shinobi_db_pw"\";" conf.json
-                node tools/modifyConfiguration.js databaseType=mysql
-                sudo pm2 restart all
-                sudo pm2 list all
+        [Yy]* ) echo "Installing Shinobi" ;
+                echo "This is an interactive install. Please follow steps on screen." ;
+                echo "You must skip all MariaDB Steps. (Answer No)" ;
+                cd ~ && git clone "https://gitlab.com/Shinobi-Systems/Shinobi.git" Shinobi ;
+                cd Shinobi ;
+                chmod +x INSTALL/ubuntu.sh && sudo INSTALL/ubuntu.sh ;
+                sudo mysql -e "CREATE DATABASE IF NOT EXISTS ccio" ;
+                read -p "Enter password for Shinobi Database:" shinobi_db_pw ;
+                shinobi_db_pw=${shinobi_db_pw:-majesticflame} ;
+                echo $shinobi_db_pw ;
+                sudo mysql -e "CREATE USER IF NOT EXISTS 'majesticflame'@'127.0.0.1' IDENTIFIED BY '$shinobi_db_pw'" ;
+                sudo mysql -e "GRANT ALL PRIVILEGES ON ccio.* TO 'majesticflame'@'127.0.0.1'" ;
+                sudo mysql -e "FLUSH PRIVILEGES" ;
+                sudo mysql -e "source sql/framework.sql" ;
+                node tools/modifyConfiguration.js databaseType=mysql ;
+                sed -i.old "12s;\"\";\""$shinobi_db_pw"\";" conf.json ;
+                node tools/modifyConfiguration.js databaseType=mysql ;
+                sudo pm2 restart all ;
+                sudo pm2 list all ;
                 echo "Shinobi Installed";
                 break;;
         [Nn]* ) break;;
@@ -494,17 +484,17 @@ echo "====================="
 while true; do
     read -p "Do you wish to install Mopidy? (Y)es (N)o (A)bort" yn
     case $yn in
-        [Yy]* ) echo "Installing Mopidy"
-                wget -q -O - https://apt.mopidy.com/mopidy.gpg | sudo apt-key add -
-                sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/buster.list
-                sudo apt update && sudo apt install -y mopidy mopidy-local mopidy-mpd mopidy-tunein
-                sudo python3 -m pip install Mopidy-MusicBox-Webclient Mopidy-Iris
-                sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old
-                sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf
-                sudo systemctl enable mopidy
-                sudo usermod -aG pulse,pulse-access,audio,bluetooth mopidy
-                sudo systemctl restart mopidy
-                sudo mopidyctl config
+        [Yy]* ) echo "Installing Mopidy" ;
+                wget -q -O - https://apt.mopidy.com/mopidy.gpg | sudo apt-key add - ;
+                sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/buster.list ;
+                sudo apt update && sudo apt install -y mopidy mopidy-local mopidy-mpd mopidy-tunein ;
+                sudo python3 -m pip install Mopidy-MusicBox-Webclient Mopidy-Iris ;
+                sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old ;
+                sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf ;
+                sudo systemctl enable mopidy ;
+                sudo usermod -aG pulse,pulse-access,audio,bluetooth mopidy ;
+                sudo systemctl restart mopidy ;
+                sudo mopidyctl config ;
                 echo "Mopidy Installed";
                 break;;
         [Nn]* ) break;;
@@ -519,27 +509,26 @@ echo "====================================="
 while true; do
     read -p "Do you wish to install HomeAssistant Ecosystem? (Y)es (N)o (A)bort" yn
     case $yn in
-        [Yy]* ) echo "Installing HomeAssistant Ecosystem"
-                cd ~
-                git clone "https://github.com/mssaleh/binaries.git"
-                cp -r ~/binaries/homeassistant ~/homeassistant
-                cp -r ~/binaries/addons ~/addons
-                read -p "Enter your domain name: (e.g. user.smart-home.app)" domain_name
-                echo "You entered this domain: $domain_name"
-                sed -i "s/domain_name/$domain_name/g" ~/addons/docker-compose.yml
-                sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/site-confs/default
-                sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/adguard.subdomain.conf
-                sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf
-                mkdir -p ~/addons/letsencrypt/config/dns-conf
-                read -p "Enter Digital Ocean Access Token" digitalocean_token
-                echo "You entered this token: $digitalocean_token"
-                echo "dns_digitalocean_token = $digitalocean_token" > ~/addons/letsencrypt/config/dns-conf/digitalocean.ini
-                cd ~/homeassistant && docker-compose up -d
-                cd ~/addons && docker-compose up -d
-                read -p "Enter Mosquitto MQTT Broker User Name" mosquitto_user
-                echo "Mosquitto User Name is: $mosquitto_user"
-                echo "Enter Mosquitto Password for $mosquitto_user"
-                cd ~/addons && docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/config/mosquitto.passwd $mosquitto_user
+        [Yy]* ) echo "Installing HomeAssistant Ecosystem" ;
+                cd ~ && git clone "https://github.com/mssaleh/binaries.git" ;
+                cp -r ~/binaries/homeassistant ~/homeassistant ;
+                cp -r ~/binaries/addons ~/addons ;
+                read -p "Enter your domain name: (e.g. user.smart-home.app)" domain_name ;
+                echo "You entered this domain: $domain_name" ;
+                sed -i "s/domain_name/$domain_name/g" ~/addons/docker-compose.yml ;
+                sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/site-confs/default ;
+                sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/adguard.subdomain.conf ;
+                sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf ;
+                mkdir -p ~/addons/letsencrypt/config/dns-conf ;
+                read -p "Enter Digital Ocean Access Token" digitalocean_token ;
+                echo "You entered this token: $digitalocean_token" ;
+                echo "dns_digitalocean_token = $digitalocean_token" > ~/addons/letsencrypt/config/dns-conf/digitalocean.ini ;
+                cd ~/homeassistant && docker-compose up -d ;
+                cd ~/addons && docker-compose up -d ;
+                read -p "Enter Mosquitto MQTT Broker User Name" mosquitto_user ;
+                echo "Mosquitto User Name is: $mosquitto_user" ;
+                echo "Enter Mosquitto Password for $mosquitto_user" ;
+                cd ~/addons && docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/config/mosquitto.passwd $mosquitto_user ;
                 echo "HomeAssistant Ecosystem Installed";
                 break;;
         [Nn]* ) break;;
