@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  homeassistant:
+    container_name: home-assistant
+    image: homeassistant/home-assistant:stable
+    volumes:
+      - ./config:/config
+    environment:
+      - TZ=Asia/Dubai
+    restart: unless-stopped
+    network_mode: host
+#    devices:
+#      - /dev/ttyUSB0:/dev/ttyUSB0
+#      - /dev/ttyUSB1:/dev/ttyUSB1
+#      - /dev/ttyACM0:/dev/ttyACM0
