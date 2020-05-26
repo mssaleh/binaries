@@ -1,0 +1,22 @@
+pacmd list-modules | grep native-protocol-tcp
+export PULSE_SERVER="tcp:127.0.0.1"
+export PULSE_SERVER="tcp:localhost:24713"
+
+source ~/.bashrc
+
+32768    60999
+
+35791
+
+auth-anonymous=1 port=35791
+
+===================================================================
+
+
+sudo usermod -aG pulse,pulse-access,audio,bluetooth mopidy
+
+
+docker run --rm \
+    --name pulsecontainer \
+    --env PULSE_SERVER=tcp:$Hostip:34567 \
+    imagename
