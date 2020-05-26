@@ -16,7 +16,7 @@ case $yn1 in
         echo "Installing packages"
         sudo apt install -y \
         adduser alac-decoder alsa-firmware-loaders alsa-utils apparmor-utils apport apt apt-offline \
-        apt-show-versions apt-transport-https apt-utils apulse at avahi-daemon base-files base-passwd \
+        apt-show-versions apt-transport-https apt-utils at avahi-daemon base-files base-passwd \
         bash bcache-tools btrfs-progs build-essential byobu bzip2 ca-certificates cloud-guest-utils \
         cloud-init cloud-initramfs-copymods cloud-initramfs-dyn-netconf console-setup curl dash dbus \
         debconf debconf-i18n diffutils dirmngr e2fsprogs efibootmgr eject ethtool faac \
@@ -118,7 +118,7 @@ case $yn4 in
         echo "Installing MariaDB" 
         sudo apt update && sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common 
         sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' 
-        sudo add-apt-repository 'deb [arch=amd64] http://ftp.hosteurope.de/mirror/mariadb.org/repo/10.5/ubuntu focal main' 
+        sudo add-apt-repository 'deb [arch=amd64] http://mirror.netcologne.de/mariadb/repo/10.5/ubuntu focal main'
         sudo apt update && sudo apt install -y mariadb-server 
         echo "================================" 
         echo " Next Steps Require User Input  " 
@@ -271,7 +271,7 @@ case $yn5 in
         libavutil-dev libblkid-dev libbs2b-dev libbsd-dev libcaca-dev libcairo-script-interpreter2 \
         libcairo2-dev libcdio-cdda-dev libcdio-dev libcdio-paranoia-dev libchromaprint-dev libcodec2-dev \
         libcurl4-gnutls-dev libdata-dump-perl libdc1394-25 libdc1394-dev libdrm-dev libegl-dev \
-        libegl1-mesa-dev libencode-locale-perl libfdk-aac-dev libfile-listing-perl libfont-afm-perl \
+        libegl1-mesa-dev libencode-locale-perl libfcgi-perl libfdk-aac-dev libfile-listing-perl libfont-afm-perl \
         libfontconfig1-dev libfreetype-dev libfreetype6-dev libfribidi-dev libgdk-pixbuf2.0-dev \
         libghc-gnutls-dev libghc-monads-tf-dev libgl-dev libgl1-mesa-dev libgles-dev libgles1 \
         libgles2-mesa-dev libglib2.0-dev libglib2.0-dev-bin libglu1-mesa libglu1-mesa-dev libglvnd-dev \
@@ -305,8 +305,8 @@ case $yn5 in
         lv2-dev m4 nasm nettle-dev ocl-icd-opencl-dev opencl-c-headers tex-common texinfo uuid-dev \
         x11proto-core-dev x11proto-dev x11proto-input-dev x11proto-randr-dev x11proto-scrnsaver-dev \
         x11proto-xext-dev x11proto-xf86vidmode-dev x11proto-xinerama-dev xml2 xorg-sgml-doctools \
-        xtrans-dev yasm 
-        sudo apt purge ffmpeg && sudo apt autoremove  --purge -y && sudo apt autoclean && sudo apt clean 
+        xtrans-dev yasm
+        sudo apt purge -y ffmpeg && sudo apt autoremove --purge -y && sudo apt autoclean && sudo apt clean 
         sudo rm -R ~/ffmpeg_build/* ~/ffmpeg_sources/* ~/.cache/* 
         ffmpeg -hwaccels 
         echo "FFMPEG Installed"
@@ -337,6 +337,7 @@ case $yn6 in
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/pulseaudio/default.pa" -o /etc/pulse/default.pa 
         pulseaudio --kill 
         pulseaudio --start 
+        sleep 5
         pulseaudio --kill 
         systemctl --user daemon-reload 
         sudo systemctl daemon-reload 
