@@ -10,9 +10,9 @@ sudo apt purge -y snapd lxd-agent-loader ubuntu-advantage-tools multipath-tools 
 echo "=========================="
 echo " Install Useful Packages "
 echo "=========================="
-read -p "Do you wish to install some useful packages? (Y)es (N)o (A)bort" yn
-case $yn in
-    [Yy]* ) 
+read -p "Do you wish to install some useful packages? (Y)es (N)o (A)bort" yn1
+case $yn1 in
+    Y|y|yes) 
         echo "Installing packages"
         sudo apt install -y \
         adduser alac-decoder alsa-firmware-loaders alsa-utils apparmor-utils apport apt apt-offline \
@@ -40,13 +40,13 @@ case $yn in
         echo "Packages Installed"
         break
         ;;
-    [Nn]* ) 
+    N|n|no) 
         break 
         ;;
-    [Aa]* ) 
+    A|a|abort) 
         exit 
         ;;
-    * ) 
+    *) 
         echo "Unrecognized Answer. Skipping." 
         echo "If you require it. You can re-run the script."
         ;;
@@ -55,9 +55,9 @@ esac
 echo "======================"
 echo "    Install Docker    "
 echo "======================"
-read -p "Do you wish to install Docker? (Y)es (N)o (A)bort" yn
-case $yn in
-    [Yy]* ) 
+read -p "Do you wish to install Docker? (Y)es (N)o (A)bort" yn2
+case $yn2 in
+    Y|y|yes) 
         echo "Installing Docker"
         sudo apt update && sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common 
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - 
@@ -72,13 +72,13 @@ case $yn in
         sudo reboot
         break
         ;;
-    [Nn]* ) 
+    N|n|no) 
         break
         ;;
-    [Aa]* ) 
+    A|a|abort) 
         exit
         ;;
-    * ) 
+    *) 
         echo "Unrecognized Answer. Skipping."
         echo "If you require it. You can re-run the script."
         ;;
@@ -87,9 +87,9 @@ esac
 echo "======================"
 echo "   Install Node.js    "
 echo "======================"
-read -p "Do you wish to install Node.js? (Y)es (N)o (A)bort" yn
-case $yn in
-    [Yy]* ) 
+read -p "Do you wish to install Node.js? (Y)es (N)o (A)bort" yn3
+case $yn3 in
+    Y|y|yes) 
         echo "Installing Node.js" 
         curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - 
         sudo apt update && sudo apt install -y nodejs 
@@ -97,13 +97,13 @@ case $yn in
         echo "Node.js Installed"
         break
         ;;
-    [Nn]* ) 
+    N|n|no) 
         break
         ;;
-    [Aa]* ) 
+    A|a|abort) 
         exit
         ;;
-    * ) 
+    *) 
         echo "Unrecognized Answer. Skipping."
         echo "If you require it. You can re-run the script."
         ;;
@@ -112,9 +112,9 @@ esac
 echo "======================"
 echo "   Install MariaDB    "
 echo "======================"
-read -p "Do you wish to install MariaDB? (Y)es (N)o (A)bort" yn
-case $yn in
-    [Yy]* ) 
+read -p "Do you wish to install MariaDB? (Y)es (N)o (A)bort" yn4
+case $yn4 in
+    Y|y|yes) 
         echo "Installing MariaDB" 
         sudo apt update && sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common 
         sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' 
@@ -129,13 +129,13 @@ case $yn in
         echo "MariaDB Installed"
         break
         ;;
-    [Nn]* ) 
+    N|n|no) 
         break
         ;;
-    [Aa]* ) 
+    A|a|abort) 
         exit
         ;;
-    * ) 
+    *) 
         echo "Unrecognized Answer. Skipping."
         echo "If you require it. You can re-run the script."
         ;;
@@ -144,9 +144,9 @@ esac
 echo "============================="
 echo "   Install FFMPEG Non-free   "
 echo "============================="
-read -p "Do you wish to install FFMPEG? (Y)es (N)o (A)bort" yn
-case $yn in
-    [Yy]* ) 
+read -p "Do you wish to install FFMPEG? (Y)es (N)o (A)bort" yn5
+case $yn5 in
+    Y|y|yes) 
         echo "Installing Non-free FFMPEG" 
         sudo apt update && sudo apt install -y \
         autoconf automake autotools-dev cmake cmake-data comerr-dev flite1-dev frei0r-plugins-dev \
@@ -312,13 +312,13 @@ case $yn in
         echo "FFMPEG Installed"
         break
         ;;
-    [Nn]* ) 
+    N|n|no) 
         break
         ;;
-    [Aa]* ) 
+    A|a|abort) 
         exit
         ;;
-    * ) 
+    *) 
         echo "Unrecognized Answer. Skipping."
         echo "If you require it. You can re-run the script."
         ;;
@@ -327,9 +327,9 @@ esac
 echo "========================"
 echo "   Install Pulseaudio   "
 echo "========================"
-read -p "Do you wish to install Pulseaudio? (Y)es (N)o (A)bort" yn
-case $yn in
-    [Yy]* ) 
+read -p "Do you wish to install Pulseaudio? (Y)es (N)o (A)bort" yn6
+case $yn6 in
+    Y|y|yes) 
         echo "Installing Pulseaudio" 
         sudo apt update && sudo apt install -y apulse avahi-daemon pulseaudio \
         gstreamer1.0-pulseaudio pulseaudio-module-zeroconf pulseaudio-utils 
@@ -350,13 +350,13 @@ case $yn in
         echo "Pulseaudio Installed"
         break
         ;;
-    [Nn]* ) 
+    N|n|no) 
         break
         ;;
-    [Aa]* ) 
+    A|a|abort) 
         exit
         ;;
-    * ) 
+    *) 
         echo "Unrecognized Answer. Skipping."
         echo "If you require it. You can re-run the script."
         ;;
@@ -365,9 +365,9 @@ esac
 echo "======================="
 echo "   Install Bluetooth   "
 echo "======================="
-read -p "Do you wish to install Bluetooth? (Y)es (N)o (A)bort" yn
-case $yn in
-    [Yy]* ) 
+read -p "Do you wish to install Bluetooth? (Y)es (N)o (A)bort" yn7
+case $yn7 in
+    Y|y|yes) 
         echo "Installing Bluetooth" 
         sudo apt update && sudo apt install -y bluetooth bluez bluez-tools bluez-hcidump \
         libbluetooth-dev pulseaudio-module-bluetooth python3-bluez avahi-daemon 
@@ -379,13 +379,13 @@ case $yn in
         echo "Bluetooth Installed"
         break
         ;;
-    [Nn]* ) 
+    N|n|no) 
         break
         ;;
-    [Aa]* ) 
+    A|a|abort) 
         exit
         ;;
-    * ) 
+    *) 
         echo "Unrecognized Answer. Skipping."
         echo "If you require it. You can re-run the script."
         ;;
@@ -394,9 +394,9 @@ esac
 echo "====================="
 echo "   Install Aircast   "
 echo "====================="
-read -p "Do you wish to install Aircast? (Y)es (N)o (A)bort" yn
-case $yn in
-    [Yy]* ) 
+read -p "Do you wish to install Aircast? (Y)es (N)o (A)bort" yn8
+case $yn8 in
+    Y|y|yes) 
         echo "Installing Aircast" 
         sudo curl -L "https://raw.githubusercontent.com/philippe44/AirConnect/master/bin/aircast-x86-64" -o /usr/local/bin/aircast 
         sudo chmod +x /usr/local/bin/aircast 
@@ -411,13 +411,13 @@ case $yn in
         echo "Aircast Installed"
         break
         ;;
-    [Nn]* ) 
+    N|n|no) 
         break
         ;;
-    [Aa]* ) 
+    A|a|abort) 
         exit
         ;;
-    * ) 
+    *) 
         echo "Unrecognized Answer. Skipping."
         echo "If you require it. You can re-run the script."
         ;;
@@ -426,9 +426,9 @@ esac
 echo "============================"
 echo "   Install shairport-sync   "
 echo "============================"
-read -p "Do you wish to install shairport-sync? (Y)es (N)o (A)bort" yn
-case $yn in
-    [Yy]* ) 
+read -p "Do you wish to install shairport-sync? (Y)es (N)o (A)bort" yn9
+case $yn9 in
+    Y|y|yes) 
         echo "Installing shairport-sync" 
         sudo apt install -y --no-install-recommends \
         autoconf automake autotools-dev avahi-daemon build-essential \
@@ -496,13 +496,13 @@ case $yn in
         echo "shairport-sync Installed"
         break
         ;;
-    [Nn]* ) 
+    N|n|no) 
         break
         ;;
-    [Aa]* ) 
+    A|a|abort) 
         exit
         ;;
-    * ) 
+    *) 
         echo "Unrecognized Answer. Skipping."
         echo "If you require it. You can re-run the script."
         ;;
@@ -511,9 +511,9 @@ esac
 echo "====================="
 echo "   Install Shinobi   "
 echo "====================="
-read -p "Do you wish to install Shinobi? (Y)es (N)o (A)bort" yn
-case $yn in
-    [Yy]* ) 
+read -p "Do you wish to install Shinobi? (Y)es (N)o (A)bort" yn10
+case $yn10 in
+    Y|y|yes) 
         echo "Installing Shinobi" 
         echo "This is an interactive install. Please follow steps on screen." 
         echo "You must skip all MariaDB Steps. (Answer No)" 
@@ -536,13 +536,13 @@ case $yn in
         echo "Shinobi Installed"
         break
         ;;
-    [Nn]* ) 
+    N|n|no) 
         break
         ;;
-    [Aa]* ) 
+    A|a|abort) 
         exit
         ;;
-    * ) 
+    *) 
         echo "Unrecognized Answer. Skipping."
         echo "If you require it. You can re-run the script."
         ;;
@@ -551,9 +551,9 @@ esac
 echo "====================="
 echo "   Install Mopidy   "
 echo "====================="
-read -p "Do you wish to install Mopidy? (Y)es (N)o (A)bort" yn
-case $yn in
-    [Yy]* ) 
+read -p "Do you wish to install Mopidy? (Y)es (N)o (A)bort" yn11
+case $yn11 in
+    Y|y|yes) 
         echo "Installing Mopidy" 
         wget -q -O - https://apt.mopidy.com/mopidy.gpg | sudo apt-key add - 
         sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/buster.list 
@@ -568,13 +568,13 @@ case $yn in
         echo "Mopidy Installed"
         break
         ;;
-    [Nn]* ) 
+    N|n|no) 
         break
         ;;
-    [Aa]* ) 
+    A|a|abort) 
         exit
         ;;
-    * ) 
+    *) 
         echo "Unrecognized Answer. Skipping."
         echo "If you require it. You can re-run the script."
         ;;
@@ -583,9 +583,9 @@ esac
 echo "====================================="
 echo "   Install HomeAssistant Ecosystem   "
 echo "====================================="
-read -p "Do you wish to install HomeAssistant Ecosystem? (Y)es (N)o (A)bort" yn
-case $yn in
-    [Yy]* ) 
+read -p "Do you wish to install HomeAssistant Ecosystem? (Y)es (N)o (A)bort" yn12
+case $yn12 in
+    Y|y|yes) 
         echo "Installing HomeAssistant Ecosystem" 
         cd ~ && git clone "https://github.com/mssaleh/binaries.git" 
         cp -r ~/binaries/homeassistant ~/homeassistant 
@@ -609,13 +609,13 @@ case $yn in
         echo "HomeAssistant Ecosystem Installed"
         break
         ;;
-    [Nn]* ) 
+    N|n|no) 
         break
         ;;
-    [Aa]* ) 
+    A|a|abort) 
         exit
         ;;
-    * ) 
+    *) 
         echo "Unrecognized Answer. Skipping."
         echo "If you require it. You can re-run the script."
         ;;
