@@ -408,6 +408,7 @@ case $yn8 in
         sudo systemctl daemon-reload 
         systemctl --user enable aircast.service 
         systemctl --user restart aircast.service 
+        sleep 3
         systemctl --user status aircast.service 
         echo "Aircast Installed"
         break
@@ -491,8 +492,12 @@ case $yn9 in
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.service" -o /usr/lib/systemd/user/shairport-sync.service 
         systemctl --user daemon-reload 
         sudo systemctl daemon-reload 
+        sudo systemctl restart avahi-daemon.service
+        sleep 2
+        sudo systemctl status avahi-daemon.service
         systemctl --user enable shairport-sync.service 
         systemctl --user restart shairport-sync.service 
+        sleep 2
         systemctl --user status shairport-sync.service 
         echo "shairport-sync Installed"
         break
@@ -530,9 +535,10 @@ case $yn10 in
         sudo mysql -e "FLUSH PRIVILEGES" 
         sudo mysql -e "source sql/framework.sql" 
         node tools/modifyConfiguration.js databaseType=mysql 
-        sed -i.old "12s\"\"\""$shinobi_db_pw"\"" conf.json 
+        sed -i.old "15s,\"\",\""$shinobi_db_pw"\"," conf.json
         node tools/modifyConfiguration.js databaseType=mysql 
-        sudo pm2 restart all 
+        sudo pm2 restart all
+        sleep 2 
         sudo pm2 list all 
         echo "Shinobi Installed"
         break
@@ -564,6 +570,7 @@ case $yn11 in
         mkdir -p ~/media/m3u
         sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old 
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf 
+        sudo sed -i "s,local_path,"$HOME"/media,g" /etc/mopidy/mopidy.conf
         sudo systemctl enable mopidy 
         sudo usermod -aG pulse,pulse-access,audio,bluetooth mopidy 
         sudo systemctl restart mopidy 
@@ -592,20 +599,30 @@ case $yn12 in
     Y|y|yes) 
         echo "Installing HomeAssistant Ecosystem" 
         cd ~ && git clone "https://github.com/mssaleh/binaries.git" 
-        cp -r ~/binaries/homeassistant ~/homeassistant 
-        cp -r ~/binaries/addons ~/addons 
-        read -p "Enter your domain name: (e.g. user.smart-home.app):   " domain_name 
+        cp -r ~/binaries/homeassistant ~/homeassistant
+        sudo chown -R $USER: ~/homeassistant && sudo chmod -R +rw ~/homeassistant
+        cd ~/homeassistant && docker-compose up -d 
+        echo "Running HomeAssistant Core" 
+        cp -r ~/binaries/addons ~/addons && sudo chown -R $USER: ~/addons
+        sudo chown -R $USER: ~/addons && sudo chmod -R +rw ~/addons
+        read -p "Enter your domain name: (e.g. user.smart-home.app):  " domain_name 
         echo "You entered this domain: $domain_name" 
         sed -i "s/domain_name/$domain_name/g" ~/addons/docker-compose.yml 
         sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/site-confs/default 
         sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/adguard.subdomain.conf 
         sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf 
         mkdir -p ~/addons/letsencrypt/config/dns-conf 
-        read -p "Enter Digital Ocean Access Token" digitalocean_token 
+        read -p "Enter Digital Ocean Access Token:  " digitalocean_token 
         echo "You entered this token: $digitalocean_token" 
         echo "dns_digitalocean_token = $digitalocean_token" > ~/addons/letsencrypt/config/dns-conf/digitalocean.ini 
-        cd ~/homeassistant && docker-compose up -d 
+        chmod 640 ~/addons/letsencrypt/config/dns-conf/digitalocean.ini
+        mkdir -p ~/addons/mosquitto/log
+        touch ~/addons/mosquitto/log/mosquitto.log
+        touch ~/addons/mosquitto/config/mosquitto.passwd
+        chmod 640 ~/addons/mosquitto/config/mosquitto.passwd
         cd ~/addons && docker-compose up -d 
+        echo "waiting 20s for docker container to run"
+        sleep 20
         read -p "Enter Mosquitto MQTT Broker User Name:   " mosquitto_user 
         echo "Mosquitto User Name is: $mosquitto_user" 
         echo "Enter Mosquitto Password for $mosquitto_user" 
