@@ -16,7 +16,8 @@ case $yn1 in
     Y|y|yes) 
         echo "Installing packages"
         sudo apt install -y \
-        adduser alac-decoder alsa-firmware-loaders alsa-utils apparmor-utils apport apt apt-offline \
+        adduser alac-decoder alsa-topology-conf alsa-ucm-conf alsa-utils alsa-base alsa-tools \
+        alsa-utils linux-sound-base apparmor-utils apport apt apt-offline \
         apt-show-versions apt-transport-https apt-utils at avahi-daemon base-files base-passwd \
         bash bcache-tools btrfs-progs build-essential byobu bzip2 ca-certificates cloud-guest-utils \
         cloud-init cloud-initramfs-copymods cloud-initramfs-dyn-netconf console-setup curl dash dbus \
@@ -37,7 +38,7 @@ case $yn1 in
         python3 python3-dev python3-nacl python3-pip \
         python3-pymacaroons rsyslog screen sensible-utils shim-signed software-properties-common \
         sosreport sudo sysvinit-utils tmux tzdata ubuntu-keyring ubuntu-restricted-extras ubuntu-standard \
-        udev unzip update-notifier-common vim vim-tiny virtualenv wget whiptail xfsprogs zip zlib1g-dev
+        ubuntu-sounds udev unzip update-notifier-common vim vim-tiny virtualenv wget whiptail xfsprogs zip zlib1g-dev
         sudo apt clean 
         echo "Packages Installed"
         break
