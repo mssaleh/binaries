@@ -10,7 +10,8 @@ sudo apt purge -y snapd lxd-agent-loader ubuntu-advantage-tools multipath-tools 
 echo "=========================="
 echo " Install Useful Packages "
 echo "=========================="
-read -p "Do you wish to install some useful packages? (Y)es (N)o (A)bort...   " yn1
+echo "Do you wish to install some useful packages?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn1
 case $yn1 in
     Y|y|yes) 
         echo "Installing packages"
@@ -36,7 +37,8 @@ case $yn1 in
         python3 python3-dev python3-nacl python3-pip \
         python3-pymacaroons rsyslog screen sensible-utils shim-signed software-properties-common \
         sosreport sudo sysvinit-utils tmux tzdata ubuntu-keyring ubuntu-restricted-extras ubuntu-standard \
-        udev unzip update-notifier-common vim vim-tiny virtualenv wget whiptail xfsprogs zip zlib1g-dev 
+        udev unzip update-notifier-common vim vim-tiny virtualenv wget whiptail xfsprogs zip zlib1g-dev
+        sudo apt clean 
         echo "Packages Installed"
         break
         ;;
@@ -47,7 +49,7 @@ case $yn1 in
         exit 
         ;;
     *) 
-        echo "Unrecognized Answer. Skipping." 
+        echo "Skipping." 
         echo "If you require it. You can re-run the script."
         ;;
 esac
@@ -55,7 +57,8 @@ esac
 echo "======================"
 echo "    Install Docker    "
 echo "======================"
-read -p "Do you wish to install Docker? (Y)es (N)o (A)bort...   " yn2
+echo "Do you wish to install Docker?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn2
 case $yn2 in
     Y|y|yes) 
         echo "Installing Docker"
@@ -68,7 +71,8 @@ case $yn2 in
         sudo chmod +x /usr/local/bin/docker-compose 
         docker -v 
         echo "Docker Installed. System will reboot now." 
-        echo "After Reboot, re-run this script and skip (answer with No) the first two steps (including Docker)" 
+        echo "After Reboot, re-run this script and skip (answer with No) the first two steps (including Docker)"
+        sudo apt clean 
         sudo reboot
         break
         ;;
@@ -79,7 +83,7 @@ case $yn2 in
         exit
         ;;
     *) 
-        echo "Unrecognized Answer. Skipping."
+        echo "Skipping."
         echo "If you require it. You can re-run the script."
         ;;
 esac
@@ -87,13 +91,15 @@ esac
 echo "======================"
 echo "   Install Node.js    "
 echo "======================"
-read -p "Do you wish to install Node.js? (Y)es (N)o (A)bort...   " yn3
+echo "Do you wish to install Node.js?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn3
 case $yn3 in
     Y|y|yes) 
         echo "Installing Node.js" 
         curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - 
         sudo apt update && sudo apt install -y nodejs 
         node -v 
+        sudo apt clean
         echo "Node.js Installed"
         break
         ;;
@@ -104,7 +110,7 @@ case $yn3 in
         exit
         ;;
     *) 
-        echo "Unrecognized Answer. Skipping."
+        echo "Skipping."
         echo "If you require it. You can re-run the script."
         ;;
 esac
@@ -112,7 +118,8 @@ esac
 echo "======================"
 echo "   Install MariaDB    "
 echo "======================"
-read -p "Do you wish to install MariaDB? (Y)es (N)o (A)bort...   " yn4
+echo "Do you wish to install MariaDB?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn4
 case $yn4 in
     Y|y|yes) 
         echo "Installing MariaDB" 
@@ -126,6 +133,7 @@ case $yn4 in
         sudo /usr/bin/mysql_secure_installation 
         sudo service mysql start 
         mariadb -V 
+        sudo apt clean
         echo "MariaDB Installed"
         break
         ;;
@@ -136,7 +144,7 @@ case $yn4 in
         exit
         ;;
     *) 
-        echo "Unrecognized Answer. Skipping."
+        echo "Skipping."
         echo "If you require it. You can re-run the script."
         ;;
 esac
@@ -144,7 +152,8 @@ esac
 echo "============================="
 echo "   Install FFMPEG Non-free   "
 echo "============================="
-read -p "Do you wish to install FFMPEG? (Y)es (N)o (A)bort...   " yn5
+echo "Do you wish to install FFMPEG?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn5
 case $yn5 in
     Y|y|yes) 
         echo "Installing Non-free FFMPEG" 
@@ -309,6 +318,7 @@ case $yn5 in
         sudo apt purge -y ffmpeg && sudo apt autoremove --purge -y && sudo apt autoclean && sudo apt clean 
         sudo rm -R ~/ffmpeg_build/* ~/ffmpeg_sources/* ~/.cache/* 
         ffmpeg -hwaccels 
+        sudo apt clean
         echo "FFMPEG Installed"
         break
         ;;
@@ -319,7 +329,7 @@ case $yn5 in
         exit
         ;;
     *) 
-        echo "Unrecognized Answer. Skipping."
+        echo "Skipping."
         echo "If you require it. You can re-run the script."
         ;;
 esac
@@ -327,7 +337,8 @@ esac
 echo "========================"
 echo "   Install Pulseaudio   "
 echo "========================"
-read -p "Do you wish to install Pulseaudio? (Y)es (N)o (A)bort...   " yn6
+echo "Do you wish to install Pulseaudio?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn6
 case $yn6 in
     Y|y|yes) 
         echo "Installing Pulseaudio" 
@@ -348,7 +359,20 @@ case $yn6 in
         systemctl --user restart pulseaudio.socket 
         systemctl --user restart pulseaudio.service 
         systemctl --user status pulseaudio.service 
-        echo "Pulseaudio Installed"
+        sudo apt clean
+        echo "Pulseaudio Installed. It's better to reboot now."
+        echo "Do you want to reboot?"
+        read -p "Press (y)es to reboot. Any other key to skip   " rbt
+        case $rbt in
+            Y|y|yes)
+                echo "You can re-run the script after reboot to continue."
+                sleep 3
+                sudo reboot
+                ;;
+            *) 
+                echo "Skipping reboot."
+                ;;
+        esac
         break
         ;;
     N|n|no) 
@@ -358,7 +382,7 @@ case $yn6 in
         exit
         ;;
     *) 
-        echo "Unrecognized Answer. Skipping."
+        echo "Skipping."
         echo "If you require it. You can re-run the script."
         ;;
 esac
@@ -366,7 +390,8 @@ esac
 echo "======================="
 echo "   Install Bluetooth   "
 echo "======================="
-read -p "Do you wish to install Bluetooth? (Y)es (N)o (A)bort...   " yn7
+echo "Do you wish to install Bluetooth?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn7
 case $yn7 in
     Y|y|yes) 
         echo "Installing Bluetooth" 
@@ -377,6 +402,7 @@ case $yn7 in
         sudo service bluetooth enable 
         sudo service bluetooth restart 
         sudo service bluetooth status 
+        sudo apt clean 
         echo "Bluetooth Installed"
         break
         ;;
@@ -387,7 +413,7 @@ case $yn7 in
         exit
         ;;
     *) 
-        echo "Unrecognized Answer. Skipping."
+        echo "Skipping."
         echo "If you require it. You can re-run the script."
         ;;
 esac
@@ -395,7 +421,8 @@ esac
 echo "====================="
 echo "   Install Aircast   "
 echo "====================="
-read -p "Do you wish to install Aircast? (Y)es (N)o (A)bort...   " yn8
+echo "Do you wish to install Aircast?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn8
 case $yn8 in
     Y|y|yes) 
         echo "Installing Aircast" 
@@ -420,7 +447,7 @@ case $yn8 in
         exit
         ;;
     *) 
-        echo "Unrecognized Answer. Skipping."
+        echo "Skipping."
         echo "If you require it. You can re-run the script."
         ;;
 esac
@@ -428,7 +455,8 @@ esac
 echo "============================"
 echo "   Install shairport-sync   "
 echo "============================"
-read -p "Do you wish to install shairport-sync? (Y)es (N)o (A)bort...   " yn9
+echo "Do you wish to install shairport-sync?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn9
 case $yn9 in
     Y|y|yes) 
         echo "Installing shairport-sync" 
@@ -499,6 +527,7 @@ case $yn9 in
         systemctl --user restart shairport-sync.service 
         sleep 2
         systemctl --user status shairport-sync.service 
+        sudo apt clean
         echo "shairport-sync Installed"
         break
         ;;
@@ -509,7 +538,7 @@ case $yn9 in
         exit
         ;;
     *) 
-        echo "Unrecognized Answer. Skipping."
+        echo "Skipping."
         echo "If you require it. You can re-run the script."
         ;;
 esac
@@ -517,7 +546,8 @@ esac
 echo "====================="
 echo "   Install Shinobi   "
 echo "====================="
-read -p "Do you wish to install Shinobi? (Y)es (N)o (A)bort...   " yn10
+echo "Do you wish to install Shinobi?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn10
 case $yn10 in
     Y|y|yes) 
         echo "Installing Shinobi" 
@@ -550,7 +580,7 @@ case $yn10 in
         exit
         ;;
     *) 
-        echo "Unrecognized Answer. Skipping."
+        echo "Skipping."
         echo "If you require it. You can re-run the script."
         ;;
 esac
@@ -558,7 +588,8 @@ esac
 echo "====================="
 echo "   Install Mopidy   "
 echo "====================="
-read -p "Do you wish to install Mopidy? (Y)es (N)o (A)bort...   " yn11
+echo "Do you wish to install Mopidy?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn11
 case $yn11 in
     Y|y|yes) 
         echo "Installing Mopidy" 
@@ -576,6 +607,7 @@ case $yn11 in
         sudo systemctl restart mopidy 
         sudo mopidyctl config 
         sudo mopidyctl local scan
+        sudo apt clean
         echo "Mopidy Installed"
         break
         ;;
@@ -586,7 +618,7 @@ case $yn11 in
         exit
         ;;
     *) 
-        echo "Unrecognized Answer. Skipping."
+        echo "Skipping."
         echo "If you require it. You can re-run the script."
         ;;
 esac
@@ -594,7 +626,8 @@ esac
 echo "====================================="
 echo "   Install HomeAssistant Ecosystem   "
 echo "====================================="
-read -p "Do you wish to install HomeAssistant Ecosystem? (Y)es (N)o (A)bort...   " yn12
+echo "Do you wish to install HomeAssistant Ecosystem?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn12
 case $yn12 in
     Y|y|yes) 
         echo "Installing HomeAssistant Ecosystem" 
@@ -637,7 +670,60 @@ case $yn12 in
         exit
         ;;
     *) 
-        echo "Unrecognized Answer. Skipping."
+        echo "Skipping."
+        echo "If you require it. You can re-run the script."
+        ;;
+esac
+
+echo "======================="
+echo "   Install AdGuardHome   "
+echo "======================="
+echo "Do you wish to install AdGuardHome?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn13
+case $yn13 in
+    Y|y|yes) 
+        echo "Installing AdGuardHome"
+        cd ~
+        https://static.adguard.com/adguardhome/release/AdGuardHome_linux_amd64.tar.gz
+        tar xvf AdGuardHome_linux_amd64.tar.gz
+        sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.old
+        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/netplan/static_ip.yaml" -o /etc/netplan/static_ip.yaml
+        eth_if=$(ip -4 -o a | awk '{print $2}' | cut -d/ -f1 | grep -v lo | head -n1)
+        lan_ip=$(ip -4 -o a | awk '{print $4}' | cut -d/ -f1 | grep -v 127.0.0.1 | head -n1)
+        lan_gateway=$(route -n | grep 'UG[ \t]' | awk '{print $2}')
+        sudo sed -i "s,enp3s0,"$eth_if",g" /etc/netplan/static_ip.yaml
+        sudo sed -i "s,local_ip,"$lan_ip",g" /etc/netplan/static_ip.yaml
+        sudo sed -i "s,local_gateway,"$lan_gateway",g" /etc/netplan/static_ip.yaml
+        sudo netplan apply
+        sudo cp /etc/systemd/resolved.conf /etc/systemd/resolved.old
+        sudo sed -i 's,#DNS=,DNS=127.0.0.1,g' /etc/systemd/resolved.conf
+        sudo sed -i 's,#FallbackDNS=,FallbackDNS=8.8.8.8,g' /etc/systemd/resolved.conf
+        sudo sed -i 's,#DNSStubListener=yes,DNSStubListener=no,g' /etc/systemd/resolved.conf
+        sudo sed -i 's,nameserver 127.0.0.53,nameserver 127.0.0.1,g' /lib/systemd/resolv.conf
+        sudo sed -i 's,nameserver 127.0.0.53,nameserver 127.0.0.1,g' /etc/resolv.conf
+        sudo mv /etc/resolv.conf /etc/resolv.conf.backup
+        sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
+        sudo systemctl reload-or-restart systemd-resolved
+        cd ~/AdGuardHome
+        chmod +x AdGuardHome
+        sudo setcap CAP_NET_BIND_SERVICE=+eip ./AdGuardHome
+        ./AdGuardHome
+        ./AdGuardHome -stop
+        sudo ./AdGuardHome -s stop
+        sudo ./AdGuardHome -s install
+        sudo ./AdGuardHome -s start
+        sudo ./AdGuardHome -s status
+        echo "AdGuardHome Installed"
+        break
+        ;;
+    N|n|no) 
+        break
+        ;;
+    A|a|abort) 
+        exit
+        ;;
+    *) 
+        echo "Skipping."
         echo "If you require it. You can re-run the script."
         ;;
 esac
