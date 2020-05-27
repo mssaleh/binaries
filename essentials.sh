@@ -696,23 +696,18 @@ case $yn13 in
         sudo sed -i "s,local_gateway,"$lan_gateway",g" /etc/netplan/static_ip.yaml
         sudo netplan apply
         sudo cp /etc/systemd/resolved.conf /etc/systemd/resolved.old
-        sudo sed -i 's,#DNS=,DNS=127.0.0.1,g' /etc/systemd/resolved.conf
-        sudo sed -i 's,#FallbackDNS=,FallbackDNS=8.8.8.8,g' /etc/systemd/resolved.conf
+        sudo sed -i 's,#DNS=,DNS=8.8.8.8,g' /etc/systemd/resolved.conf
+        sudo sed -i 's,#FallbackDNS=,FallbackDNS=127.0.0.1,g' /etc/systemd/resolved.conf
         sudo sed -i 's,#DNSStubListener=yes,DNSStubListener=no,g' /etc/systemd/resolved.conf
         sudo sed -i 's,nameserver 127.0.0.53,nameserver 127.0.0.1,g' /lib/systemd/resolv.conf
         sudo sed -i 's,nameserver 127.0.0.53,nameserver 127.0.0.1,g' /etc/resolv.conf
         sudo mv /etc/resolv.conf /etc/resolv.conf.backup
         sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
         sudo systemctl reload-or-restart systemd-resolved
-        cd ~/AdGuardHome
-        chmod +x AdGuardHome
-        sudo ./AdGuardHome
-        sleep 5
-        sudo ./AdGuardHome -stop
-        sudo ./AdGuardHome -s stop
-        sudo ./AdGuardHome -s install
-        sudo ./AdGuardHome -s start
-        sudo ./AdGuardHome -s status
+        sudo chmod +x ~/AdGuardHome/AdGuardHome
+        sudo ~/AdGuardHome/AdGuardHome -s install
+        sudo ~/AdGuardHome/AdGuardHome -s start
+        sudo ~/AdGuardHome/AdGuardHome -s status
         echo "AdGuardHome Installed"
         break
         ;;
