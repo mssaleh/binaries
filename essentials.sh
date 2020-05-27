@@ -660,6 +660,7 @@ case $yn12 in
         echo "Mosquitto User Name is: $mosquitto_user" 
         echo "Enter Mosquitto Password for $mosquitto_user" 
         cd ~/addons && docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/config/mosquitto.passwd $mosquitto_user 
+        sudo rm -R ~/binaries
         echo "HomeAssistant Ecosystem Installed"
         break
         ;;
@@ -685,7 +686,7 @@ case $yn13 in
         echo "Installing AdGuardHome"
         cd ~
         curl -L https://static.adguard.com/adguardhome/release/AdGuardHome_linux_amd64.tar.gz -o ~/AdGuardHome_linux_amd64.tar.gz
-        tar xvf AdGuardHome_linux_amd64.tar.gz
+        tar xvf ~/AdGuardHome_linux_amd64.tar.gz
         sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.old
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/netplan/static_ip.yaml" -o /etc/netplan/static_ip.yaml
         eth_if=$(ip -4 -o a | awk '{print $2}' | cut -d/ -f1 | grep -v lo | head -n1)
@@ -708,6 +709,7 @@ case $yn13 in
         sudo ~/AdGuardHome/AdGuardHome -s install
         sudo ~/AdGuardHome/AdGuardHome -s start
         sudo ~/AdGuardHome/AdGuardHome -s status
+        rm ~/AdGuardHome_linux_amd64.tar.gz
         echo "AdGuardHome Installed"
         break
         ;;
