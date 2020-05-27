@@ -596,9 +596,10 @@ case $yn11 in
         wget -q -O - https://apt.mopidy.com/mopidy.gpg | sudo apt-key add - 
         sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/buster.list 
         sudo apt update && sudo apt install -y mopidy mopidy-local mopidy-mpd mopidy-tunein 
-        sudo python3 -m pip install Mopidy-MusicBox-Webclient Mopidy-Iris
-        python_ver=$(python3 -V |awk '{print $2}' | cut -b -3)
-        echo "mopidy ALL=NOPASSWD: /usr/local/lib/python$python_ver/dist-packages/mopidy_iris/system.sh" | (sudo su -c 'EDITOR="tee" visudo -f /etc/sudoers.d/mopidy')
+        sudo python3 -m pip install Mopidy-MusicBox-Webclient 
+        # sudo python3 -m pip install Mopidy-Iris
+        # python_ver=$(python3 -V |awk '{print $2}' | cut -b -3)
+        # echo "mopidy ALL=NOPASSWD: /usr/local/lib/python$python_ver/dist-packages/mopidy_iris/system.sh" | (sudo su -c 'EDITOR="tee" visudo -f /etc/sudoers.d/mopidy')
         mkdir -p ~/media/music
         mkdir -p ~/media/m3u
         sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old 
