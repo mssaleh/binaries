@@ -16,7 +16,7 @@ case $yn1 in
     Y|y|yes) 
         echo "Installing packages"
         sudo apt install -y \
-        adduser alac-decoder alsa-topology-conf alsa-ucm-conf alsa-utils alsa-base alsa-tools \
+        adduser alac-decoder alsa-topology-conf alsa-ucm-conf alsa-base alsa-tools \
         alsa-utils linux-sound-base apparmor-utils apport apt apt-offline \
         apt-show-versions apt-transport-https apt-utils at avahi-daemon base-files base-passwd \
         bash bcache-tools btrfs-progs build-essential byobu bzip2 ca-certificates cloud-guest-utils \
