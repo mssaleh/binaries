@@ -1,8 +1,10 @@
 [Unit]
 Description=Shairport Sync AirPlay Audio Receiver
-After=sound.target
-Wants=network-online.target
-After=network.target network-online.target
+Requires=pulseaudio.service
+After=pulseaudio.service
+After=dbus.service
+After=avahi-daemon.service
+ConditionUser=!root
 
 [Service]
 ExecStart=/usr/local/bin/shairport-sync
@@ -10,4 +12,4 @@ Restart=on-failure
 RestartSec=30
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
