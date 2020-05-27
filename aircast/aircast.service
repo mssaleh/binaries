@@ -1,7 +1,10 @@
 [Unit]
 Description=Aircast Bridge
-After=network-online.target
-Wants=network-online.target
+Requires=pulseaudio.service
+After=pulseaudio.service
+After=dbus.service
+After=avahi-daemon.service
+ConditionUser=!root
 
 [Service]
 ExecStart=/usr/local/bin/aircast -l 1000:2000 -Z -r -x /etc/aircast/aircast.xml
@@ -9,4 +12,4 @@ Restart=on-failure
 RestartSec=30
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
