@@ -684,7 +684,7 @@ case $yn13 in
     Y|y|yes) 
         echo "Installing AdGuardHome"
         cd ~
-        https://static.adguard.com/adguardhome/release/AdGuardHome_linux_amd64.tar.gz
+        curl -L https://static.adguard.com/adguardhome/release/AdGuardHome_linux_amd64.tar.gz -o ~/AdGuardHome_linux_amd64.tar.gz
         tar xvf AdGuardHome_linux_amd64.tar.gz
         sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.old
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/netplan/static_ip.yaml" -o /etc/netplan/static_ip.yaml
@@ -706,9 +706,9 @@ case $yn13 in
         sudo systemctl reload-or-restart systemd-resolved
         cd ~/AdGuardHome
         chmod +x AdGuardHome
-        sudo setcap CAP_NET_BIND_SERVICE=+eip ./AdGuardHome
-        ./AdGuardHome
-        ./AdGuardHome -stop
+        sudo ./AdGuardHome
+        sleep 5
+        sudo ./AdGuardHome -stop
         sudo ./AdGuardHome -s stop
         sudo ./AdGuardHome -s install
         sudo ./AdGuardHome -s start
