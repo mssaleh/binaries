@@ -619,7 +619,7 @@ case $yn11 in
         sudo systemctl daemon-reload
         sudo systemctl reset-failed
         sudo systemctl enable mopidy 
-        (sudo crontab -l 2>/dev/null; echo "@reboot sleep 30 && /usr/bin/systemctl restart mopidy.service") | sudo crontab - 
+        (sudo crontab -l 2>/dev/null; echo "@reboot sleep 20 && /usr/bin/systemctl restart mopidy.service") | sudo crontab - 
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi mopidy
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
