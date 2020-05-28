@@ -647,6 +647,7 @@ case $yn11 in
  
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
+        sudo systemctl status mopidy 
         sudo apt clean
         echo "Mopidy Installed"
         break
