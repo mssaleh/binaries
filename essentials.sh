@@ -318,7 +318,7 @@ case $yn5 in
         x11proto-xext-dev x11proto-xf86vidmode-dev x11proto-xinerama-dev xml2 xorg-sgml-doctools \
         xtrans-dev yasm
         sudo apt purge -y ffmpeg && sudo apt autoremove --purge -y && sudo apt autoclean && sudo apt clean 
-        sudo rm -R ~/ffmpeg_build/* ~/ffmpeg_sources/* ~/.cache/* 
+        sudo rm -Rf ~/ffmpeg_build/* ~/ffmpeg_sources/* ~/.cache/* 
         ffmpeg -hwaccels 
         sudo apt clean
         echo "FFMPEG Installed"
@@ -518,7 +518,7 @@ case $yn9 in
         avahi-daemon libasound2 libavahi-client3 libavahi-common3 \
         libc6 libconfig9 libdaemon0 libgcc-s1 libglib2.0-0 libjack-jackd2-0 \
         libmosquitto1 libpopt0 libpulse0 libsndfile1 libsoxr0 libssl1.1 libstdc++6 
-        sudo rm -R ~/shairport ~/.cache/* 
+        sudo rm -Rf ~/shairport ~/.cache/* 
         sudo mv /etc/shairport-sync.conf /etc/shairport-sync.old 
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.conf" -o /etc/shairport-sync.conf 
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.service" -o /usr/lib/systemd/user/shairport-sync.service 
@@ -604,28 +604,49 @@ case $yn11 in
         wget -q -O - https://apt.mopidy.com/mopidy.gpg | sudo apt-key add - 
         sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/buster.list 
         sudo apt update && sudo apt install -y mopidy mopidy-local mopidy-mpd mopidy-tunein 
-        sudo python3 -m pip install Mopidy-MusicBox-Webclient 
+        sudo python3 -m pip install Mopidy-MusicBox-Webclient
+        sudo systemctl stop mopidy.service
+        sudo systemctl disable mopidy.service
+        sudo rm -rf /usr/lib/systemd/system/mopidy.service
+        sudo rm -rf /lib/systemd/system/mopidy.service
+        sudo systemctl daemon-reload
+        sudo systemctl reset-failed
         # sudo python3 -m pip install Mopidy-Iris
         # python_ver=$(python3 -V |awk '{print $2}' | cut -b -3)
         # echo "mopidy ALL=NOPASSWD: /usr/local/lib/python$python_ver/dist-packages/mopidy_iris/system.sh" | (sudo su -c 'EDITOR="tee" visudo -f /etc/sudoers.d/mopidy')
         mkdir -p ~/media/music
         mkdir -p ~/media/m3u
         sudo chmod -R a+rw ~/media
-        sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old 
-        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf 
-        sudo sed -i "s,local_path,"$HOME"/media,g" /etc/mopidy/mopidy.conf
-        sudo mv /usr/lib/systemd/system/mopidy.service ~/.mopidy.service.old
-        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.service" -o /usr/lib/systemd/system/mopidy.service
-        sudo systemctl daemon-reload
-        sudo systemctl reset-failed
-        sudo systemctl enable mopidy 
-        (sudo crontab -l 2>/dev/null; echo "@reboot sleep 20 && /usr/bin/systemctl restart mopidy.service") | sudo crontab - 
-        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi mopidy
+        # run mopidy as user
+        sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old
+        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o ~/.config/mopidy/mopidy.conf
+        sudo sed -i "s,local_path,"$HOME"/media,g" ~/.config/mopidy/mopidy.conf
+        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/user/mopidy.service" -o /usr/lib/systemd/user/mopidy.service
+        systemctl --user daemon-reload 
+        systemctl --user enable mopidy.service
+        systemctl --user restart mopidy.service
+        sleep 2
+        systemctl --user status mopidy.service
+
+        # # run mopidy as system
+        # sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old 
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf 
+        # sudo sed -i "s,local_path,"$HOME"/media,g" /etc/mopidy/mopidy.conf
+        # sudo mv /usr/lib/systemd/system/mopidy.service ~/.mopidy.service.old
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/system/mopidy.service" -o /usr/lib/systemd/system/mopidy.service
+        # sudo systemctl daemon-reload
+        # sudo systemctl reset-failed
+        # sudo systemctl enable mopidy 
+        # (sudo crontab -l 2>/dev/null; echo "@reboot sleep 20 && /usr/bin/systemctl restart mopidy.service") | sudo crontab - 
+        # sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi mopidy
+        # sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
+        # sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
+        # sudo systemctl restart mopidy 
+        # sudo mopidyctl config 
+        # sudo mopidyctl local scan
+ 
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
-        sudo systemctl restart mopidy 
-        sudo mopidyctl config 
-        sudo mopidyctl local scan
         sudo apt clean
         echo "Mopidy Installed"
         break
@@ -679,7 +700,7 @@ case $yn12 in
         echo "Mosquitto User Name is: $mosquitto_user" 
         echo "Enter Mosquitto Password for $mosquitto_user" 
         cd ~/addons && docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/config/mosquitto.passwd $mosquitto_user 
-        sudo rm -R ~/binaries
+        sudo rm -Rf ~/binaries
         echo "HomeAssistant Ecosystem Installed"
         break
         ;;
@@ -728,7 +749,7 @@ case $yn13 in
         sudo ~/AdGuardHome/AdGuardHome -s install
         sudo ~/AdGuardHome/AdGuardHome -s start
         sudo ~/AdGuardHome/AdGuardHome -s status
-        rm ~/AdGuardHome_linux_amd64.tar.gz
+        rm -rf ~/AdGuardHome_linux_amd64.tar.gz
         echo "AdGuardHome Installed"
         break
         ;;
