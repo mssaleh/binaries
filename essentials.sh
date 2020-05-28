@@ -70,6 +70,7 @@ case $yn2 in
         sudo usermod -aG docker $USER 
         sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose 
         sudo chmod +x /usr/local/bin/docker-compose 
+        sudo usermod -aG audio,avahi docker
         docker -v 
         echo "Docker Installed. System will reboot now." 
         echo "After Reboot, re-run this script and skip (answer with No) the first two steps (including Docker)"
@@ -613,7 +614,7 @@ case $yn11 in
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf 
         sudo sed -i "s,local_path,"$HOME"/media,g" /etc/mopidy/mopidy.conf
         sudo systemctl enable mopidy 
-        sudo usermod -aG pulse,pulse-access,audio,bluetooth mopidy
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi mopidy
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
         sudo systemctl restart mopidy 
