@@ -355,8 +355,8 @@ case $yn6 in
         sudo systemctl daemon-reload 
         systemctl --user enable pulseaudio.socket 
         systemctl --user enable pulseaudio.service 
-        sudo usermod -aG pulse,pulse-access,audio,bluetooth root 
-        sudo usermod -aG pulse,pulse-access,audio,bluetooth $USER 
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root 
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER 
         systemctl --user restart pulseaudio.socket 
         systemctl --user restart pulseaudio.service 
         systemctl --user status pulseaudio.service 
@@ -438,6 +438,8 @@ case $yn8 in
         systemctl --user restart aircast.service 
         sleep 3
         systemctl --user status aircast.service 
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
         echo "Aircast Installed"
         break
         ;;
@@ -529,6 +531,8 @@ case $yn9 in
         sleep 2
         systemctl --user status shairport-sync.service 
         sudo apt clean
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
         echo "shairport-sync Installed"
         break
         ;;
@@ -570,7 +574,9 @@ case $yn10 in
         node tools/modifyConfiguration.js databaseType=mysql 
         sudo pm2 restart all
         sleep 2 
-        sudo pm2 list all 
+        sudo pm2 list all
+        sudo usermod -aG video,audio,bluetooth,avahi root
+        sudo usermod -aG video,audio,bluetooth,avahi $USER
         echo "Shinobi Installed"
         break
         ;;
@@ -607,7 +613,9 @@ case $yn11 in
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf 
         sudo sed -i "s,local_path,"$HOME"/media,g" /etc/mopidy/mopidy.conf
         sudo systemctl enable mopidy 
-        sudo usermod -aG pulse,pulse-access,audio,bluetooth mopidy 
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth mopidy
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
         sudo systemctl restart mopidy 
         sudo mopidyctl config 
         sudo mopidyctl local scan
