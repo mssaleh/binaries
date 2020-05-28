@@ -610,9 +610,14 @@ case $yn11 in
         # echo "mopidy ALL=NOPASSWD: /usr/local/lib/python$python_ver/dist-packages/mopidy_iris/system.sh" | (sudo su -c 'EDITOR="tee" visudo -f /etc/sudoers.d/mopidy')
         mkdir -p ~/media/music
         mkdir -p ~/media/m3u
+        sudo chmod -R a+rw ~/media
         sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old 
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf 
         sudo sed -i "s,local_path,"$HOME"/media,g" /etc/mopidy/mopidy.conf
+        sudo mv /usr/lib/systemd/system/mopidy.service ~/.mopidy.service.old
+        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.service" -o /usr/lib/systemd/system/mopidy.service
+        sudo systemctl daemon-reload
+        sudo systemctl reset-failed
         sudo systemctl enable mopidy 
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi mopidy
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
