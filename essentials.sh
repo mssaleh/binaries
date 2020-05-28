@@ -356,6 +356,7 @@ case $yn6 in
         sudo systemctl daemon-reload 
         systemctl --user enable pulseaudio.socket 
         systemctl --user enable pulseaudio.service 
+        sudo groupadd bluetooth
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root 
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER 
         systemctl --user restart pulseaudio.socket 
@@ -399,6 +400,7 @@ case $yn7 in
         echo "Installing Bluetooth" 
         sudo apt update && sudo apt install -y bluetooth bluez bluez-tools bluez-hcidump \
         libbluetooth-dev pulseaudio-module-bluetooth python3-bluez avahi-daemon 
+        sudo groupadd bluetooth
         sudo usermod -aG audio,bluetooth root 
         sudo usermod -aG audio,bluetooth $USER 
         sudo service bluetooth enable 
@@ -439,6 +441,7 @@ case $yn8 in
         systemctl --user restart aircast.service 
         sleep 3
         systemctl --user status aircast.service 
+        sudo groupadd bluetooth
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
         echo "Aircast Installed"
@@ -532,6 +535,7 @@ case $yn9 in
         sleep 2
         systemctl --user status shairport-sync.service 
         sudo apt clean
+        sudo groupadd bluetooth
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
         echo "shairport-sync Installed"
@@ -576,6 +580,7 @@ case $yn10 in
         sudo pm2 restart all
         sleep 2 
         sudo pm2 list all
+        sudo groupadd bluetooth
         sudo usermod -aG video,audio,bluetooth,avahi root
         sudo usermod -aG video,audio,bluetooth,avahi $USER
         echo "Shinobi Installed"
@@ -638,16 +643,15 @@ case $yn11 in
         sudo systemctl reset-failed
         sudo systemctl enable mopidy 
         (sudo crontab -l 2>/dev/null; echo "@reboot sleep 20 && /usr/bin/systemctl restart mopidy.service") | sudo crontab - 
+        sudo groupadd bluetooth
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi mopidy
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
         sudo systemctl restart mopidy 
         sudo mopidyctl config 
         sudo mopidyctl local scan
- 
-        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
-        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
-        sudo systemctl status mopidy 
+        sudo systemctl status mopidy
+
         sudo apt clean
         echo "Mopidy Installed"
         break
