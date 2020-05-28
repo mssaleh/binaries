@@ -1,0 +1,23 @@
+[Unit]
+Description=Mopidy music server
+After=avahi-daemon.service
+After=dbus.service
+After=network.target
+After=nss-lookup.target
+Requires=pulseaudio.service
+After=pulseaudio.service
+After=remote-fs.target
+After=sound.target
+After=aircast.service
+After=shairport-sync.service
+After=alsa-restore.service
+
+[Service]
+User=mopidy
+PermissionsStartOnly=true
+ExecStartPre=/bin/mkdir -p /var/cache/mopidy
+ExecStartPre=/bin/chown mopidy:audio /var/cache/mopidy
+ExecStart=/usr/bin/mopidy --config /usr/share/mopidy/conf.d:/etc/mopidy/mopidy.conf
+
+[Install]
+WantedBy=multi-user.target
