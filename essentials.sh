@@ -617,33 +617,33 @@ case $yn11 in
         mkdir -p ~/media/music
         mkdir -p ~/media/m3u
         sudo chmod -R a+rw ~/media
-        # run mopidy as user
-        sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old
-        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o ~/.config/mopidy/mopidy.conf
-        sudo sed -i "s,local_path,"$HOME"/media,g" ~/.config/mopidy/mopidy.conf
-        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/user/mopidy.service" -o /usr/lib/systemd/user/mopidy.service
-        systemctl --user daemon-reload 
-        systemctl --user enable mopidy.service
-        systemctl --user restart mopidy.service
-        sleep 2
-        systemctl --user status mopidy.service
+        # # run mopidy as user
+        # sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o ~/.config/mopidy/mopidy.conf
+        # sudo sed -i "s,local_path,"$HOME"/media,g" ~/.config/mopidy/mopidy.conf
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/user/mopidy.service" -o /usr/lib/systemd/user/mopidy.service
+        # systemctl --user daemon-reload 
+        # systemctl --user enable mopidy.service
+        # systemctl --user restart mopidy.service
+        # sleep 2
+        # systemctl --user status mopidy.service
 
-        # # run mopidy as system
-        # sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old 
-        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf 
-        # sudo sed -i "s,local_path,"$HOME"/media,g" /etc/mopidy/mopidy.conf
-        # sudo mv /usr/lib/systemd/system/mopidy.service ~/.mopidy.service.old
-        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/system/mopidy.service" -o /usr/lib/systemd/system/mopidy.service
-        # sudo systemctl daemon-reload
-        # sudo systemctl reset-failed
-        # sudo systemctl enable mopidy 
-        # (sudo crontab -l 2>/dev/null; echo "@reboot sleep 20 && /usr/bin/systemctl restart mopidy.service") | sudo crontab - 
-        # sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi mopidy
-        # sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
-        # sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
-        # sudo systemctl restart mopidy 
-        # sudo mopidyctl config 
-        # sudo mopidyctl local scan
+        # run mopidy as system
+        sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old 
+        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf 
+        sudo sed -i "s,local_path,"$HOME"/media,g" /etc/mopidy/mopidy.conf
+        sudo mv /usr/lib/systemd/system/mopidy.service ~/.mopidy.service.old
+        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/system/mopidy.service" -o /usr/lib/systemd/system/mopidy.service
+        sudo systemctl daemon-reload
+        sudo systemctl reset-failed
+        sudo systemctl enable mopidy 
+        (sudo crontab -l 2>/dev/null; echo "@reboot sleep 20 && /usr/bin/systemctl restart mopidy.service") | sudo crontab - 
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi mopidy
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
+        sudo systemctl restart mopidy 
+        sudo mopidyctl config 
+        sudo mopidyctl local scan
  
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
