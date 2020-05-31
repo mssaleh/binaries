@@ -624,6 +624,8 @@ case $yn12 in
         echo "Mosquitto User Name is: $mosquitto_user" 
         echo "Enter Mosquitto Password for $mosquitto_user" 
         cd ~/addons && docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/config/mosquitto.passwd $mosquitto_user 
+        sleep 5
+        docker restart mosquitto
 
         # Clean-Up
         sudo apt clean
