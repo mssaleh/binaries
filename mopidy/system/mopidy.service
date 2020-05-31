@@ -3,7 +3,6 @@ Description=Mopidy music server
 After=avahi-daemon.service
 After=dbus.service
 After=network.target
-After=network-online.target
 After=nss-lookup.target
 After=pulseaudio.service
 After=remote-fs.target
@@ -15,7 +14,7 @@ After=alsa-restore.service
 [Service]
 User=mopidy
 PermissionsStartOnly=true
-ExecStartPre=/bin/sleep 5
+ExecStartPre=/bin/sleep 1
 ExecStartPre=/bin/mkdir -p /var/cache/mopidy
 ExecStartPre=/bin/chown mopidy:audio /var/cache/mopidy
 ExecStart=/usr/bin/mopidy --config /usr/share/mopidy/conf.d:/etc/mopidy/mopidy.conf

@@ -344,10 +344,11 @@ read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn6
 case $yn6 in
     Y|y|yes) 
         echo "Installing Pulseaudio" 
-        sudo apt update && sudo apt install -y apulse avahi-daemon pulseaudio \
-        gstreamer1.0-pulseaudio pulseaudio-module-zeroconf pulseaudio-utils 
+        sudo apt update && sudo apt install -y apulse avahi-daemon pulseaudio pulsemixer \
+        gstreamer1.0-pulseaudio pulseaudio-module-zeroconf pulseaudio-utils libpulse-mainloop-glib0 
         sudo mv /etc/pulse/default.pa /etc/pulse/default.old 
-        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/pulseaudio/default.pa" -o /etc/pulse/default.pa 
+        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/pulseaudio/default.pa" -o /etc/pulse/default.pa
+        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/pulseaudio/client.conf" -o /etc/pulse/client.conf
         pulseaudio --kill 
         pulseaudio --start 
         sleep 5
@@ -356,11 +357,11 @@ case $yn6 in
         sudo systemctl daemon-reload 
         systemctl --user enable pulseaudio.socket 
         systemctl --user enable pulseaudio.service 
+        export PULSE_SERVER="tcp:127.0.0.1"
         sudo groupadd bluetooth
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root 
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER 
-        systemctl --user restart pulseaudio.socket 
-        systemctl --user restart pulseaudio.service 
+        systemctl --user restart pulseaudio.socket pulseaudio.service 
         systemctl --user status pulseaudio.service 
         sudo apt clean
         echo "Pulseaudio Installed. It's better to reboot now."
@@ -553,37 +554,81 @@ case $yn9 in
         ;;
 esac
 
-echo "====================="
-echo "   Install Shinobi   "
-echo "====================="
-echo "Do you wish to install Shinobi?"
-read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn10
-case $yn10 in
+echo "====================================="
+echo "   Install HomeAssistant Ecosystem   "
+echo "====================================="
+echo "Do you wish to install HomeAssistant Ecosystem?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn12
+case $yn12 in
     Y|y|yes) 
-        echo "Installing Shinobi" 
-        echo "This is an interactive install. Please follow steps on screen." 
-        echo "You must skip all MariaDB Steps. (Answer No)" 
-        cd ~ && git clone "https://gitlab.com/Shinobi-Systems/Shinobi.git" Shinobi 
-        cd Shinobi 
-        chmod +x INSTALL/ubuntu.sh && sudo INSTALL/ubuntu.sh 
-        sudo mysql -e "CREATE DATABASE IF NOT EXISTS ccio" 
-        read -p "Enter password for Shinobi Database:  " shinobi_db_pw 
-        shinobi_db_pw=${shinobi_db_pw:-majesticflame} 
-        echo $shinobi_db_pw 
-        sudo mysql -e "CREATE USER IF NOT EXISTS 'majesticflame'@'127.0.0.1' IDENTIFIED BY '$shinobi_db_pw'" 
-        sudo mysql -e "GRANT ALL PRIVILEGES ON ccio.* TO 'majesticflame'@'127.0.0.1'" 
-        sudo mysql -e "FLUSH PRIVILEGES" 
-        sudo mysql -e "source sql/framework.sql" 
-        node tools/modifyConfiguration.js databaseType=mysql 
-        sed -i.old "15s,\"\",\""$shinobi_db_pw"\"," conf.json
-        node tools/modifyConfiguration.js databaseType=mysql 
-        sudo pm2 restart all
-        sleep 2 
-        sudo pm2 list all
-        sudo groupadd bluetooth
-        sudo usermod -aG video,audio,bluetooth,avahi root
-        sudo usermod -aG video,audio,bluetooth,avahi $USER
-        echo "Shinobi Installed"
+        echo "Installing HomeAssistant Ecosystem"
+        sudo apt install -y jq 
+        cd ~ && git clone "https://github.com/mssaleh/binaries.git" 
+        cp -r ~/binaries/homeassistant ~/homeassistant
+        sudo chown -R $USER: ~/homeassistant && sudo chmod -R +rw ~/homeassistant
+        cd ~/homeassistant && docker-compose up -d 
+        echo "Running HomeAssistant Core" 
+        cp -r ~/binaries/addons ~/addons
+        sudo chown -R $USER: ~/addons && sudo chmod -R +rw ~/addons
+
+        # Domain Setup
+        read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
+        domain_name=""$sub_domain".smart-home.app"
+        echo "Setting up for: $domain_name"
+        read -p "Enter CloudFlare Token:  " cloudflare_token
+        echo "CloudFlare Token is: $cloudflare_token"
+        read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
+        echo "CloudFlare Zone ID is: $cloudflare_zone_id"
+
+        public_ip=$(curl --silent https://api.ipify.org) || exit 1
+        curl -X POST \"https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records\" \
+             -H \"Content-Type: application/json\" \
+             -H \"Authorization: Bearer "$cloudflare_token"\" \
+             --data "{\"type\":\"A\",\"name\":\""$sub_domain"\",\"content\":\""$public_ip"\",\"ttl\":120,\"proxied\":false}"
+
+        curl -X GET "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records?type=A" \
+             -H "Authorization: Bearer "$cloudflare_token"" -H "Content-Type:application/json" > /tmp/djson
+        domain_record_id=$(cat /tmp/djson | jq -r ".result[] | select(.name==\""$domain_name"\") | .id")
+        rm -Rf /tmp/djson
+        echo "Domain: $domain_name has been setup with Domain Record ID: $domain_record_id"
+
+        # DDNS
+        echo "Setting Up Cloudflare DDNS for $domain_name.."
+        sed -i "s/cf_token/$cloudflare_token/g" ~/addons/ddns/ddns.sh
+        sed -i "s/cf_zone_id/$cloudflare_zone_id/g" ~/addons/ddns/ddns.sh
+        sed -i "s/cf_record_name/$sub_domain/g" ~/addons/ddns/ddns.sh
+        sed -i "s/cf_record_id/$domain_record_id/g" ~/addons/ddns/ddns.sh
+        chmod 750 ~/addons/ddns/ddns.sh
+        sh ~/addons/ddns/ddns.sh
+        (crontab -l 2>/dev/null && echo "*/5 * * * * ~/addons/ddns/ddns.sh") | crontab -
+
+        # Letsencrypt
+        echo "Setting Up Letsencrypt SSL Certificate for $domain_name.."
+        sed -i "s/domain_name/$domain_name/g" ~/addons/docker-compose.yml 
+        sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/site-confs/default
+        mkdir -p ~/addons/letsencrypt/config/dns-conf
+        rm -fr ~/addons/letsencrypt/config/dns-conf/cloudflare.ini
+        echo "dns_cloudflare_api_token = $cloudflare_token" > ~/addons/letsencrypt/config/dns-conf/cloudflare.ini
+        chmod 640 ~/addons/letsencrypt/config/dns-conf/cloudflare.ini
+
+        # Mosquitto
+        echo "Setting Up Mosquitto MQTT borker.."
+        mkdir -p ~/addons/mosquitto/log
+        touch ~/addons/mosquitto/log/mosquitto.log
+        touch ~/addons/mosquitto/config/mosquitto.passwd
+        chmod 640 ~/addons/mosquitto/config/mosquitto.passwd
+        cd ~/addons && docker-compose up -d 
+        echo "waiting 20s for docker container to run"
+        sleep 20
+        read -p "Enter Mosquitto MQTT Broker User Name:   " mosquitto_user 
+        echo "Mosquitto User Name is: $mosquitto_user" 
+        echo "Enter Mosquitto Password for $mosquitto_user" 
+        cd ~/addons && docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/config/mosquitto.passwd $mosquitto_user 
+
+        # Clean-Up
+        sudo apt clean
+        sudo rm -Rf ~/binaries
+        echo "HomeAssistant Ecosystem Installed"
         break
         ;;
     N|n|no) 
@@ -609,7 +654,7 @@ case $yn11 in
         wget -q -O - https://apt.mopidy.com/mopidy.gpg | sudo apt-key add - 
         sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/buster.list 
         sudo apt update && sudo apt install -y mopidy mopidy-local mopidy-mpd mopidy-tunein 
-        sudo python3 -m pip install Mopidy-MusicBox-Webclient
+        sudo python3 -m pip install Mopidy-Muse
         sudo systemctl stop mopidy.service
         sudo systemctl disable mopidy.service
         sudo rm -rf /usr/lib/systemd/system/mopidy.service
@@ -619,13 +664,14 @@ case $yn11 in
         # sudo python3 -m pip install Mopidy-Iris
         # python_ver=$(python3 -V |awk '{print $2}' | cut -b -3)
         # echo "mopidy ALL=NOPASSWD: /usr/local/lib/python$python_ver/dist-packages/mopidy_iris/system.sh" | (sudo su -c 'EDITOR="tee" visudo -f /etc/sudoers.d/mopidy')
-        mkdir -p ~/media/music
-        mkdir -p ~/media/m3u
-        sudo chmod -R a+rw ~/media
+        mkdir -p ~/addons/music
+        mkdir -p ~/addons/m3u
+        sudo chmod -R a+rw ~/addons/music
+        sudo chmod -R a+rw ~/addons/m3u
         # # run mopidy as user
         # sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old
         # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o ~/.config/mopidy/mopidy.conf
-        # sudo sed -i "s,local_path,"$HOME"/media,g" ~/.config/mopidy/mopidy.conf
+        # sudo sed -i "s,home_path,"$HOME",g" ~/.config/mopidy/mopidy.conf
         # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/user/mopidy.service" -o /usr/lib/systemd/user/mopidy.service
         # systemctl --user daemon-reload 
         # systemctl --user enable mopidy.service
@@ -636,13 +682,14 @@ case $yn11 in
         # run mopidy as system
         sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old 
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf 
-        sudo sed -i "s,local_path,"$HOME"/media,g" /etc/mopidy/mopidy.conf
+        sudo sed -i "s,home_path,"$HOME",g" /etc/mopidy/mopidy.conf
+        sudo sed -i "s,domain_name,"$domain_name",g" /etc/mopidy/mopidy.conf
         sudo mv /usr/lib/systemd/system/mopidy.service ~/.mopidy.service.old
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/system/mopidy.service" -o /usr/lib/systemd/system/mopidy.service
         sudo systemctl daemon-reload
         sudo systemctl reset-failed
         sudo systemctl enable mopidy 
-        (sudo crontab -l 2>/dev/null; echo "@reboot sleep 20 && /usr/bin/systemctl restart mopidy.service") | sudo crontab - 
+        (sudo crontab -l 2>/dev/null; echo "@reboot sleep 15 && /usr/bin/systemctl restart mopidy.service") | sudo crontab - 
         sudo groupadd bluetooth
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi mopidy
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
@@ -653,9 +700,20 @@ case $yn11 in
         sudo systemctl status mopidy
 
         sudo apt clean
+
+        # Mopidy Subdomain
+        echo "Setting Up Mopidy Subdomain.."
+        curl -X POST \"https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records\" \
+             -H \"Content-Type: application/json\" \
+             -H \"Authorization: Bearer "$cloudflare_token"\" \
+             --data "{\"type\":\"CNAME\",\"name\":\"media."$sub_domain"\",\"content\":\""$domain_name"\",\"ttl\":120,\"proxied\":false}"
+        sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/mopidy.subdomain.conf
+        docker restart letsencrypt
+
         echo "Mopidy Installed"
         break
         ;;
+
     N|n|no) 
         break
         ;;
@@ -668,58 +726,6 @@ case $yn11 in
         ;;
 esac
 
-echo "====================================="
-echo "   Install HomeAssistant Ecosystem   "
-echo "====================================="
-echo "Do you wish to install HomeAssistant Ecosystem?"
-read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn12
-case $yn12 in
-    Y|y|yes) 
-        echo "Installing HomeAssistant Ecosystem" 
-        cd ~ && git clone "https://github.com/mssaleh/binaries.git" 
-        cp -r ~/binaries/homeassistant ~/homeassistant
-        sudo chown -R $USER: ~/homeassistant && sudo chmod -R +rw ~/homeassistant
-        cd ~/homeassistant && docker-compose up -d 
-        echo "Running HomeAssistant Core" 
-        cp -r ~/binaries/addons ~/addons && sudo chown -R $USER: ~/addons
-        sudo chown -R $USER: ~/addons && sudo chmod -R +rw ~/addons
-        read -p "Enter your domain name: (e.g. user.smart-home.app):  " domain_name 
-        echo "You entered this domain: $domain_name" 
-        sed -i "s/domain_name/$domain_name/g" ~/addons/docker-compose.yml 
-        sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/site-confs/default 
-        sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/adguard.subdomain.conf 
-        sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf 
-        mkdir -p ~/addons/letsencrypt/config/dns-conf 
-        read -p "Enter Digital Ocean Access Token:  " digitalocean_token 
-        echo "You entered this token: $digitalocean_token" 
-        echo "dns_digitalocean_token = $digitalocean_token" > ~/addons/letsencrypt/config/dns-conf/digitalocean.ini 
-        chmod 640 ~/addons/letsencrypt/config/dns-conf/digitalocean.ini
-        mkdir -p ~/addons/mosquitto/log
-        touch ~/addons/mosquitto/log/mosquitto.log
-        touch ~/addons/mosquitto/config/mosquitto.passwd
-        chmod 640 ~/addons/mosquitto/config/mosquitto.passwd
-        cd ~/addons && docker-compose up -d 
-        echo "waiting 20s for docker container to run"
-        sleep 20
-        read -p "Enter Mosquitto MQTT Broker User Name:   " mosquitto_user 
-        echo "Mosquitto User Name is: $mosquitto_user" 
-        echo "Enter Mosquitto Password for $mosquitto_user" 
-        cd ~/addons && docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/config/mosquitto.passwd $mosquitto_user 
-        sudo rm -Rf ~/binaries
-        echo "HomeAssistant Ecosystem Installed"
-        break
-        ;;
-    N|n|no) 
-        break
-        ;;
-    A|a|abort) 
-        exit
-        ;;
-    *) 
-        echo "Skipping."
-        echo "If you require it. You can re-run the script."
-        ;;
-esac
 
 echo "======================="
 echo "   Install AdGuardHome   "
@@ -755,9 +761,20 @@ case $yn13 in
         sudo ~/AdGuardHome/AdGuardHome -s start
         sudo ~/AdGuardHome/AdGuardHome -s status
         rm -rf ~/AdGuardHome_linux_amd64.tar.gz
+
+        # AdGuard Subdomain
+        echo "Setting Up AdGuard Subdomain.."
+        curl -X POST \"https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records\" \
+             -H \"Content-Type: application/json\" \
+             -H \"Authorization: Bearer "$cloudflare_token"\" \
+             --data "{\"type\":\"CNAME\",\"name\":\"adguard."$sub_domain"\",\"content\":\""$domain_name"\",\"ttl\":120,\"proxied\":false}"
+        sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/adguard.subdomain.conf 
+        docker restart letsencrypt
+
         echo "AdGuardHome Installed"
         break
         ;;
+
     N|n|no) 
         break
         ;;
@@ -769,3 +786,60 @@ case $yn13 in
         echo "If you require it. You can re-run the script."
         ;;
 esac
+
+echo "====================="
+echo "   Install Shinobi   "
+echo "====================="
+echo "Do you wish to install Shinobi?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn10
+case $yn10 in
+    Y|y|yes) 
+        echo "Installing Shinobi" 
+        echo "This is an interactive install. Please follow steps on screen." 
+        echo "You must skip all MariaDB Steps. (Answer No)" 
+        cd ~ && git clone "https://gitlab.com/Shinobi-Systems/Shinobi.git" Shinobi 
+        cd Shinobi 
+        chmod +x INSTALL/ubuntu.sh && sudo INSTALL/ubuntu.sh 
+        sudo mysql -e "CREATE DATABASE IF NOT EXISTS ccio" 
+        read -p "Enter password for Shinobi Database:  " shinobi_db_pw 
+        shinobi_db_pw=${shinobi_db_pw:-majesticflame} 
+        echo $shinobi_db_pw 
+        sudo mysql -e "CREATE USER IF NOT EXISTS 'majesticflame'@'127.0.0.1' IDENTIFIED BY '$shinobi_db_pw'" 
+        sudo mysql -e "GRANT ALL PRIVILEGES ON ccio.* TO 'majesticflame'@'127.0.0.1'" 
+        sudo mysql -e "FLUSH PRIVILEGES" 
+        sudo mysql -e "source sql/framework.sql" 
+        node tools/modifyConfiguration.js databaseType=mysql 
+        sed -i.old "15s,\"\",\""$shinobi_db_pw"\"," conf.json
+        node tools/modifyConfiguration.js databaseType=mysql 
+        sudo pm2 restart all
+        sleep 2 
+        sudo pm2 list all
+        sudo groupadd bluetooth
+        sudo usermod -aG video,audio,bluetooth,avahi root
+        sudo usermod -aG video,audio,bluetooth,avahi $USER
+
+        # Shinobi Subdomain
+        echo "Setting Up Shinobi Subdomain.."
+        curl -X POST \"https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records\" \
+             -H \"Content-Type: application/json\" \
+             -H \"Authorization: Bearer "$cloudflare_token"\" \
+             --data "{\"type\":\"CNAME\",\"name\":\"cctv."$sub_domain"\",\"content\":\""$domain_name"\",\"ttl\":120,\"proxied\":false}"
+        sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf
+        docker restart letsencrypt
+
+        echo "Shinobi Installed"
+        break
+        ;;
+
+    N|n|no) 
+        break
+        ;;
+    A|a|abort) 
+        exit
+        ;;
+    *) 
+        echo "Skipping."
+        echo "If you require it. You can re-run the script."
+        ;;
+esac
+
