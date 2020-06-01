@@ -539,6 +539,7 @@ case $yn9 in
         sudo groupadd bluetooth
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi shairport-sync
         echo "shairport-sync Installed"
         break
         ;;
