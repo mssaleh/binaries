@@ -495,7 +495,7 @@ case $yn9 in
         git clone "https://github.com/mikebrady/shairport-sync.git"  
         cd ~/shairport/shairport-sync  
         autoreconf -fi  
-        ./configure --sysconfdir=/etc --with-alsa --with-pa --with-avahi --with-ssl=openssl --with-metadata --with-soxr --with-libdaemon --with-stdout --with-pipe --with-convolution --with-apple-alac  
+        ./configure --sysconfdir=/etc --with-alsa --with-pa --with-avahi --with-ssl=openssl --with-metadata --with-soxr --with-stdout --with-pipe --with-convolution --with-apple-alac  
         make  
         sudo make install  
         sudo apt purge -y \
