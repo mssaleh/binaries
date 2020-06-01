@@ -300,7 +300,7 @@ case $yn5 in
         libopengl-dev libopengl0 libopenjp2-7-dev libopenmpt-dev libopus-dev libout123-0 libp11-kit-dev \
         libpcre16-3 libpcre2-16-0 libpcre2-32-0 libpcre2-dev libpcre2-posix2 libpcre3-dev \
         libpcre32-3 libpcrecpp0v5 libpgm-dev libpixman-1-dev libpng-dev libpng-tools libpthread-stubs0-dev \
-        libpulse-dev libpulse-mainloop-glib0 libraw1394-dev libraw1394-tools librhash0 librsvg2-dev \
+        libpulse-dev libraw1394-dev libraw1394-tools librhash0 librsvg2-dev \
         librubberband-dev libsdl2-dev libselinux1-dev libsepol1-dev libserd-dev libset-scalar-perl \
         libshine-dev libslang2-dev libsm-dev libsm6 libsnappy-dev libsndio-dev libsodium-dev \
         libsord-dev libsoxr-dev libspeex-dev libsratom-dev libssh-dev libssl-dev libswresample-dev \
@@ -513,7 +513,7 @@ case $yn9 in
         libmbedx509-0 libmount-dev libnet-http-perl libnet-smtp-ssl-perl \
         libogg-dev libpcre16-3 libpcre2-16-0 libpcre2-32-0 libpcre2-dev \
         libpcre2-posix2 libpcre3-dev libpcre32-3 libpcrecpp0v5 \
-        libpopt-dev libpulse-dev libpulse-mainloop-glib0 libselinux1-dev \
+        libpopt-dev libpulse-dev libselinux1-dev \
         libsepol1-dev libsndfile1-dev libsoxr-dev libssl-dev \
         libtimedate-perl libtool libtry-tiny-perl liburi-perl \
         libvo-aacenc-dev libvorbis-dev libwww-perl libwww-robotrules-perl \
