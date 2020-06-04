@@ -1,0 +1,80 @@
+version: '3.8'
+services:
+  letsencrypt:
+    image: linuxserver/letsencrypt
+    container_name: letsencrypt
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Dubai
+      - URL=domain_name
+      - SUBDOMAINS=wildcard
+      - VALIDATION=dns
+      - DNSPLUGIN=cloudflare
+      ## - PROPAGATION= #optional
+      ## - DUCKDNSTOKEN= #optional
+      - EMAIL= mssaleh@live.com
+      ## - DHLEVEL=2048
+      ## - ONLY_SUBDOMAINS=false #optional
+      ## - EXTRA_DOMAINS= #optional
+      ## - STAGING=false #optional
+    volumes:
+      - ./letsencrypt/config:/config
+    ports:
+      - 443:443
+      - 80:80
+    restart: unless-stopped
+
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    user: "1000:1000"
+    volumes:
+      - ./letsencrypt/config/keys/letsencrypt:/keys:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    ports:
+      - "1883:1883"
+    #  - "9001:9001"
+    restart: unless-stopped
+
+  homeassistant:
+    container_name: home-assistant
+    image: homeassistant/home-assistant:stable
+    volumes:
+      - ./homeassistant/config:/config
+      - ./letsencrypt/config/keys/letsencrypt:/ssl:ro
+    environment:
+      - TZ=Asia/Dubai
+    restart: unless-stopped
+    network_mode: host
+#    devices:
+#      - /dev/ttyUSB0:/dev/ttyUSB0
+#      - /dev/ttyUSB1:/dev/ttyUSB1
+#      - /dev/ttyACM0:/dev/ttyACM0
+
+  rclone:
+    container_name: rclone
+    image: pfidr/rclone
+    depends_on:
+      - "letsencrypt"
+      - "homeassistant"
+    volumes:
+      - ./rclone/config:/config
+      - ~/smarthome:/source
+    environment:
+      - UID=1000
+      - GID=1000
+      - TZ=Asia/Dubai
+      - SYNC_SRC="/source"
+      - SYNC_DEST="backup:/mnt/md0/backups/domain_name/smarthome/"
+      - RCLONE_CMD=copy
+      - CRON="0 3 * * *"
+      - CRON_ABORT="0 6 * * *"
+      - FORCE_SYNC=1
+      - CHECK_URL=https://hc-ping.com/4b04555b-57bc-4147-83bd-919e3bc0a1ce
+    restart: unless-stopped
