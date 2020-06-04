@@ -68,7 +68,7 @@ case $yn2 in
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" 
         sudo apt update && sudo apt install -y docker-ce 
         sudo usermod -aG docker $USER 
-        sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose 
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose 
         sudo chmod +x /usr/local/bin/docker-compose 
         sudo usermod -aG audio,avahi docker
         docker -v 
@@ -98,7 +98,7 @@ read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn3
 case $yn3 in
     Y|y|yes) 
         echo "Installing Node.js" 
-        curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - 
+        curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
         sudo apt update && sudo apt install -y nodejs 
         node -v 
         sudo apt clean
@@ -565,13 +565,8 @@ case $yn12 in
         echo "Installing HomeAssistant Ecosystem"
         sudo apt install -y jq 
         cd ~ && git clone "https://github.com/mssaleh/binaries.git" 
-        cp -r ~/binaries/homeassistant ~/homeassistant
-        sudo chown -R $USER: ~/homeassistant && sudo chmod -R +rw ~/homeassistant
-        cd ~/homeassistant && docker-compose up -d 
-        echo "Running HomeAssistant Core" 
-        cp -r ~/binaries/addons ~/addons
-        sudo chown -R $USER: ~/addons && sudo chmod -R +rw ~/addons
-
+        cp -r ~/binaries/smarthome ~/smarthome
+        sudo chown -R $USER: ~/smarthome && sudo chmod -R +rw ~/smarthome
         # Domain Setup
         read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
         domain_name=""$sub_domain".smart-home.app"
@@ -580,7 +575,6 @@ case $yn12 in
         echo "CloudFlare Token is: $cloudflare_token"
         read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
         echo "CloudFlare Zone ID is: $cloudflare_zone_id"
-
         public_ip=$(curl --silent https://api.ipify.org) || exit 1
         curl -X POST \"https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records\" \
              -H \"Content-Type: application/json\" \
@@ -592,42 +586,38 @@ case $yn12 in
         domain_record_id=$(cat /tmp/djson | jq -r ".result[] | select(.name==\""$domain_name"\") | .id")
         rm -Rf /tmp/djson
         echo "Domain: $domain_name has been setup with Domain Record ID: $domain_record_id"
-
         # DDNS
         echo "Setting Up Cloudflare DDNS for $domain_name.."
-        sed -i "s/cf_token/$cloudflare_token/g" ~/addons/ddns/ddns.sh
-        sed -i "s/cf_zone_id/$cloudflare_zone_id/g" ~/addons/ddns/ddns.sh
-        sed -i "s/cf_record_name/$sub_domain/g" ~/addons/ddns/ddns.sh
-        sed -i "s/cf_record_id/$domain_record_id/g" ~/addons/ddns/ddns.sh
-        chmod 750 ~/addons/ddns/ddns.sh
-        sh ~/addons/ddns/ddns.sh
-        (crontab -l 2>/dev/null && echo "*/5 * * * * ~/addons/ddns/ddns.sh") | crontab -
-
+        sed -i "s/cf_token/$cloudflare_token/g" ~/smarthome/ddns/ddns.sh
+        sed -i "s/cf_zone_id/$cloudflare_zone_id/g" ~/smarthome/ddns/ddns.sh
+        sed -i "s/cf_record_name/$sub_domain/g" ~/smarthome/ddns/ddns.sh
+        sed -i "s/cf_record_id/$domain_record_id/g" ~/smarthome/ddns/ddns.sh
+        chmod 750 ~/smarthome/ddns/ddns.sh
+        sh ~/smarthome/ddns/ddns.sh
+        (crontab -l 2>/dev/null && echo "*/5 * * * * ~/smarthome/ddns/ddns.sh") | crontab -
         # Letsencrypt
         echo "Setting Up Letsencrypt SSL Certificate for $domain_name.."
-        sed -i "s/domain_name/$domain_name/g" ~/addons/docker-compose.yml 
-        sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/site-confs/default
-        mkdir -p ~/addons/letsencrypt/config/dns-conf
-        rm -fr ~/addons/letsencrypt/config/dns-conf/cloudflare.ini
-        echo "dns_cloudflare_api_token = $cloudflare_token" > ~/addons/letsencrypt/config/dns-conf/cloudflare.ini
-        chmod 640 ~/addons/letsencrypt/config/dns-conf/cloudflare.ini
-
+        sed -i "s/domain_name/$domain_name/g" ~/smarthome/docker-compose.yml 
+        sed -i "s/domain_name/$domain_name/g" ~/smarthome/letsencrypt/config/nginx/site-confs/default
+        mkdir -p ~/smarthome/letsencrypt/config/dns-conf
+        rm -fr ~/smarthome/letsencrypt/config/dns-conf/cloudflare.ini
+        echo "dns_cloudflare_api_token = $cloudflare_token" > ~/smarthome/letsencrypt/config/dns-conf/cloudflare.ini
+        chmod 640 ~/smarthome/letsencrypt/config/dns-conf/cloudflare.ini
         # Mosquitto
         echo "Setting Up Mosquitto MQTT borker.."
-        mkdir -p ~/addons/mosquitto/log
-        touch ~/addons/mosquitto/log/mosquitto.log
-        touch ~/addons/mosquitto/config/mosquitto.passwd
-        chmod 640 ~/addons/mosquitto/config/mosquitto.passwd
-        cd ~/addons && docker-compose up -d 
+        mkdir -p ~/smarthome/mosquitto/log
+        touch ~/smarthome/mosquitto/log/mosquitto.log
+        touch ~/smarthome/mosquitto/config/mosquitto.passwd
+        chmod 640 ~/smarthome/mosquitto/config/mosquitto.passwd
+        cd ~/smarthome && docker-compose up -d 
         echo "waiting 20s for docker container to run"
         sleep 20
         read -p "Enter Mosquitto MQTT Broker User Name:   " mosquitto_user 
         echo "Mosquitto User Name is: $mosquitto_user" 
         echo "Enter Mosquitto Password for $mosquitto_user" 
-        cd ~/addons && docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/config/mosquitto.passwd $mosquitto_user 
+        cd ~/smarthome && docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/config/mosquitto.passwd $mosquitto_user 
         sleep 5
         docker restart mosquitto
-
         # Clean-Up
         sudo apt clean
         sudo rm -Rf ~/binaries
@@ -667,10 +657,10 @@ case $yn11 in
         # sudo python3 -m pip install Mopidy-Iris
         # python_ver=$(python3 -V |awk '{print $2}' | cut -b -3)
         # echo "mopidy ALL=NOPASSWD: /usr/local/lib/python$python_ver/dist-packages/mopidy_iris/system.sh" | (sudo su -c 'EDITOR="tee" visudo -f /etc/sudoers.d/mopidy')
-        mkdir -p ~/addons/music
-        mkdir -p ~/addons/m3u
-        sudo chmod -R a+rw ~/addons/music
-        sudo chmod -R a+rw ~/addons/m3u
+        mkdir -p ~/media/music
+        mkdir -p ~/media/m3u
+        sudo chmod -R a+rw ~/media/music
+        sudo chmod -R a+rw ~/media/m3u
         # # run mopidy as user
         # sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old
         # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o ~/.config/mopidy/mopidy.conf
@@ -681,7 +671,6 @@ case $yn11 in
         # systemctl --user restart mopidy.service
         # sleep 2
         # systemctl --user status mopidy.service
-
         # run mopidy as system
         sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old 
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf 
@@ -710,7 +699,7 @@ case $yn11 in
              -H \"Content-Type: application/json\" \
              -H \"Authorization: Bearer "$cloudflare_token"\" \
              --data "{\"type\":\"CNAME\",\"name\":\"media."$sub_domain"\",\"content\":\""$domain_name"\",\"ttl\":120,\"proxied\":false}"
-        sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/mopidy.subdomain.conf
+        sed -i "s/domain_name/$domain_name/g" ~/smarthome/letsencrypt/config/nginx/proxy-confs/mopidy.subdomain.conf
         docker restart letsencrypt
 
         echo "Mopidy Installed"
@@ -739,8 +728,8 @@ case $yn13 in
     Y|y|yes) 
         echo "Installing AdGuardHome"
         cd ~
-        curl -L https://static.adguard.com/adguardhome/release/AdGuardHome_linux_amd64.tar.gz -o ~/AdGuardHome_linux_amd64.tar.gz
-        tar xvf ~/AdGuardHome_linux_amd64.tar.gz
+        curl -L https://static.adguard.com/adguardhome/release/AdGuardHome_linux_amd64.tar.gz -o ~/smarthome/AdGuardHome_linux_amd64.tar.gz
+        tar xvf ~/smarthome/AdGuardHome_linux_amd64.tar.gz
         sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.old
         sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/netplan/static_ip.yaml" -o /etc/netplan/static_ip.yaml
         eth_if=$(ip -4 -o a | awk '{print $2}' | cut -d/ -f1 | grep -v lo | head -n1)
@@ -759,11 +748,11 @@ case $yn13 in
         sudo mv /etc/resolv.conf /etc/resolv.conf.backup
         sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
         sudo systemctl reload-or-restart systemd-resolved
-        sudo chmod +x ~/AdGuardHome/AdGuardHome
-        sudo ~/AdGuardHome/AdGuardHome -s install
-        sudo ~/AdGuardHome/AdGuardHome -s start
-        sudo ~/AdGuardHome/AdGuardHome -s status
-        rm -rf ~/AdGuardHome_linux_amd64.tar.gz
+        sudo chmod a+x ~/AdGuardHome/AdGuardHome
+        sudo ~/smarthome/AdGuardHome/AdGuardHome -s install
+        sudo ~/smarthome/AdGuardHome/AdGuardHome -s start
+        sudo ~/smarthome/AdGuardHome/AdGuardHome -s status
+        rm -rf ~/smarthome/AdGuardHome_linux_amd64.tar.gz
 
         # AdGuard Subdomain
         echo "Setting Up AdGuard Subdomain.."
@@ -771,7 +760,7 @@ case $yn13 in
              -H \"Content-Type: application/json\" \
              -H \"Authorization: Bearer "$cloudflare_token"\" \
              --data "{\"type\":\"CNAME\",\"name\":\"adguard."$sub_domain"\",\"content\":\""$domain_name"\",\"ttl\":120,\"proxied\":false}"
-        sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/adguard.subdomain.conf 
+        sed -i "s/domain_name/$domain_name/g" ~/smarthome/letsencrypt/config/nginx/proxy-confs/adguard.subdomain.conf 
         docker restart letsencrypt
 
         echo "AdGuardHome Installed"
@@ -827,7 +816,7 @@ case $yn10 in
              -H \"Content-Type: application/json\" \
              -H \"Authorization: Bearer "$cloudflare_token"\" \
              --data "{\"type\":\"CNAME\",\"name\":\"cctv."$sub_domain"\",\"content\":\""$domain_name"\",\"ttl\":120,\"proxied\":false}"
-        sed -i "s/domain_name/$domain_name/g" ~/addons/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf
+        sed -i "s/domain_name/$domain_name/g" ~/smarthome/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf
         docker restart letsencrypt
 
         echo "Shinobi Installed"

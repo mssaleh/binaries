@@ -1,7 +1,0 @@
-cd ~
-git clone https://gitlab.com/Shinobi-Systems/Shinobi.git Shinobi
-cd Shinobi
-chmod +x INSTALL/ubuntu.sh && sudo INSTALL/ubuntu.sh
-node tools/modifyConfiguration.js databaseType=mysql
-sudo nano conf.json 
-sudo pm2 restart all
