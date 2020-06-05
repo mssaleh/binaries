@@ -203,7 +203,7 @@ case $yn5 in
         xtrans-dev yasm libxml2 libflite1 libgsm1 libssl-dev 
         mkdir -p ~/ffmpeg_sources ~/bin  
         cd ~/ffmpeg_sources  
-        wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2
+        wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.2.3.tar.bz2
         tar xjvf ffmpeg.tar.bz2  
         cd ffmpeg  
         PATH="/usr/local/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
