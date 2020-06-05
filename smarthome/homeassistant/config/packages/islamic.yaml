@@ -180,26 +180,15 @@ script:
     alias: 'صوت الأذان'
     icon: 'mdi:speaker-wireless'
     sequence:
-    - delay: '00:00:02'
-    # - service: media_player.media_stop
-    #   data_template:
-    #     entity_id: "media_player.{{ states('input_select.azan_speaker') }}"
-    # - service: media_player.clear_playlist
-    #   data_template:
-    #     entity_id: "media_player.{{ states('input_select.azan_speaker') }}"
-    # - service: media_player.turn_off
-    #   data_template:
-    #     entity_id: "media_player.{{ states('input_select.azan_speaker') }}"
-    # - delay: '00:00:01'
-    # - service: media_player.turn_on
-    #   data_template:
-    #     entity_id: "media_player.{{ states('input_select.azan_speaker') }}"
-    # - service: media_player.volume_set
-    #   data_template:
-    #     entity_id: "media_player.{{ states('input_select.azan_speaker') }}"
-    #     volume_level: 0.4
-    # - service: media_player.play_media
-    #   data_template:
-    #     media_content_id: "https://bader.smart-home.app/local/islamic/azan/{{ states('input_select.azan_sound') }}.mp3"
-    #     media_content_type: audio/mp3
-    #     entity_id: "media_player.{{ states('input_select.azan_speaker') }}"
+    - service: media_player.turn_on
+      data_template:
+        entity_id: "media_player.{{ states('input_select.azan_speaker') }}"
+    - service: media_player.volume_set
+      data_template:
+        entity_id: "media_player.{{ states('input_select.azan_speaker') }}"
+        volume_level: 0.4
+    - service: media_player.play_media
+      data_template:
+        media_content_id: "http://127.0.0.1:8123/local/islamic/azan/{{ states('input_select.azan_sound') }}.mp3"
+        media_content_type: audio/mp3
+        entity_id: "media_player.{{ states('input_select.azan_speaker') }}"

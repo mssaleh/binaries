@@ -1,20 +1,20 @@
-# alarm_control_panel:
-#   - platform: manual
-#     name: Home Alarm System
-#     code: !secret alarm_code
-#     # code_template: '{{ states.input_text.alarm_code.state | int }}'
-#     code_arm_required: true
-#     delay_time: 30
-#     arming_time: 30
-#     trigger_time: 120
-#     disarm_after_trigger: false
-#     disarmed:
-#       trigger_time: 0
-#     armed_home:
-#       delay_time: 2
-#       arming_time: 2
+alarm_control_panel:
+  - platform: manual
+    name: Home Alarm System
+    code: !secret alarm_code
+    # code_template: '{{ states.input_text.alarm_code.state | int }}'
+    code_arm_required: true
+    delay_time: 30
+    arming_time: 30
+    trigger_time: 120
+    disarm_after_trigger: false
+    disarmed:
+      trigger_time: 0
+    armed_home:
+      delay_time: 2
+      arming_time: 2
 
-# ################################################################################
+################################################################################
 
 # input_boolean:
 #   upstairs_alarm:
@@ -22,22 +22,12 @@
 #     initial: off
 #     icon: mdi:alarm-light
 
-# ################################################################################
+################################################################################
 
 # script:
 #   alarm_sound:
 #     alias: 'Sound the Alarm'
 #     sequence:
-#     - service: media_player.media_stop
-#       data_template:
-#         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
-#     - service: media_player.clear_playlist
-#       data_template:
-#         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
-#     - service: media_player.turn_off
-#       data_template:
-#         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
-#     - delay: '00:00:01'
 #     - service: media_player.turn_on
 #       data_template:
 #         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
@@ -45,13 +35,13 @@
 #       data_template:
 #         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
 #         volume_level: 0.7
-#     # - service: media_player.play_media
-#     #   data_template:
-#     #     entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
-#     #     media_content_id: "https://bader.smart-home.app/local/alarm/{{ states('input_select.alarm_sound') }}.mp3"
-#     #     media_content_type: 'audio/mp3'
+    # - service: media_player.play_media
+    #   data_template:
+    #     entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
+    #     media_content_id: "https://bader.smart-home.app/local/alarm/{{ states('input_select.alarm_sound') }}.mp3"
+    #     media_content_type: 'audio/mp3'
 
-# # ################################################################################
+# ################################################################################
 
 # automation:
 #   - alias: 'Trigger alarm while armed away'

@@ -2,10 +2,11 @@ input_select:
   radio_speaker:
     name: Radio Speaker
     options:
-      - "master_bedroom_display"
-      - "master_bedroom_speaker"
+      # - "master_bedroom_display"
+      # - "master_bedroom_speaker"
       - "audio_system"
     icon: "mdi:volume-source"
+    initial: "audio_system"
   radio_station:
     name: Radio Station
     options:
@@ -46,15 +47,9 @@ script:
   play_radio:
     alias: 'Play Radio Stream'
     sequence:
-    # - service: media_player.turn_on
-    #   data_template:
-    #     entity_id: "media_player.{{ states('input_select.radio_speaker') }}"
-    # - service: media_player.media_stop
-    #   data_template:
-    #     entity_id: "media_player.{{ states('input_select.radio_speaker') }}"
-    # - service: media_player.clear_playlist
-    #   data_template:
-    #     entity_id: "media_player.{{ states('input_select.radio_speaker') }}"
+    - service: media_player.turn_on
+      data_template:
+        entity_id: "media_player.{{ states('input_select.radio_speaker') }}"
     - service: media_player.play_media
       data_template:
         entity_id: "media_player.{{ states('input_select.radio_speaker') }}"

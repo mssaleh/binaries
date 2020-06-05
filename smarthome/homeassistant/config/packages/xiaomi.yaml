@@ -1,10 +1,3 @@
-# # xiaomi_aqara:
-# #   discovery_retry: 5
-# #   gateways:
-# #     - mac: !secret aqara_mac
-# #       host: !secret aqara_host
-# #       key: !secret aqara_key
-
 # light:
 #   - platform: xiaomi_miio
 #     name: "Balcony bulb 2"

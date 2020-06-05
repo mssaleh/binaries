@@ -31,11 +31,12 @@ input_select:
   alarm_speaker:
     name: Alarm Speaker
     options:
-      - "master_bedroom_display"
-      - "master_bedroom_speaker"
-      - "office_speaker"
+      # - "master_bedroom_display"
+      # - "master_bedroom_speaker"
+      # - "office_speaker"
       - "audio_system"
     icon: "mdi:volume-source"
+    initial: "audio_system"
 
   azan_sound:
     name: "Al-Mo'azzen"
@@ -49,11 +50,12 @@ input_select:
   azan_speaker:
     name: Azan Speaker
     options:
-      - "master_bedroom_display"
-      - "master_bedroom_speaker"
-      - "office_speaker"
+      # - "master_bedroom_display"
+      # - "master_bedroom_speaker"
+      # - "office_speaker"
       - "audio_system"
     icon: "mdi:volume-source"
+    initial: "audio_system"
 
 
 

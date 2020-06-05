@@ -55,6 +55,64 @@ case $yn1 in
         ;;
 esac
 
+echo "========================"
+echo "   Install Pulseaudio   "
+echo "========================"
+echo "Do you wish to install Pulseaudio?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn6
+case $yn6 in
+    Y|y|yes) 
+        echo "Installing Pulseaudio" 
+        sudo apt update && sudo apt install -y apulse avahi-daemon pulseaudio pulsemixer \
+        gstreamer1.0-pulseaudio pulseaudio-module-zeroconf pulseaudio-utils libpulse-mainloop-glib0 
+        sudo mv /etc/pulse/default.pa /etc/pulse/default.old
+        sudo mv /etc/pulse/client.conf /etc/pulse/client.old
+        sudo cp ~/binaries/pulseaudio/default.pa /etc/pulse/default.pa
+        sudo cp ~/binaries/pulseaudio/client.conf /etc/pulse/client.conf
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/pulseaudio/default.pa" -o /etc/pulse/default.pa
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/pulseaudio/client.conf" -o /etc/pulse/client.conf
+        pulseaudio --kill 
+        pulseaudio --start 
+        sleep 5
+        pulseaudio --kill 
+        systemctl --user daemon-reload 
+        sudo systemctl daemon-reload 
+        systemctl --user enable pulseaudio.socket 
+        systemctl --user enable pulseaudio.service 
+        export PULSE_SERVER="tcp:127.0.0.1"
+        sudo groupadd bluetooth
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root 
+        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER 
+        systemctl --user restart pulseaudio.socket pulseaudio.service 
+        systemctl --user status pulseaudio.service 
+        sudo apt clean
+        echo "Pulseaudio Installed. It's better to reboot now."
+        echo "Do you want to reboot?"
+        read -p "Press (y)es to reboot. Any other key to skip   " rbt
+        case $rbt in
+            Y|y|yes)
+                echo "You can re-run the script after reboot to continue."
+                sleep 3
+                sudo reboot
+                ;;
+            *) 
+                echo "Skipping reboot."
+                ;;
+        esac
+        break
+        ;;
+    N|n|no) 
+        break
+        ;;
+    A|a|abort) 
+        exit
+        ;;
+    *) 
+        echo "Skipping."
+        echo "If you require it. You can re-run the script."
+        ;;
+esac
+
 echo "======================"
 echo "    Install Docker    "
 echo "======================"
@@ -336,64 +394,6 @@ case $yn5 in
         ;;
 esac
 
-echo "========================"
-echo "   Install Pulseaudio   "
-echo "========================"
-echo "Do you wish to install Pulseaudio?"
-read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn6
-case $yn6 in
-    Y|y|yes) 
-        echo "Installing Pulseaudio" 
-        sudo apt update && sudo apt install -y apulse avahi-daemon pulseaudio pulsemixer \
-        gstreamer1.0-pulseaudio pulseaudio-module-zeroconf pulseaudio-utils libpulse-mainloop-glib0 
-        sudo mv /etc/pulse/default.pa /etc/pulse/default.old
-        sudo mv /etc/pulse/client.conf /etc/pulse/client.old
-        sudo cp ~/binaries/pulseaudio/default.pa /etc/pulse/default.pa
-        sudo cp ~/binaries/pulseaudio/client.conf /etc/pulse/client.conf
-        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/pulseaudio/default.pa" -o /etc/pulse/default.pa
-        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/pulseaudio/client.conf" -o /etc/pulse/client.conf
-        pulseaudio --kill 
-        pulseaudio --start 
-        sleep 5
-        pulseaudio --kill 
-        systemctl --user daemon-reload 
-        sudo systemctl daemon-reload 
-        systemctl --user enable pulseaudio.socket 
-        systemctl --user enable pulseaudio.service 
-        export PULSE_SERVER="tcp:127.0.0.1"
-        sudo groupadd bluetooth
-        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root 
-        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER 
-        systemctl --user restart pulseaudio.socket pulseaudio.service 
-        systemctl --user status pulseaudio.service 
-        sudo apt clean
-        echo "Pulseaudio Installed. It's better to reboot now."
-        echo "Do you want to reboot?"
-        read -p "Press (y)es to reboot. Any other key to skip   " rbt
-        case $rbt in
-            Y|y|yes)
-                echo "You can re-run the script after reboot to continue."
-                sleep 3
-                sudo reboot
-                ;;
-            *) 
-                echo "Skipping reboot."
-                ;;
-        esac
-        break
-        ;;
-    N|n|no) 
-        break
-        ;;
-    A|a|abort) 
-        exit
-        ;;
-    *) 
-        echo "Skipping."
-        echo "If you require it. You can re-run the script."
-        ;;
-esac
-
 echo "======================="
 echo "   Install Bluetooth   "
 echo "======================="
@@ -402,8 +402,8 @@ read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn7
 case $yn7 in
     Y|y|yes) 
         echo "Installing Bluetooth" 
-        sudo apt update && sudo apt install -y bluetooth bluez bluez-tools bluez-hcidump \
-        libbluetooth-dev pulseaudio-module-bluetooth python3-bluez avahi-daemon 
+        sudo apt update && sudo apt install -y avahi-daemon bluetooth bluez bluez-tools bluez-hcidump libbluetooth-dev \
+        pulseaudio-module-bluetooth python3-bluez pulseaudio pulseaudio-module-zeroconf pulseaudio-utils 
         sudo groupadd bluetooth
         sudo usermod -aG audio,bluetooth root 
         sudo usermod -aG audio,bluetooth $USER 
@@ -522,7 +522,7 @@ case $yn9 in
         libsepol1-dev libsndfile1-dev libsoxr-dev libssl-dev \
         libtimedate-perl libtool libtry-tiny-perl liburi-perl \
         libvo-aacenc-dev libvorbis-dev libwww-perl libwww-robotrules-perl \
-        libxml-parser-perl m4 uuid-dev xmltoman  
+        libxml-parser-perl m4 uuid-dev xmltoman
         sudo apt install -y --no-install-recommends \
         avahi-daemon libasound2 libavahi-client3 libavahi-common3 \
         libc6 libconfig9 libdaemon0 libgcc-s1 libglib2.0-0 libjack-jackd2-0 \
@@ -594,6 +594,9 @@ case $yn12 in
         rm -Rf /tmp/djson
         echo "Domain: $domain_name has been setup with Domain Record ID: $domain_record_id"
         # HomeAssistant Config
+        read -p "Enter new PIN Code for HomeAssistant Alarm System:  " homeassistant_alarm_pin
+        echo "Alarm System PIN is:  $homeassistant_alarm_pin"
+        sed -i "s/secret_alarm_code/$homeassistant_alarm_pin/g" ~/smarthome/homeassistant/config/secrets.yaml
         sed -i "s/ha_domain_name/$domain_name/g" ~/smarthome/homeassistant/config/configuration.yaml
         sudo mysql -e "CREATE DATABASE IF NOT EXISTS homeassistant" 
         read -p "Enter password for HomeAssistant Database:  " homeassistant_db_pw 

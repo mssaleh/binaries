@@ -1,8 +1,7 @@
-# media_player:
-#   - platform: mpd
-#     host: !secret mpd_host
-#     # port: !secret mpd_port
-#     name: "Audio System"
+media_player:
+  - platform: mpd
+    host: 127.0.0.1
+    name: "Audio System"
 
 #   - platform: snapcast
 #     host: !secret snapcast_server
