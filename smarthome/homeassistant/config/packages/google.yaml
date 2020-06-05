@@ -1,0 +1,203 @@
+# google:
+#   client_id: !secret google_client_id
+#   client_secret: !secret google_client_secret
+
+# google_assistant:
+#   project_id: !secret google_project_id
+#   service_account: !include bader-smarthome.json
+#   secure_devices_pin: !secret google_pin
+#   report_state: true
+#   expose_by_default: false
+# #   exposed_domains:
+# #     - switch
+# #     - light
+# #     - fan
+# #     - lock
+# #     - cover
+# #     - climate
+#   entity_config:
+#     alarm_control_panel.home_alarm_system:
+#       name: 'Home Alarm'
+#       expose: true
+#       room: 'Master Bedroom'
+#       aliases:
+#         - 'Alarm'
+#     climate.girls_room:
+#       name: 'Girls Room A.C'
+#       expose: true
+#       room: 'Kids Room'
+#       aliases:
+#         - 'Kids Room A.C'
+#     climate.gym:
+#       name: 'Gym A.C'
+#       expose: true
+#       room: 'Gym'
+#     climate.home_office:
+#       name: 'Office A.C'
+#       expose: true
+#       room: 'Home Office A.C'
+#       aliases:
+#         - 'Office A.C'
+#     climate.playroom:
+#       name: 'Playroom A.C'
+#       expose: true
+#       room: 'Playroom'
+#     climate.dining_room:
+#       name: 'Dining Room A.C'
+#       expose: true
+#       room: 'Dining Room'
+#     cover.gate:
+#       name: 'Gate'
+#       expose: true
+#       room: 'Entryway'
+#       aliases:
+#         - 'Garage Door'
+#     lock.front_door:
+#       name: 'Front Door'
+#       expose: true
+#       room: 'Entrance'
+
+#     light.bader_light:
+#       name: 'Bader Light'
+#       expose: true
+#       room: 'Master Bedroom'
+#     light.balcony_lights:
+#       name: 'Balcony Lights'
+#       expose: true
+#       room: 'Master Bedroom'
+#     light.bed_light:
+#       name: 'Bed Light'
+#       expose: true
+#       room: 'Master Bedroom'
+#     light.bedroom_chandelier_1:
+#       name: 'Bedroom Chandelier 1'
+#       expose: true
+#       room: 'Master Bedroom'
+#       aliases:
+#         - 'Bed Chandelier'
+#     light.bedroom_chandelier_2:
+#       name: 'Bedroom Chandelier 2'
+#       expose: true
+#       room: 'Master Bedroom'
+#       aliases:
+#         - 'Sofa Chandelier'
+#     light.bedroom_spots:
+#       name: 'Bedroom Spots'
+#       expose: true
+#       room: 'Master Bedroom'
+#       aliases:
+#         - 'Bedroom Spotlights'
+#     light.dining_floor_lamp:
+#       name: 'Dining Floor Lamp'
+#       expose: true
+#       room: 'Dining Room'
+#     light.entrance_lights:
+#       name: 'Entrance Lights'
+#       expose: true
+#       room: 'Entrance'
+#     light.entrance_spotlights:
+#       name: 'Entrance Spots'
+#       expose: true
+#       room: 'Entrance'
+#       aliases:
+#         - 'Entrance Spotlights'
+#     light.floor_lamp:
+#       name: 'Bedroom Floor Lamp'
+#       expose: true
+#       room: 'Master Bedroom'
+#     light.sawsan_light:
+#       name: 'Sawsan Light'
+#       expose: true
+#       room: 'Master Bedroom'
+#     light.stairs_lights:
+#       name: 'Stairs Lights'
+#       expose: true
+#       room: 'Stairs'
+#     light.terrace_lights:
+#       name: 'Terrace Lights'
+#       expose: true
+#       room: 'Master Bedroom'
+#     switch.bed_ceiling:
+#       name: 'Bed Ceiling Inner'
+#       expose: true
+#       room: 'Master Bedroom'
+#     switch.bed_ceiling_outer:
+#       name: 'Bed Ceiling Outer'
+#       expose: true
+#       room: 'Master Bedroom'
+#     switch.floor_lamp_ff_switch:
+#       name: 'Floor Lamp FF'
+#       expose: true
+#       room: 'Living Room FF'
+#       aliases:
+#         - 'Living Room FF Floor Lamp'
+#     switch.sofa_ceiling:
+#       name: 'Sofa Ceiling'
+#       expose: true
+#       room: 'Master Bedroom'
+#     light.living_room_gf_table_lamps:
+#       name: 'Living Room GF Table Lamps'
+#       expose: true
+#       aliases:
+#         - 'Table Lamps'
+#       room: 'Living Room GF'
+#     switch.veranda_lights:
+#       name: 'Veranda Lights'
+#       expose: true
+#       room: 'Outdoor'
+#       aliases:
+#         - 'Outdoor GF Lights'
+#     switch.sonoff_1000664f1e_1:
+#       name: 'In-Ground Lights'
+#       expose: true
+#       aliases:
+#         - 'Outdoor Ground Lights'
+#     switch.shelly_shsw_1_69458b:
+#       name: 'Garage Light'
+#       expose: true
+#       aliases:
+#         - 'Garage Lights'
+#       room: 'Outdoor'
+#     switch.sonoff_1000664f1e_3:
+#       name: 'Compound Wall'
+#       expose: true
+#       aliases:
+#         - 'Fence Lights'
+#       room: 'Outdoor'
+#     switch.outdoor_fountain:
+#       name: 'Fountain Light'
+#       expose: true
+#       aliases:
+#         - 'Outdoor Fountain Light'
+#         - 'Outdoor Fountain'
+#       room: 'Outdoor'
+#     script.air_purifier_on_off:
+#       name: 'Air Purifier'
+#       expose: true
+#       aliases:
+#         - 'Panasonic Fan'
+#       room: 'Master Bedroom'
+#     script.bedroom_netflix:
+#       name: 'Bedroom Netflix'
+#       expose: true
+#       aliases:
+#         - 'Netflix'
+#         - 'Netflix Bedroom'
+#       room: 'Master Bedroom'
+#     script.bedroom_youtube:
+#       name: 'Bedroom YouTube'
+#       expose: true
+#       aliases:
+#         - 'YouTube'
+#         - 'YouTube Bedroom'
+#       room: 'Master Bedroom'
+#     camera.garage_camera:
+#       name: 'Garage Camera'
+#       expose: true
+#       aliases:
+#         - 'Gate Camera'
+#         - 'Garage Door'
+#       room: 'Entryway'
+
+
+

@@ -1,0 +1,65 @@
+# smartir:
+
+# media_player:
+#   - platform: smartir
+#     name: Master Bedroom TV
+#     unique_id: master_bedroom_tv
+#     device_code: 1060
+#     controller_data: !secret broadlink_host
+#     # power_sensor: binary_sensor.ahmad_tv_power
+
+# switch:
+#   - platform: broadlink
+#     host: !secret broadlink_host
+#     mac: !secret broadlink_mac
+
+# remote:
+#   - platform: broadlink
+#     host: !secret broadlink_host
+#     mac: !secret broadlink_mac
+
+# script:
+#   learn_air_purifier_commands:
+#     sequence:
+#       - service: remote.learn_command
+#         data:
+#           entity_id: remote.broadlink
+#           device: air_purifier
+#           command:
+#             - on_off
+#             - fan
+#             - humidifer
+#             - timer
+
+#   air_purifier_on_off:
+#     sequence:
+#       - service: remote.send_command
+#         data:
+#           entity_id: remote.broadlink
+#           device: air_purifier
+#           command: on_off
+
+#   air_purifier_fan:
+#     sequence:
+#       - service: remote.send_command
+#         data:
+#           entity_id: remote.broadlink
+#           device: air_purifier
+#           command: fan
+
+#   air_purifier_humidifier:
+#     sequence:
+#       - service: remote.send_command
+#         data:
+#           entity_id: remote.broadlink
+#           device: air_purifier
+#           command: humidifer
+
+#   air_purifier_timer:
+#     sequence:
+#       - service: remote.send_command
+#         data:
+#           entity_id: remote.broadlink
+#           device: air_purifier
+#           command: timer
+

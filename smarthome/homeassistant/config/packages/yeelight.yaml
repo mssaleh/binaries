@@ -1,0 +1,8 @@
+# yeelight:
+#   devices:
+#     192.168.1.72:
+#       name: 'Bader Light'
+#     192.168.1.71:
+#       name: 'Sawsan Light'
+#     192.168.1.91:
+#       name: 'Bed Light'

@@ -1,0 +1,60 @@
+automation:
+- alias: 'Preview Alarm Sound'
+  id: 'preview alarm sound'
+  trigger:
+  - platform: state
+    entity_id: input_select.alarm_sound, input_select.alarm_speaker
+  action:
+  - service: script.turn_on
+    data:
+      entity_id: script.alarm_sound
+
+- alias: 'Preview Azan Sound'
+  id: 'preview azan sound'
+  trigger:
+  - platform: state
+    entity_id: input_select.azan_sound, input_select.azan_speaker
+  action:
+  - service: script.turn_on
+    data:
+      entity_id: script.azan_sound
+
+input_select:
+  alarm_sound:
+    name: Alarm Sound
+    options:
+      - "alarm-1"
+      - "alarm-2"
+      - "alarm-3"
+      - "alarm-4"
+    icon: "mdi:alarm-bell"
+  alarm_speaker:
+    name: Alarm Speaker
+    options:
+      - "master_bedroom_display"
+      - "master_bedroom_speaker"
+      - "office_speaker"
+      - "audio_system"
+    icon: "mdi:volume-source"
+
+  azan_sound:
+    name: "Al-Mo'azzen"
+    options:
+      - "Ahmad Al Nafees"
+      - "Masjid Al-Haram in Mecca"
+      - "Mshary Rashid Alafasy 1"
+      - "Mshary Rashid Alafasy 2"
+      - "Salah Mansoor Az-Zahrani"
+    icon: "mdi:islam"
+  azan_speaker:
+    name: Azan Speaker
+    options:
+      - "master_bedroom_display"
+      - "master_bedroom_speaker"
+      - "office_speaker"
+      - "audio_system"
+    icon: "mdi:volume-source"
+
+
+
+

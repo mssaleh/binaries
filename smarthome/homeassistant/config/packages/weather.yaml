@@ -1,0 +1,6 @@
+sun:
+
+sensor:
+  - platform: moon
+  - platform: season
+

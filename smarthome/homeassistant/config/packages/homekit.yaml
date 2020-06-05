@@ -1,0 +1,83 @@
+# homekit:
+#   auto_start: false
+#   name: Home
+#   filter:
+#     include_entities:
+#     - binary_sensor.bedroom_door_contact
+#     - binary_sensor.opposite_lift_door_contact
+#     - binary_sensor.balcony_door_contact
+#     - binary_sensor.gate_sensor_contact
+#     - binary_sensor.kitchen_door_contact
+#     - binary_sensor.terrace_door_contact
+#     - binary_sensor.pantry_door_contact
+#     - binary_sensor.dinning_room_window_contact
+
+#     - binary_sensor.bedroom_bed_motion_occupancy
+#     - binary_sensor.bedroom_sofa_motion_occupancy
+#     - binary_sensor.dining_room_motion_sensor_motion
+#     - binary_sensor.entrance_motion_sensor_motion
+#     - binary_sensor.playroom_motion_occupancy
+
+#     - climate.dining_room
+#     - climate.girls_room
+#     - climate.gym
+#     - climate.hallway_thermostat
+#     - climate.home_office
+#     - climate.master_bedroom_thermostat
+#     - climate.playroom
+#     - cover.gate
+#     - light.pantry_ff_light
+#     - light.bader_light
+#     - light.balcony_lights
+#     - light.bed_light
+#     - light.bedroom_chandelier_1
+#     - light.bedroom_chandelier_2
+#     - light.bedroom_spots
+#     - light.dining_floor_lamp
+#     - light.entrance_lights
+#     - light.entrance_spotlights
+#     - light.floor_lamp
+#     - light.floor_lamp_gf
+#     - light.living_room_gf_table_lamps
+#     - light.sawsan_light
+#     - light.stairs_lights
+#     - light.terrace_lights
+#     - lock.front_door
+#     - media_player.dining_room_tv
+#     - media_player.gym_tv
+#     - media_player.living_room_ff_tv
+#     - media_player.living_room_gf_tv
+#     - media_player.master_bedroom_display
+#     - media_player.master_bedroom_speaker
+#     - media_player.master_bedroom_tv_2
+#     - media_player.office_speaker
+#     - media_player.office_tv
+#     - media_player.playroom_tv
+#     - switch.bed_ceiling
+#     - switch.bed_ceiling_outer
+#     - switch.coffee_maker
+#     - switch.floor_lamp_ff_switch
+#     - switch.sofa_ceiling
+#     - script.air_purifier_on_off
+#     - switch.veranda_lights # veranda
+#     - switch.shelly_shsw_1_69458b # garage_lights
+#     - switch.sonoff_1000664f1e_1 # inground
+#     - switch.sonoff_1000664f1e_3 # fence lights + chandellier
+#     - switch.outdoor_fountain
+
+#   entity_config:
+#     alarm_control_panel.home_alarm_system:
+#       code: !secret homekit_pin
+#     lock.front_door:
+#       code: !secret homekit_pin
+#     script.air_purifier_on_off:
+#       name: 'Air Purifier'
+
+# automation:
+#   - alias: 'Start HomeKit'
+#     trigger:
+#       - platform: homeassistant
+#         event: start
+#     action:
+#       - delay: 00:04:00
+#       - service: homekit.start

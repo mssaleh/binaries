@@ -1,0 +1,221 @@
+# alarm_control_panel:
+#   - platform: manual
+#     name: Home Alarm System
+#     code: !secret alarm_code
+#     # code_template: '{{ states.input_text.alarm_code.state | int }}'
+#     code_arm_required: true
+#     delay_time: 30
+#     arming_time: 30
+#     trigger_time: 120
+#     disarm_after_trigger: false
+#     disarmed:
+#       trigger_time: 0
+#     armed_home:
+#       delay_time: 2
+#       arming_time: 2
+
+# ################################################################################
+
+# input_boolean:
+#   upstairs_alarm:
+#     name: Upstairs Alarm
+#     initial: off
+#     icon: mdi:alarm-light
+
+# ################################################################################
+
+# script:
+#   alarm_sound:
+#     alias: 'Sound the Alarm'
+#     sequence:
+#     - service: media_player.media_stop
+#       data_template:
+#         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
+#     - service: media_player.clear_playlist
+#       data_template:
+#         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
+#     - service: media_player.turn_off
+#       data_template:
+#         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
+#     - delay: '00:00:01'
+#     - service: media_player.turn_on
+#       data_template:
+#         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
+#     - service: media_player.volume_set
+#       data_template:
+#         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
+#         volume_level: 0.7
+#     # - service: media_player.play_media
+#     #   data_template:
+#     #     entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
+#     #     media_content_id: "https://bader.smart-home.app/local/alarm/{{ states('input_select.alarm_sound') }}.mp3"
+#     #     media_content_type: 'audio/mp3'
+
+# # ################################################################################
+
+# automation:
+#   - alias: 'Trigger alarm while armed away'
+#     trigger:
+#     - platform: state
+#       entity_id: 
+#         - group.inside_doors
+#         - group.outside_doors
+#         - binary_sensor.gate_sensor_contact
+#         - group.all_motion_sensors
+#       from: 'off'
+#       to: 'on'
+#     condition:
+#     - condition: state
+#       entity_id: alarm_control_panel.home_alarm_system
+#       state: armed_away
+#     action:
+#     - service: alarm_control_panel.alarm_trigger
+#       data:
+#         entity_id: alarm_control_panel.home_alarm_system
+
+#   - alias: 'Trigger alarm while armed home'
+#     trigger:
+#     - platform: state
+#       entity_id: group.outside_doors
+#       from: 'off'
+#       to: 'on'
+#     condition:
+#     - condition: state
+#       entity_id: alarm_control_panel.home_alarm_system
+#       state: armed_home
+#     action:
+#     - service: alarm_control_panel.alarm_trigger
+#       data:
+#         entity_id: alarm_control_panel.home_alarm_system
+
+#   - alias: 'Disarm alarm when smart lock is unlocked'
+#     trigger:
+#     - platform: state
+#       entity_id: lock.front_door
+#       from: 'locked'
+#       to: 'unlocked'
+#     condition:
+#     - condition: template
+#       value_template: '{{ state_attr("lock.front_door", "method") != "manual" }}'
+#     action:
+#     - service: alarm_control_panel.alarm_disarm
+#       entity_id: alarm_control_panel.home_alarm_system
+
+#   - alias: 'Disarm alarm when Bader or Sawsan comes home'
+#     trigger:
+#     - platform: state
+#       entity_id: person.bader, person.sawsan
+#       from: "not_home"
+#       to: "home"
+#     condition:
+#     - condition: state
+#       entity_id: alarm_control_panel.home_alarm_system
+#       state: armed_away
+#     action:
+#     - service: alarm_control_panel.alarm_disarm
+#       entity_id: alarm_control_panel.home_alarm_system
+
+#   - alias: 'Trigger upstairs alarm if activated'
+#     trigger:
+#     - platform: state
+#       entity_id: 
+#         - group.upstairs_motion_sensors
+#       from: 'off'
+#       to: 'on'
+#     condition:
+#     - condition: state
+#       entity_id: input_boolean.upstairs_alarm
+#       state: 'on'
+#     action:
+#     - service: alarm_control_panel.alarm_trigger
+#       data:
+#         entity_id: alarm_control_panel.home_alarm_system
+
+
+# # ####### NOTIFICATIONS #########################################################
+
+#   - alias: 'Send notification when alarm triggered'
+#     trigger:
+#     - platform: state
+#       entity_id: alarm_control_panel.home_alarm_system
+#       to: 'triggered'
+#     action:
+#     # - service: notify.mobile_app_iphone
+#     #   data:
+#     #     message: "ALARM! The alarm has been triggered!"
+#     # - service: notify.mobile_app_sue
+#     #   data:
+#     #     message: "ALARM! The alarm has been triggered!"
+#     - service: persistent_notification.create
+#       data:
+#         # notification_id: "1461"
+#         message: "ALARM! The alarm has been triggered!"
+#         title: "ALARM TRIGGERED!"
+
+#   - alias: 'Audio alarm sound when alarm triggered'
+#     trigger:
+#     - platform: state
+#       entity_id: alarm_control_panel.home_alarm_system
+#       to: 'triggered'
+#     action:
+#     - service: script.turn_on
+#       data:
+#         entity_id: script.alarm_sound
+
+#   - alias: 'Send notification when alarm is Disarmed'
+#     trigger:
+#     - platform: state
+#       entity_id: alarm_control_panel.home_alarm_system
+#       to: 'disarmed'
+#     action:
+#     - service: persistent_notification.create
+#       data_template:
+#         # notification_id: "1460"
+#         message: "The alarm is Disarmed at {{ states('sensor.date_time') }}"
+#         title: "ALARM DISARMED!"
+#     - service: media_player.media_stop
+#       data_template:
+#         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
+#     - service: media_player.clear_playlist
+#       data_template:
+#         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
+#     - service: media_player.turn_off
+#       data_template:
+#         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
+
+#   - alias: 'Send notification when alarm is in arming status'
+#     trigger:
+#     - platform: state
+#       entity_id: alarm_control_panel.home_alarm_system
+#       to: 'arming'
+#     action:
+#     - service: persistent_notification.create
+#     #   notification_id: "1462"
+#       data_template:
+#         message: "The alarm is in arming status at {{ states('sensor.date_time') }}"
+#         title: "Alarm Arming"
+
+#   - alias: 'Send notification when alarm is Armed in Away mode'
+#     trigger:
+#     - platform: state
+#       entity_id: alarm_control_panel.home_alarm_system
+#       to: 'armed_away'
+#     action:
+#     - service: persistent_notification.create
+#     #   notification_id: "1463"
+#       data_template:
+#         message: "The alarm is armed in Away mode at {{ states('sensor.date_time') }}"
+#         title: "Alarm Armed"
+
+#   - alias: 'Send notification when alarm is Armed in Home mode'
+#     trigger:
+#     - platform: state
+#       entity_id: alarm_control_panel.home_alarm_system
+#       to: 'armed_home'
+#     action:
+#     - service: persistent_notification.create
+#       data_template:
+#         # notification_id: "1463"
+#         message: >
+#           The alarm is armed in Home mode at {{ states('sensor.date_time') }}
+#         title: "Alarm Armed"

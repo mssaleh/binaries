@@ -1,0 +1,39 @@
+# withings:
+#   client_id: !secret withings_client_id
+#   client_secret: !secret withings_client_secret
+#   profiles:
+#     - Mohammed
+
+# automation:
+# - alias: Temp Audio Alert
+#   initial_state: 'on'
+#   trigger:
+#   - platform: state
+#     entity_id: sensor.withings_body_temperature_c_mohammed
+#   action:
+#   - service: notify.alexa_media
+#     data_template:
+#       target: 
+#       - media_player.echo_dot
+#       data:
+#           type: announce
+#       message: 'Health Alert! Your temperature is {{ states.sensor.withings_body_temperature_c_mohammed.state }} degrees.'
+
+# - alias: BP Audio Alert
+#   initial_state: 'on'
+#   trigger:
+#   - platform: state
+#     entity_id: sensor.withings_systolic_blood_pressure_mmhg_mohammed
+#   action:
+#   - service: notify.alexa_media
+#     data_template:
+#       target: 
+#       - media_player.echo_dot
+#       data:
+#           type: announce
+#       message: 'Health Alert! Your Blood Pressure is {{ states.sensor.withings_systolic_blood_pressure_mmhg_mohammed.state | int }} systolic and {{ states.sensor.withings_diastolic_blood_pressure_mmhg_mohammed.state | int }} diastolic.'
+
+
+
+
+

@@ -1,0 +1,199 @@
+# climate:
+#   - platform: mqtt
+#     name: Girls Room
+#     unique_id: "girls_room_thermostat_v2"
+#     ##### command #####
+#     power_command_topic: "climate/girls_room/thermostat/set/deviceOn"
+#     mode_command_topic: "climate/girls_room/thermostat/set/systemMode"
+#     temperature_command_topic: "climate/girls_room/thermostat/set/targetTemperature"
+#     fan_mode_command_topic: "climate/girls_room/thermostat/set/fanMode"
+#     ##### state #####
+#     mode_state_topic: "climate/girls_room/thermostat/properties"
+#     temperature_state_topic: "climate/girls_room/thermostat/properties"
+#     fan_mode_state_topic: "climate/girls_room/thermostat/properties"
+#     current_temperature_topic: "climate/girls_room/thermostat/properties"
+#     action_topic: "climate/girls_room/thermostat/properties"
+#     <<: &commonthermostat
+#       min_temp: 15
+#       max_temp: 35
+#       initial: 24
+#       temp_step: 0.5
+#       precision: 0.5
+#       retain: true
+#       send_if_off: true
+#       modes: ["off", "cool", "heat", "fan_only"]
+#       fan_modes: ["auto", "low", "medium", "high"]
+#       payload_on: 'true'
+#       payload_off: 'false'
+#       ##### state #####
+#       mode_state_template: >
+#         {% if value_json['deviceOn'] == false %}
+#           off
+#         {% elif (value_json['deviceOn'] == true) and (value_json['systemMode'] == "cool") %}
+#           cool
+#         {% elif (value_json['deviceOn'] == true) and (value_json['systemMode'] == "heat") %}
+#           heat
+#         {% elif (value_json['deviceOn'] == true) and (value_json['systemMode'] == "fan_only") %}
+#           fan_only
+#         {% elif (value_json['deviceOn'] == true) and (value_json['schedulesMode'] == "auto") %}
+#           auto
+#         {% else %}
+#           auto
+#         {% endif %}
+#       temperature_state_template: "{{ value_json['targetTemperature'] | round(1) }}"
+#       fan_mode_state_template: "{{ value_json['fanMode'] }}"
+#       current_temperature_template: "{{ value_json['temperature'] }}"
+#       action_template: >
+#         {% if (value_json['deviceOn'] == true) and (value_json['systemMode'] == "cool") and (((value_json['temperature'])|float - (value_json['targetTemperature'])|float) >= 1)  %}
+#           cooling
+#         {% elif (value_json['deviceOn'] == true) and (value_json['systemMode'] == "cool") and (((value_json['temperature'])|float - (value_json['targetTemperature'])|float) < 1)  %}
+#           idle
+#         {% elif (value_json['deviceOn'] == true) and (value_json['systemMode'] == "heat") and (((value_json['targetTemperature'])|float - (value_json['temperature'])|float) >= 1)  %}
+#           heating
+#         {% elif (value_json['deviceOn'] == true) and (value_json['systemMode'] == "heat") and (((value_json['targetTemperature'])|float - (value_json['temperature'])|float) < 1)  %}
+#           idle
+#         {% elif (value_json['deviceOn'] == true) and (value_json['systemMode'] == "fan_only") %}
+#           fan
+#         {% elif value_json['deviceOn'] == false %}
+#           off
+#         {% else %}
+#           idle
+#         {% endif %}
+
+#   - platform: mqtt
+#     name: Dining Room
+#     unique_id: "dining_room_thermostat_v2"
+#     ##### command #####
+#     power_command_topic: "climate/dining_room/thermostat/set/deviceOn"
+#     mode_command_topic: "climate/dining_room/thermostat/set/systemMode"
+#     temperature_command_topic: "climate/dining_room/thermostat/set/targetTemperature"
+#     fan_mode_command_topic: "climate/dining_room/thermostat/set/fanMode"
+#     ##### state #####
+#     mode_state_topic: "climate/dining_room/thermostat/properties"
+#     temperature_state_topic: "climate/dining_room/thermostat/properties"
+#     fan_mode_state_topic: "climate/dining_room/thermostat/properties"
+#     current_temperature_topic: "climate/dining_room/thermostat/properties"
+#     action_topic: "climate/dining_room/thermostat/properties"
+#     <<: *commonthermostat
+
+#   - platform: mqtt
+#     name: Playroom
+#     unique_id: "playroom_thermostat_v2"
+#     ##### command #####
+#     power_command_topic: "climate/playroom/thermostat/set/deviceOn"
+#     mode_command_topic: "climate/playroom/thermostat/set/systemMode"
+#     temperature_command_topic: "climate/playroom/thermostat/set/targetTemperature"
+#     fan_mode_command_topic: "climate/playroom/thermostat/set/fanMode"
+#     ##### state #####
+#     mode_state_topic: "climate/playroom/thermostat/properties"
+#     temperature_state_topic: "climate/playroom/thermostat/properties"
+#     fan_mode_state_topic: "climate/playroom/thermostat/properties"
+#     current_temperature_topic: "climate/playroom/thermostat/properties"
+#     action_topic: "climate/playroom/thermostat/properties"
+#     <<: *commonthermostat
+
+#   - platform: mqtt
+#     name: Gym
+#     unique_id: "gym_thermostat_v2"
+#     ##### command #####
+#     power_command_topic: "climate/gym/thermostat/set/deviceOn"
+#     mode_command_topic: "climate/gym/thermostat/set/systemMode"
+#     temperature_command_topic: "climate/gym/thermostat/set/targetTemperature"
+#     fan_mode_command_topic: "climate/gym/thermostat/set/fanMode"
+#     ##### state #####
+#     mode_state_topic: "climate/gym/thermostat/properties"
+#     temperature_state_topic: "climate/gym/thermostat/properties"
+#     fan_mode_state_topic: "climate/gym/thermostat/properties"
+#     current_temperature_topic: "climate/gym/thermostat/properties"
+#     action_topic: "climate/gym/thermostat/properties"
+#     <<: *commonthermostat
+
+#   - platform: mqtt
+#     name: Home Office
+#     unique_id: "home_office_thermostat_v2"
+#     ##### command #####
+#     power_command_topic: "climate/home_office/thermostat/set/deviceOn"
+#     mode_command_topic: "climate/home_office/thermostat/set/systemMode"
+#     temperature_command_topic: "climate/home_office/thermostat/set/targetTemperature"
+#     fan_mode_command_topic: "climate/home_office/thermostat/set/fanMode"
+#     ##### state #####
+#     mode_state_topic: "climate/home_office/thermostat/properties"
+#     temperature_state_topic: "climate/home_office/thermostat/properties"
+#     fan_mode_state_topic: "climate/home_office/thermostat/properties"
+#     current_temperature_topic: "climate/home_office/thermostat/properties"
+#     action_topic: "climate/home_office/thermostat/properties"
+#     <<: *commonthermostat
+
+# #################################################################################################################################################
+
+# sensor:
+#   - platform: mqtt
+#     name: "girls_room_thermostat_temperature"
+#     unique_id: "girls_room_thermostat_sensor_v2"
+#     state_topic: "climate/girls_room/thermostat/properties"
+#     value_template: "{{ value_json['temperature']|round(1) }}"
+#     device_class: temperature
+#     unit_of_measurement: "C"
+#     scan_interval: 60
+
+#   - platform: mqtt
+#     name: "dining_room_thermostat_temperature"
+#     unique_id: "dining_room_thermostat_sensor_v2"
+#     state_topic: "climate/dining_room/thermostat/properties"
+#     value_template: "{{ value_json['temperature']|round(1) }}"
+#     device_class: temperature
+#     unit_of_measurement: "C"
+#     scan_interval: 60
+
+#   - platform: mqtt
+#     name: "playroom_thermostat_temperature"
+#     unique_id: "playroom_thermostat_sensor_v2"
+#     state_topic: "climate/playroom/thermostat/properties"
+#     value_template: "{{ value_json['temperature']|round(1) }}"
+#     device_class: temperature
+#     unit_of_measurement: "C"
+#     scan_interval: 60
+
+#   - platform: mqtt
+#     name: "gym_thermostat_temperature"
+#     unique_id: "gym_thermostat_sensor_v2"
+#     state_topic: "climate/gym/thermostat/properties"
+#     value_template: "{{ value_json['temperature']|round(1) }}"
+#     device_class: temperature
+#     unit_of_measurement: "C"
+#     scan_interval: 60
+
+#   - platform: mqtt
+#     name: "home_office_thermostat_temperature"
+#     unique_id: "home_office_thermostat_sensor_v2"
+#     state_topic: "climate/home_office/thermostat/properties"
+#     value_template: "{{ value_json['temperature']|round(1) }}"
+#     device_class: temperature
+#     unit_of_measurement: "C"
+#     scan_interval: 60
+
+# #################################################################################################################################################
+
+# shell_command:
+#   reboot_dining_room_thermostat: curl -X POST http://192.168.1.64/reset | grep reboots
+#   reboot_girls_room_thermostat: curl -X POST http://192.168.1.152/reset | grep reboots
+#   reboot_gym_thermostat: curl -X POST http://192.168.1.151/reset | grep reboots
+#   reboot_home_office_thermostat: curl -X POST http://192.168.1.140/reset | grep reboots
+#   reboot_playroom_thermostat: curl -X POST http://192.168.1.27/reset | grep reboots
+
+# automation:
+# - alias: reboot_thermostats
+#   trigger:
+#     platform: time
+#     at: "03:30:00"
+#   action:
+#     - service: shell_command.reboot_dining_room_thermostat
+#     - delay: '00:00:01'
+#     - service: shell_command.reboot_girls_room_thermostat
+#     - delay: '00:00:01'
+#     - service: shell_command.reboot_gym_thermostat
+#     - delay: '00:00:01'
+#     - service: shell_command.reboot_home_office_thermostat
+#     - delay: '00:00:01'
+#     - service: shell_command.reboot_playroom_thermostat
+

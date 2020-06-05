@@ -1,0 +1,518 @@
+# sensor:
+#   - platform: template
+#     sensors:
+#       terrace_lights_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('light.terrace_lights', 'off') %}
+#             {{ (1 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ (1 + (state_attr('light.0x000b57fffea6f76a_light', 'brightness')|float * 11 / 254 ) 
+#                   + (state_attr('light.0xd0cf5efffe79fd82_light', 'brightness')|float * 11 / 254 ) 
+#                   + ( now().second / 10000 )) |float|round(4) }}
+#           {% endif %}
+
+#       balcony_lights_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('light.balcony_lights', 'off') %}
+#             {{ (1 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ (1 + (state_attr('light.0x000b57fffea6f76a_light', 'brightness')|float * 11 / 254 ) 
+#                   + (state_attr('light.0xd0cf5efffe79fd82_light', 'brightness')|float * 11 / 254 ) 
+#                   + ( now().second / 10000 )) |float|round(4) }}
+#           {% endif %}
+
+#       bed_ceiling_inner_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('switch.bed_ceiling', 'off') %}
+#             {{ (0.5 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ 60 + ( now().second / 10000 ) |float|round(4) }}
+#           {% endif %}
+
+#       bed_ceiling_outer_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('switch.bed_ceiling_outer', 'off') %}
+#             {{ (0.5 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ 72 + ( now().second / 10000 ) |float|round(4) }}
+#           {% endif %}
+
+#       bed_chandelier_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('light.bedroom_chandelier_1', 'off') %}
+#             {{ (3.0 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ (3 + (state_attr('light.l1_light', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.l2_light', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.l3_light', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.l4_light', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.l5_light', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.l6_light', 'brightness')|float * 5 / 254 ) 
+#                   + ( now().second / 10000 )) |float|round(4) }}
+#           {% endif %}
+
+#       bader_light_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('light.bader_light', 'off') %}
+#             {{ (0.5 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ (0.5 + (state_attr('light.bader_light', 'brightness')|float * 10.5 / 254 ) + ( now().second / 10000 ) |float)|round(4) }}
+#           {% endif %}
+
+#       sawsan_light_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('light.sawsan_light', 'off') %}
+#             {{ (0.5 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ (0.5 + (state_attr('light.sawsan_light', 'brightness')|float * 10.5 / 254 ) + ( now().second / 10000 ) |float)|round(4) }}
+#           {% endif %}
+
+#       floor_lamp_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('light.floor_lamp', 'off') %}
+#             {{ (0.5 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ (0.5 + (state_attr('light.floor_lamp', 'brightness')|float * 11 / 254 ) + ( now().second / 10000 ) |float)|round(4) }}
+#           {% endif %}
+
+#       bed_light_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('light.bed_light', 'off') %}
+#             {{ (0.5 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ (0.5 + (state_attr('light.bed_light', 'brightness')|float * 14 / 254 ) + ( now().second / 10000 ) |float)|round(4) }}
+#           {% endif %}
+
+#       sofa_ceiling_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('switch.sofa_ceiling', 'off') %}
+#             {{ (0.5 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ 60 + ( now().second / 10000 ) |float|round(4) }}
+#           {% endif %}
+
+#       bedroom_spots_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('light.bedroom_spots', 'off') %}
+#             {{ (4.0 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ (4 + (state_attr('light.spot1_light', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.spot2_light', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.spot3_light', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.spot4_light', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.spot5_light', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.spot6_light', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.spot7_light', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.spot8_light', 'brightness')|float * 5 / 254 ) 
+#                   + ( now().second / 10000 )) |float|round(4) }}
+#           {% endif %}
+
+#       sofa_chandelier_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('light.bedroom_chandelier_2', 'off') %}
+#             {{ (4.5 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ (4.5 + (state_attr('light.c9_light', 'brightness')|float * 5 / 254 ) 
+#                     + (state_attr('light.c1_light', 'brightness')|float * 5 / 254 ) 
+#                     + (state_attr('light.c2_light', 'brightness')|float * 5 / 254 ) 
+#                     + (state_attr('light.c3_light', 'brightness')|float * 5 / 254 ) 
+#                     + (state_attr('light.c4_light', 'brightness')|float * 5 / 254 ) 
+#                     + (state_attr('light.c5_light', 'brightness')|float * 5 / 254 ) 
+#                     + (state_attr('light.c6_light', 'brightness')|float * 5 / 254 ) 
+#                     + (state_attr('light.c7_light', 'brightness')|float * 5 / 254 ) 
+#                     + (state_attr('light.c8_light', 'brightness')|float * 5 / 254 ) 
+#                     + ( now().second / 10000 )) |float|round(4) }}
+#           {% endif %}
+
+#       floor_lamp_ff_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('switch.floor_lamp_ff_switch', 'off') %}
+#             {{ (0.5 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ 12 + ( now().second / 10000 ) |float|round(4) }}
+#           {% endif %}
+
+#       pantry_wall_ff_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('switch.pantry_ff_wall_switch', 'off') %}
+#             {{ (0.5 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ 48 + ( now().second / 10000 ) |float|round(4) }}
+#           {% endif %}
+
+# ###### Downstairs
+
+#       entrance_spots_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('light.entrance_spotlights', 'off') %}
+#             {{ (4.0 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ (4 + (state_attr('light.s1', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.s2', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.s3', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.s4', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.s5', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.s6', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.s7', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.s8', 'brightness')|float * 5 / 254 ) 
+#                   + ( now().second / 10000 )) |float|round(4) }}
+#           {% endif %}
+
+#       entrance_lights_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('light.entrance_lights', 'off') %}
+#             {{ (4.0 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ (4 + (state_attr('light.b1', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.b2', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.b3', 'brightness')|float * 5 / 254 ) 
+#                   + (state_attr('light.b4', 'brightness')|float * 5 / 254 ) 
+#                   + ( now().second / 10000 )) |float|round(4) }}
+#           {% endif %}
+
+#       table_lamps_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('switch.table_lamps', 'off') %}
+#             {{ (0.5 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ 20 + ( now().second / 10000 ) |float|round(4) }}
+#           {% endif %}
+
+#       floor_lamp_gf_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('light.floor_lamp_gf', 'off') %}
+#             {{ (0.5 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ (0.5 + (state_attr('light.floor_lamp_gf', 'brightness')|float * 11 / 254 ) + ( now().second / 10000 ) |float)|round(4) }}
+#           {% endif %}
+
+#       coffee_maker_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if state_attr('switch.coffee_maker', 'current_power_w') > 0 %}
+#             {{ state_attr('switch.coffee_maker', 'current_power_w')|float }}
+#           {% else %}
+#             {{ (0.5 + ( now().second / 10000 )) |float|round(4) }}
+#           {% endif %}
+
+#       dining_floor_lamp_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('light.dining_floor_lamp', 'off') %}
+#             {{ (1.0 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ (1 + (state_attr('light.dining_floor_lamp_1', 'brightness')|float * 11 / 254 ) 
+#                   + (state_attr('light.dining_floor_lamp_2', 'brightness')|float * 11 / 254 ) 
+#                   + ( now().second / 10000 )) |float|round(4) }}
+#           {% endif %}
+
+#       stairs_lights_power_meter:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >-
+#           {% if is_state('light.stairs_lights', 'off') %}
+#             {{ (1.0 + ( now().second / 10000 )) |float|round(4) }}
+#           {% else %}
+#             {{ (1 + (state_attr('light.dining_floor_lamp_1', 'brightness')|float * 11 / 254 ) 
+#                   + (state_attr('light.dining_floor_lamp_2', 'brightness')|float * 11 / 254 ) 
+#                   + ( now().second / 10000 )) |float|round(4) }}
+#           {% endif %}
+
+# #######################################################################################################
+
+#       total_current_power:
+#         device_class: power
+#         unit_of_measurement: "W"
+#         value_template: >
+#           {{  (states('sensor.terrace_lights_power_meter')|float 
+#               + states('sensor.balcony_lights_power_meter')|float
+#               + states('sensor.bed_ceiling_inner_power_meter')|float 
+#               + states('sensor.bed_ceiling_outer_power_meter')|float 
+#               + states('sensor.bed_chandelier_power_meter')|float 
+#               + states('sensor.bader_light_power_meter')|float 
+#               + states('sensor.sawsan_light_power_meter')|float 
+#               + states('sensor.floor_lamp_power_meter')|float 
+#               + states('sensor.bed_light_power_meter')|float 
+#               + states('sensor.sofa_ceiling_power_meter')|float 
+#               + states('sensor.bedroom_spots_power_meter')|float 
+#               + states('sensor.sofa_chandelier_power_meter')|float 
+#               + states('sensor.floor_lamp_ff_power_meter')|float 
+#               + states('sensor.pantry_wall_ff_power_meter')|float 
+#               + states('sensor.entrance_spots_power_meter')|float 
+#               + states('sensor.entrance_lights_power_meter')|float 
+#               + states('sensor.table_lamps_power_meter')|float 
+#               + states('sensor.floor_lamp_gf_power_meter')|float 
+#               + states('sensor.coffee_maker_power_meter')|float
+#               + states('sensor.stairs_lights_power_meter')|float
+#               + states('sensor.dining_floor_lamp_power_meter')|float)|float|round(3) }}
+
+# #######################################################################################################
+
+#     #   master_bedroom_energy_consumption:
+#     #     device_class: power
+#     #     unit_of_measurement: "kWh"
+#     #     value_template: >
+#     #       {{  ((states('sensor.bed_ceiling_inner_energy_consumption')|float 
+#     #           + states('sensor.bed_ceiling_outer_energy_consumption')|float 
+#     #           + states('sensor.bed_chandelier_energy_consumption')|float 
+#     #           + states('sensor.bader_light_energy_consumption')|float 
+#     #           + states('sensor.sawsan_light_energy_consumption')|float 
+#     #           + states('sensor.floor_lamp_energy_consumption')|float 
+#     #           + states('sensor.bed_light_energy_consumption')|float 
+#     #           + states('sensor.sofa_ceiling_energy_consumption')|float 
+#     #           + states('sensor.bedroom_spots_energy_consumption')|float 
+#     #           + states('sensor.terrace_lights_energy_consumption')|float 
+#     #           + states('sensor.balcony_lights_energy_consumption')|float 
+#     #           + states('sensor.sofa_chandelier_energy_consumption')|float) / 1000) |float|round(0) }}
+
+#     #   living_room_ff_energy_consumption:
+#     #     device_class: power
+#     #     unit_of_measurement: "kWh"
+#     #     value_template: >
+#     #       {{  ((states('sensor.floor_lamp_ff_energy_consumption')|float) / 1000) |float|round(0) }}
+
+#     #   pantry_ff_energy_consumption:
+#     #     device_class: power
+#     #     unit_of_measurement: "kWh"
+#     #     value_template: >
+#     #       {{  ((states('sensor.pantry_wall_ff_energy_consumption')|float) / 1000) |float|round(0) }}
+
+#     #   entrance_energy_consumption:
+#     #     device_class: power
+#     #     unit_of_measurement: "kWh"
+#     #     value_template: >
+#     #       {{  ((states('sensor.entrance_spots_energy_consumption')|float 
+#     #           + states('sensor.entrance_lights_energy_consumption')|float) / 1000) |float|round(0) }}
+
+#     #   living_room_gf_energy_consumption:
+#     #     device_class: power
+#     #     unit_of_measurement: "kWh"
+#     #     value_template: >
+#     #       {{  ((states('sensor.table_lamps_energy_consumption')|float 
+#     #           + states('sensor.floor_lamp_gf_energy_consumption')|float) / 1000) |float|round(0) }}
+
+#     #   pantry_gf_energy_consumption:
+#     #     device_class: power
+#     #     unit_of_measurement: "kWh"
+#     #     value_template: >
+#     #       {{  ((states('sensor.coffee_maker_energy_consumption')|float) / 1000) |float|round(0) }}
+
+#     #   dining_room_energy_consumption:
+#     #     device_class: power
+#     #     unit_of_measurement: "kWh"
+#     #     value_template: >
+#     #       {{  ((states('sensor.dining_floor_lamp_energy_consumption')|float) / 1000) |float|round(0) }}
+
+# #######################################################################################################
+
+#   - platform: integration
+#     source: sensor.terrace_lights_power_meter
+#     name: 'Terrace Lights Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.balcony_lights_power_meter
+#     name: 'Balcony Lights Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.bed_ceiling_inner_power_meter
+#     name: 'Bed Ceiling Inner Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.bed_ceiling_outer_power_meter
+#     name: 'Bed Ceiling Outer Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.bed_chandelier_power_meter
+#     name: 'Bed Chandelier Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.bader_light_power_meter
+#     name: 'Bader Light Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.sawsan_light_power_meter
+#     name: 'Sawsan Light Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.floor_lamp_power_meter
+#     name: 'Floor Lamp Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.bed_light_power_meter
+#     name: 'Bed Light Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.sofa_ceiling_power_meter
+#     name: 'Sofa Ceiling Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.bedroom_spots_power_meter
+#     name: 'Bedroom Spots Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.sofa_chandelier_power_meter
+#     name: 'Sofa Chandelier Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.floor_lamp_ff_power_meter
+#     name: 'Floor Lamp FF Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.pantry_wall_ff_power_meter
+#     name: 'Pantry Wall FF Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.entrance_spots_power_meter
+#     name: 'Entrance Spots Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.entrance_lights_power_meter
+#     name: 'Entrance Lights Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.table_lamps_power_meter
+#     name: 'Table Lamps Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.floor_lamp_gf_power_meter
+#     name: 'Floor Lamp GF Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.coffee_maker_power_meter
+#     name: 'Coffee Maker Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.dining_floor_lamp_power_meter
+#     name: 'Dining Floor Lamp Energy Consumption'
+#     method: left
+#     round: 0
+
+#   - platform: integration
+#     source: sensor.total_current_power
+#     name: 'Total Energy Consumption'
+#     method: left
+#     round: 0
+
+# automation:
+#   - id: 'power_meters_refresh'
+#     initial_state: true
+#     alias: Power Meters Refresh
+#     trigger:
+#     - platform: time_pattern
+#       seconds: "/6"
+#     action:
+#     - service: homeassistant.update_entity
+#       data:
+#         entity_id:
+#         - sensor.terrace_lights_power_meter
+#         - sensor.balcony_lights_power_meter
+#         - sensor.bed_ceiling_inner_power_meter
+#         - sensor.bed_ceiling_outer_power_meter
+#         - sensor.bed_chandelier_power_meter
+#         - sensor.bader_light_power_meter
+#         - sensor.sawsan_light_power_meter
+#         - sensor.floor_lamp_power_meter
+#         - sensor.bed_light_power_meter
+#         - sensor.sofa_ceiling_power_meter
+#         - sensor.bedroom_spots_power_meter
+#         - sensor.sofa_chandelier_power_meter
+#         - sensor.floor_lamp_ff_power_meter
+#         - sensor.pantry_wall_ff_power_meter
+#         - sensor.entrance_spots_power_meter
+#         - sensor.entrance_lights_power_meter
+#         - sensor.table_lamps_power_meter
+#         - sensor.floor_lamp_gf_power_meter
+#         - sensor.dining_floor_lamp_power_meter
+#         - sensor.coffee_maker_power_meter
+#         - sensor.stairs_lights_power_meter
+
+# utility_meter:
+#   daily_energy:
+#     source: sensor.total_energy_consumption
+#     cycle: daily
+#     # tariffs:
+#     #   - peak
+#     #   - offpeak
+#   monthly_energy:
+#     source: sensor.total_energy_consumption
+#     cycle: monthly
+#     # tariffs:
+#     #   - peak
+#     #   - offpeak
+

@@ -1,0 +1,105 @@
+input_select:
+  radio_speaker:
+    name: Radio Speaker
+    options:
+      - "master_bedroom_display"
+      - "master_bedroom_speaker"
+      - "audio_system"
+    icon: "mdi:volume-source"
+  radio_station:
+    name: Radio Station
+    options:
+      - "Sharjah Quran"
+      - "Abu Dhabi Quran"
+      - "Dubai Quran"
+      - "Abu Dhabi Classic FM"
+      - "Dubai 92"
+      - "Dubai 92 Rock"
+      - "Dubai 92 Smooth"
+      - "Al-Arabiya 99"
+      - "Al-Arabiya Cassette"
+      - "Al Khaleejiya"
+      - "Al Khaleejiya Classic"
+      - "Dubai Eye"
+      - "Virgin Radio Dubai"
+      - "Virgin Radio Chill"
+      - "Virgin Radio Beat"
+      - "Pearl FM"
+      - "Emarat FM"
+      - "Sky News Arabia"
+      - "BBC Arabic"
+      - "Monte Carlo Doualiya"
+    icon: "mdi:radio"
+
+automation:
+- alias: 'Play Live Radio'
+  id: 'play live radio'
+  trigger:
+  - platform: state
+    entity_id: input_select.radio_station
+  action:
+  - service: script.turn_on
+    data:
+      entity_id: script.play_radio
+
+script:
+  play_radio:
+    alias: 'Play Radio Stream'
+    sequence:
+    # - service: media_player.turn_on
+    #   data_template:
+    #     entity_id: "media_player.{{ states('input_select.radio_speaker') }}"
+    # - service: media_player.media_stop
+    #   data_template:
+    #     entity_id: "media_player.{{ states('input_select.radio_speaker') }}"
+    # - service: media_player.clear_playlist
+    #   data_template:
+    #     entity_id: "media_player.{{ states('input_select.radio_speaker') }}"
+    - service: media_player.play_media
+      data_template:
+        entity_id: "media_player.{{ states('input_select.radio_speaker') }}"
+        media_content_id: >
+            {% if is_state("input_select.radio_station", "Sharjah Quran") %} https://l3.itworkscdn.net/smcquranlive/quranradiolive/icecast.audio
+            {% elif is_state("input_select.radio_station", "Abu Dhabi Quran") %} https://admdn7.cdn.mangomolo.com/quranrdo/quranrdo.stream_aac/chunklist.m3u8
+            {% elif is_state("input_select.radio_station", "Dubai Quran") %} http://uk5.internet-radio.com:8079/stream
+            {% elif is_state("input_select.radio_station", "Abu Dhabi Classic FM") %} https://admdn7.cdn.mangomolo.com/clasrdo/clasrdo.stream_aac/playlist.m3u8
+            {% elif is_state("input_select.radio_station", "Dubai 92") %} http://stream.radiojar.com/6ty5rrkerxquv
+            {% elif is_state("input_select.radio_station", "Dubai 92 Rock") %} http://stream.radiojar.com/03m2eamerxquv
+            {% elif is_state("input_select.radio_station", "Dubai 92 Smooth") %} http://stream.radiojar.com/9wz85zmerxquv
+            {% elif is_state("input_select.radio_station", "Al-Arabiya 99") %} http://stream.radiojar.com/s1mygd1frxquv
+            {% elif is_state("input_select.radio_station", "Al-Arabiya Cassette") %} http://stream.radiojar.com/9zyyxy3frxquv
+            {% elif is_state("input_select.radio_station", "Al Khaleejiya") %} http://stream.radiojar.com/5wpf9e4erxquv
+            {% elif is_state("input_select.radio_station", "Al Khaleejiya Classic") %} http://stream.radiojar.com/6vswxt4erxquv
+            {% elif is_state("input_select.radio_station", "Dubai Eye") %} http://stream.radiojar.com/shcthrfbsxquv
+            {% elif is_state("input_select.radio_station", "Virgin Radio Dubai") %} http://stream.radiojar.com/nhq0vcqwuueuv
+            {% elif is_state("input_select.radio_station", "Virgin Radio Chill") %} http://stream.radiojar.com/m20vbsykqxquv
+            {% elif is_state("input_select.radio_station", "Virgin Radio Beat") %} http://stream.radiojar.com/8p33fazkqxquv
+            {% elif is_state("input_select.radio_station", "Pearl FM") %} https://streamer.radio.co/see628308e/listen
+            {% elif is_state("input_select.radio_station", "Emarat FM") %} https://admdn7.cdn.mangomolo.com/emrdo/emrdo.stream_aac/chunklist.m3u8
+            {% elif is_state("input_select.radio_station", "Sky News Arabia") %} https://radio.skynewsarabia.com/stream/radio/skynewsarabia
+            {% elif is_state("input_select.radio_station", "BBC Arabic") %} https://radio.skynewsarabia.com/stream/radio/skynewsarabia
+            {% elif is_state("input_select.radio_station", "Monte Carlo Doualiya") %} https://radio.skynewsarabia.com/stream/radio/skynewsarabia
+            {% endif %}
+        media_content_type: >
+            {% if is_state("input_select.radio_station", "Sharjah Quran") %} 'audio/mp4'
+            {% elif is_state("input_select.radio_station", "Abu Dhabi Quran") %} 'audio/mp4'
+            {% elif is_state("input_select.radio_station", "Dubai Quran") %} 'audio/mp4'
+            {% elif is_state("input_select.radio_station", "Abu Dhabi Classic FM") %} 'audio/mp4'
+            {% elif is_state("input_select.radio_station", "Dubai 92") %} 'audio/mp3'
+            {% elif is_state("input_select.radio_station", "Dubai 92 Rock") %} 'audio/mp3'
+            {% elif is_state("input_select.radio_station", "Dubai 92 Smooth") %} 'audio/mp3'
+            {% elif is_state("input_select.radio_station", "Al-Arabiya 99") %} 'audio/mp3'
+            {% elif is_state("input_select.radio_station", "Al-Arabiya Cassette") %} 'audio/mp3'
+            {% elif is_state("input_select.radio_station", "Al Khaleejiya") %} 'audio/mp3'
+            {% elif is_state("input_select.radio_station", "Al Khaleejiya Classic") %} 'audio/mp3'
+            {% elif is_state("input_select.radio_station", "Dubai Eye") %} 'audio/mp3'
+            {% elif is_state("input_select.radio_station", "Virgin Radio Dubai") %} 'audio/mp3'
+            {% elif is_state("input_select.radio_station", "Virgin Radio Chill") %} 'audio/mp3'
+            {% elif is_state("input_select.radio_station", "Virgin Radio Beat") %} 'audio/mp3'
+            {% elif is_state("input_select.radio_station", "Pearl FM") %} 'audio/mp3'
+            {% elif is_state("input_select.radio_station", "Emarat FM") %} 'audio/mp4'
+            {% elif is_state("input_select.radio_station", "Sky News Arabia") %} 'audio/mp3'
+            {% elif is_state("input_select.radio_station", "BBC Arabic") %} 'audio/mp3'
+            {% elif is_state("input_select.radio_station", "Monte Carlo Doualiya") %} 'audio/mp3'
+            {% endif %}
+

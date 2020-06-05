@@ -1,0 +1,58 @@
+# device_tracker:
+#   - platform: bluetooth_tracker
+
+# zone:
+#   - name: Home
+#     latitude: !secret home_ltd
+#     longitude: !secret home_lng
+#     radius: 35
+#     icon: 'mdi:home'
+
+#   - name: Work
+#     latitude: !secret work_ltd
+#     longitude: !secret work_lng
+#     radius: 50
+#     icon: mdi:briefcase
+
+# sensor:
+#   - platform: here_travel_time
+#     api_key: !secret here_api_key
+#     name: "Time to Reach Work"
+#     origin_entity_id: person.bader
+#     destination_entity_id: zone.work
+#     mode: car
+#     route_mode: fastest
+#     traffic_mode: true
+#     unit_system: metric
+#     scan_interval: 420
+
+#   - platform: here_travel_time
+#     api_key: !secret here_api_key
+#     name: "Time to Reach Home"
+#     origin_entity_id: person.bader
+#     destination_entity_id: zone.home
+#     mode: car
+#     route_mode: fastest
+#     traffic_mode: true
+#     unit_system: metric
+#     scan_interval: 420
+
+#   - platform: here_travel_time
+#     api_key: !secret here_api_key
+#     name: "Time to Reach Home"
+#     origin_entity_id: device_tracker.iphone
+#     destination_entity_id: zone.home
+#     mode: car
+#     route_mode: fastest
+#     # traffic_mode: true
+#     unit_system: metric
+#     scan_interval: 300
+
+
+#   - platform: google_travel_time
+#     name: Time To Reach Home
+#     api_key: !secret google_api_key
+#     origin: device_tracker.sm_g973f
+#     destination: zone.home
+
+  

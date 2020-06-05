@@ -1,0 +1,205 @@
+sensor:
+  # Prayer Times, change coordinates manually to home location; default is Dubai
+  - platform: rest
+    resource: 'http://api.aladhan.com/v1/timings/default?latitude=25.236803&longitude=55.479771&method=99&methodSettings=18.5,null,18.5&tune=3,3,-2,4,4,4,2,-1,0'
+    method: GET
+    name: prayers
+    scan_interval: 43200
+    value_template: '{{ value_json.value }}'
+    json_attributes:
+    - data
+  - platform: template
+    sensors:
+      hijri_date:
+        icon_template: mdi:islam
+        friendly_name: التقويم الهجري
+        value_template: '{{ states.sensor.prayers.attributes.data.date.hijri["date"] }}'
+        entity_id: sensor.prayers
+      azan_fajr:
+        icon_template: mdi:islam
+        friendly_name: الفجر
+        value_template: '{{ states.sensor.prayers.attributes.data.timings["Fajr"] }}'
+        entity_id: sensor.prayers
+      azan_sunrise:
+        icon_template: mdi:islam
+        friendly_name: الشروق
+        value_template: '{{ states.sensor.prayers.attributes.data.timings["Sunrise"] }}'
+        entity_id: sensor.prayers
+      azan_dhuhr:
+        icon_template: mdi:islam
+        friendly_name: الظهر
+        value_template: '{{ states.sensor.prayers.attributes.data.timings["Dhuhr"] }}'
+        entity_id: sensor.prayers
+      azan_asr:
+        icon_template: mdi:islam
+        friendly_name: العصر
+        value_template: '{{ states.sensor.prayers.attributes.data.timings["Asr"] }}'
+        entity_id: sensor.prayers
+      azan_maghrib:
+        icon_template: mdi:islam
+        friendly_name: المغرب
+        value_template: '{{ states.sensor.prayers.attributes.data.timings["Maghrib"] }}'
+        entity_id: sensor.prayers
+      azan_isha:
+        icon_template: mdi:islam
+        friendly_name: العشاء
+        value_template: '{{ states.sensor.prayers.attributes.data.timings["Isha"] }}'
+        entity_id: sensor.prayers
+
+# sensor:
+  - platform: template
+    sensors:
+      moonphases:
+        friendly_name: 'طور القمر'
+        value_template: >-
+          {% if is_state('sensor.moon', 'new_moon') %}
+            محاق
+          {% elif is_state('sensor.moon', 'waxing_crescent') %}
+            هلال
+          {% elif is_state('sensor.moon', 'first_quarter') %}
+            تربيع متزايد 
+          {% elif is_state('sensor.moon', 'waxing_gibbous') %}
+            أحدب متزايد
+          {% elif is_state('sensor.moon', 'full_moon') %}
+            بدر
+          {% elif is_state('sensor.moon', 'waning_gibbous') %}
+            أحدب متناقص
+          {% elif is_state('sensor.moon', 'last_quarter') %}
+            تربيع متناقص
+          {% elif is_state('sensor.moon', 'waning_crescent') %}
+            هلال متناقص
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.moon', 'new_moon') %}
+            mdi:moon-new
+          {% elif is_state('sensor.moon', 'waxing_crescent') %}
+            mdi:moon-waxing-crescent
+          {% elif is_state('sensor.moon', 'first_quarter') %}
+            mdi:moon-first-quarter
+          {% elif is_state('sensor.moon', 'waxing_gibbous') %}
+            mdi:moon-waxing-gibbous
+          {% elif is_state('sensor.moon', 'full_moon') %}
+            mdi:moon-full
+          {% elif is_state('sensor.moon', 'waning_gibbous') %}
+            mdi:moon-waning-gibbous
+          {% elif is_state('sensor.moon', 'last_quarter') %}
+            mdi:moon-last-quarter
+          {% elif is_state('sensor.moon', 'waning_crescent') %}
+            mdi:moon-waning-crescent
+          {% endif %}
+        entity_picture_template: >-
+          {% if is_state('sensor.moon', 'new_moon') %}
+           /local/moonphases/NNewMoon.jpg
+          {% elif is_state('sensor.moon', 'waxing_crescent') %}
+            /local/moonphases/NWaxingCrescent.jpg
+          {% elif is_state('sensor.moon', 'first_quarter') %}
+            /local/moonphases/NFirstQuarter.jpg
+          {% elif is_state('sensor.moon', 'waxing_gibbous') %}
+            /local/moonphases/NWaxingGibbous.jpg
+          {% elif is_state('sensor.moon', 'full_moon') %}
+            /local/moonphases/NFullMoon.jpg
+          {% elif is_state('sensor.moon', 'waning_gibbous') %}
+            /local/moonphases/NWaningGibbous.jpg
+          {% elif is_state('sensor.moon', 'last_quarter') %}
+            /local/moonphases/NLastQuarter.jpg
+          {% elif is_state('sensor.moon', 'waning_crescent') %}
+            /local/moonphases/NWaningCrescent.jpg
+          {% endif %}
+          
+#################################################################################
+
+automation:
+  - id: 'update_prayer_times_at_midnight'
+    initial_state: 'on'
+    alias: 'update_prayer_times_at_midnight'
+    trigger:
+    - platform: time
+      at: '00:01:00'
+    action:
+    - service: homeassistant.update_entity
+      data:
+        entity_id: sensor.prayers
+
+  - id: 'azan_fajr_sound'
+    alias: 'صوت أذان الفجر'
+    trigger:
+    - platform: template
+      value_template: '{{ states.sensor.time.state == states.sensor.azan_fajr.state }}'
+    condition: []
+    action:
+    - service: script.turn_on
+      data:
+        entity_id: script.azan_sound
+
+  - id: 'azan_dhuhr_sound'
+    alias: 'صوت أذان الظهر'
+    trigger:
+    - platform: template
+      value_template: '{{ states.sensor.time.state == states.sensor.azan_dhuhr.state }}'
+    condition: []
+    action:
+    - service: script.turn_on
+      data:
+        entity_id: script.azan_sound
+
+  - id: 'azan_asr_sound'
+    alias: 'صوت أذان العصر'
+    trigger:
+    - platform: template
+      value_template: '{{ states.sensor.time.state == states.sensor.azan_asr.state }}'
+    condition: []
+    action:
+    - service: script.turn_on
+      data:
+        entity_id: script.azan_sound
+
+  - id: 'azan_maghrib_sound'
+    alias: 'صوت أذان المغرب'
+    trigger:
+    - platform: template
+      value_template: '{{ states.sensor.time.state == states.sensor.azan_maghrib.state }}'
+    condition: []
+    action:
+    - service: script.turn_on
+      data:
+        entity_id: script.azan_sound
+
+  - id: 'azan_isha_sound'
+    alias: 'صوت أذان العشاء'
+    trigger:
+    - platform: template
+      value_template: '{{ states.sensor.time.state == states.sensor.azan_isha.state }}'
+    condition: []
+    action:
+    - service: script.turn_on
+      data:
+        entity_id: script.azan_sound
+
+script:
+  azan_sound:
+    alias: 'صوت الأذان'
+    icon: 'mdi:speaker-wireless'
+    sequence:
+    - delay: '00:00:02'
+    # - service: media_player.media_stop
+    #   data_template:
+    #     entity_id: "media_player.{{ states('input_select.azan_speaker') }}"
+    # - service: media_player.clear_playlist
+    #   data_template:
+    #     entity_id: "media_player.{{ states('input_select.azan_speaker') }}"
+    # - service: media_player.turn_off
+    #   data_template:
+    #     entity_id: "media_player.{{ states('input_select.azan_speaker') }}"
+    # - delay: '00:00:01'
+    # - service: media_player.turn_on
+    #   data_template:
+    #     entity_id: "media_player.{{ states('input_select.azan_speaker') }}"
+    # - service: media_player.volume_set
+    #   data_template:
+    #     entity_id: "media_player.{{ states('input_select.azan_speaker') }}"
+    #     volume_level: 0.4
+    # - service: media_player.play_media
+    #   data_template:
+    #     media_content_id: "https://bader.smart-home.app/local/islamic/azan/{{ states('input_select.azan_sound') }}.mp3"
+    #     media_content_type: audio/mp3
+    #     entity_id: "media_player.{{ states('input_select.azan_speaker') }}"

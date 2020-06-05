@@ -1,0 +1,98 @@
+# media_player:
+#   - platform: mpd
+#     host: !secret mpd_host
+#     # port: !secret mpd_port
+#     name: "Audio System"
+
+#   - platform: snapcast
+#     host: !secret snapcast_server
+#     port: !secret snapcast_port
+
+# sensor:
+#   - platform: rest
+#     name: mpd_current_position
+#     resource: !secret mpd_rpc_path
+#     method: POST
+#     value_template: '{{ value_json.result }}'
+#     payload: '{"method":"core.playback.get_time_position","jsonrpc":"2.0","params":{},"id":1}'
+#     headers:
+#       Content-Type: application/json
+
+# input_text:
+#     media_content_id:
+#       max: 255
+#     media_content_type:
+#       max: 255
+#     media_source:
+#       max: 255
+#     media_source_list:
+#       max: 255
+
+# input_number:
+#     media_volume_level:
+#         initial: 0.30
+#         min: 0
+#         max: 1
+#         step: 0.01
+#     media_position:
+#         mode: box
+#         initial: 0
+#         min: 0
+#         max: 43200
+#         step: 1
+
+# script:
+#   media_snapshot_capture:
+#     alias: Capture Media Snapshot
+#     sequence:
+#       - service: homeassistant.update_entity
+#         data:
+#           entity_id: sensor.mpd_current_position
+#       - service: input_number.set_value
+#         data_template:
+#           entity_id: input_number.media_volume_level
+#           value: "{{ state_attr('media_player.audio_system', 'volume_level') | float}}"
+#       - service: input_number.set_value
+#         data_template:
+#           entity_id: input_number.media_position
+#           value: "{{ (states('sensor.mpd_current_position')|float / 1000) | int}}"
+#       - service: input_text.set_value
+#         data_template:
+#           entity_id: input_text.media_content_id
+#           value: "{{ states.media_player.audio_system.attributes['media_content_id'] }}"
+#       - service: input_text.set_value
+#         data_template:
+#           entity_id: input_text.media_content_type
+#           value: "{{ states.media_player.audio_system.attributes['media_content_type'] }}"
+#       - service: input_text.set_value
+#         data_template:
+#           entity_id: input_text.media_source_list
+#           value: "{{ states.media_player.audio_system.attributes['source_list'][0] }}"
+#     #   - service: input_text.set_value
+#     #     data_template:
+#     #       entity_id: input_text.media_source
+#     #       value: "{{ states.media_player.audio_system.attributes['source'] }}"
+
+#   media_snapshot_restore:
+#     alias: Restore Media Snapshot
+#     sequence:
+#       - service: media_player.media_stop
+#         data:
+#           entity_id: media_player.audio_system
+#       - service: media_player.select_source
+#         data_template:
+#           entity_id: media_player.audio_system
+#           source: "{{ states('input_text.media_source_list') }}"
+#       - service: media_player.play_media
+#         data_template:
+#           entity_id: media_player.audio_system
+#           media_content_type: "{{ states('input_text.media_content_type') }}"
+#           media_content_id: "{{ states('input_text.media_content_id') }}"
+#       - service: media_player.media_seek
+#         data_template:
+#           entity_id: media_player.audio_system
+#           seek_position: "{{ states('input_number.media_position') | int }}"
+#       - service: media_player.volume_set
+#         data_template:
+#           entity_id: media_player.audio_system
+#           volume_level: "{{ states('input_number.media_volume_level') | float }}"

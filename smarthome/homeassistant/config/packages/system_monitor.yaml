@@ -1,0 +1,44 @@
+sensor:
+  - platform: dnsip
+    name: myip
+    scan_interval: 120
+
+  - platform: dnsip
+    hostname: !secret domain_name
+    name: duckdns_ip
+    resolver: 208.67.222.222
+    scan_interval: 120
+
+  - platform: command_line
+    name: CPU Temperature
+    command: "cat /sys/class/thermal/thermal_zone0/temp"
+    unit_of_measurement: "°C"
+    value_template: '{{ value | multiply(0.001) | round(1) }}'
+
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /home
+      - type: memory_use_percent
+      - type: processor_use
+      - type: last_boot
+
+# rest_command:
+#   update_ddns:
+#     url: 'https://api.digitalocean.com/v2/domains/smart-home.app/records/98988034'
+#     method: PUT
+#     headers:
+#       Content-Type: application/json
+#       Authorization: !secret digitalocean_auth
+#     payload: '{"data": "{{ states.sensor.myip.state }}"}'
+
+# automation:
+#   - alias: 'Update DDNS'
+#     trigger:
+#       platform: state
+#       entity_id: sensor.myip
+#     condition:
+#       condition: template
+#       value_template: '{{ trigger.to_state.state|replace(".", "")|float > 0 }}'
+#     action:
+#       - service: rest_command.update_ddns

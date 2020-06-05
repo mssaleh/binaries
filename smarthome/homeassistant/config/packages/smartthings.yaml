@@ -1,0 +1,41 @@
+# light:
+#   - platform: group
+#     name: Entrance Lights
+#     entities:
+#       - light.b1
+#       - light.b2
+#       - light.b3
+#       - light.b4
+
+#   - platform: group
+#     name: Stairs Lights
+#     entities:
+#       - light.st1
+#       - light.st2
+#       - light.st3
+#       - light.st4
+
+#   - platform: group
+#     name: Entrance Spotlights
+#     entities:
+#       - light.s1
+#       - light.s2
+#       - light.s3
+#       - light.s4
+#       - light.s5
+#       - light.s6
+#       - light.s7
+#       - light.s8
+
+#   - platform: group
+#     name: Dining Floor Lamp 
+#     entities:
+#       - light.dining_floor_lamp_1
+#       - light.dining_floor_lamp_2
+
+#   - platform: group
+#     name: Living Room GF Table Lamps
+#     entities:
+#       - light.table_lamp_1
+#       - light.table_lamp_2
+

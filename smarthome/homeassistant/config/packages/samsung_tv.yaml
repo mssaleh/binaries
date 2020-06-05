@@ -1,0 +1,54 @@
+# script:
+#   bedroom_netflix:
+#     alias: Bedroom Netflix
+#     icon: "mdi:netflix"
+#     sequence:
+#       - service: media_player.turn_on
+#         data:
+#           entity_id: media_player.master_bedroom_tv_2
+#       - wait_template: "{{ is_state('media_player.master_bedroom_tv_2', 'on') }}"
+#         timeout: '00:00:05'
+#       - service: media_player.select_source
+#         data:
+#           entity_id: media_player.master_bedroom_tv_2
+#           source: Netflix
+#   bedroom_youtube:
+#     alias: Bedroom YouTube
+#     icon: "mdi:youtube"
+#     sequence:
+#       - service: media_player.turn_on
+#         data:
+#           entity_id: media_player.master_bedroom_tv_2
+#       - wait_template: "{{ is_state('media_player.master_bedroom_tv_2', 'on') }}"
+#         timeout: '00:00:05'
+#       - service: media_player.select_source
+#         data:
+#           entity_id: media_player.master_bedroom_tv_2
+#           source: YouTube
+#   playroom_netflix:
+#     alias: Playroom Netflix
+#     icon: "mdi:netflix"
+#     sequence:
+#       - service: media_player.turn_on
+#         data:
+#           entity_id: media_player.playroom_tv
+#       - wait_template: "{{ is_state('media_player.playroom_tv', 'on') }}"
+#         timeout: '00:00:05'
+#       - service: media_player.select_source
+#         data:
+#           entity_id: media_player.playroom_tv
+#           source: Netflix
+#   playroom_youtube:
+#     alias: Playroom YouTube
+#     icon: "mdi:youtube"
+#     sequence:
+#       - service: media_player.turn_on
+#         data:
+#           entity_id: media_player.playroom_tv
+#       - wait_template: "{{ is_state('media_player.playroom_tv', 'on') }}"
+#         timeout: '00:00:05'
+#       - service: media_player.select_source
+#         data:
+#           entity_id: media_player.playroom_tv
+#           source: YouTube
+

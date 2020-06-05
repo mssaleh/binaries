@@ -1,0 +1,54 @@
+# automation:
+#   - alias: 'gate_remote_auto_off'
+#     initial_state: true
+#     trigger:
+#       platform: state
+#       entity_id: switch.shelly_shsw_1_7709dc
+#       to: 'on'
+#       for: '00:00:02'
+#     condition: []
+#     action:
+#       service: switch.turn_off
+#       entity_id: switch.shelly_shsw_1_7709dc
+
+#   - alias: 'garage_reboot_when_disconnected'
+#     initial_state: true
+#     trigger:
+#       platform: state
+#       entity_id: switch.shelly_shsw_1_7709dc
+#       to: 'unavailable'
+#       for: '00:05:00'
+#     condition:
+#     - condition: state
+#       entity_id: binary_sensor.gate_sensor_contact
+#       state: "off"
+#     action:
+#     - service: switch.turn_off
+#       entity_id: switch.sonoff_1000664f1e_2
+#     - delay: '00:00:10'
+#     - service: switch.turn_on
+#       entity_id: switch.sonoff_1000664f1e_2
+
+# cover:
+#   - platform: template
+#     covers:
+#       gate:
+#         friendly_name: "Gate"
+#         device_class: garage
+#         value_template: "{{ is_state('binary_sensor.gate_sensor_contact', 'on') }}"
+#         availability_template: "{{ not is_state('switch.shelly_shsw_1_7709dc', 'unavailable') }}"
+#         open_cover:
+#           service: switch.turn_on
+#           data:
+#             entity_id: switch.shelly_shsw_1_7709dc
+#         close_cover:
+#           service: switch.turn_on
+#           data:
+#             entity_id: switch.shelly_shsw_1_7709dc
+#         icon_template: >-
+#           {% if states('binary_sensor.gate_sensor_contact') == 'on' %}
+#             mdi:garage-open
+#           {% else %}
+#             mdi:garage
+#           {% endif %}
+

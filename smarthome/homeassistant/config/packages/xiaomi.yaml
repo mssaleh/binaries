@@ -1,0 +1,25 @@
+# # xiaomi_aqara:
+# #   discovery_retry: 5
+# #   gateways:
+# #     - mac: !secret aqara_mac
+# #       host: !secret aqara_host
+# #       key: !secret aqara_key
+
+# light:
+#   - platform: xiaomi_miio
+#     name: "Balcony bulb 2"
+#     host: 192.168.1.90
+#     token: 
+#     model: philips.light.bulb ## philips.light.hbulb
+
+#   - platform: xiaomi_miio
+#     name: "Balcony bulb 1"
+#     host: 192.168.1.88
+#     token: 
+#     model: philips.light.bulb ## philips.light.hbulb
+
+#   - platform: group
+#     name: Balcony Lights
+#     entities:
+#       - light.balcony_bulb_1
+#       - light.balcony_bulb_2
