@@ -24,22 +24,22 @@ alarm_control_panel:
 
 ################################################################################
 
-# script:
-#   alarm_sound:
-#     alias: 'Sound the Alarm'
-#     sequence:
-#     - service: media_player.turn_on
-#       data_template:
-#         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
-#     - service: media_player.volume_set
-#       data_template:
-#         entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
-#         volume_level: 0.7
-    # - service: media_player.play_media
-    #   data_template:
-    #     entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
-    #     media_content_id: "https://bader.smart-home.app/local/alarm/{{ states('input_select.alarm_sound') }}.mp3"
-    #     media_content_type: 'audio/mp3'
+script:
+  alarm_sound:
+    alias: 'Sound the Alarm'
+    sequence:
+    - service: media_player.turn_on
+      data_template:
+        entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
+    - service: media_player.volume_set
+      data_template:
+        entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
+        volume_level: 0.7
+    - service: media_player.play_media
+      data_template:
+        entity_id: "media_player.{{ states('input_select.alarm_speaker') }}"
+        media_content_id: "http://127.0.0.1:8123/local/alarm/{{ states('input_select.alarm_sound') }}.mp3"
+        media_content_type: 'audio/mp3'
 
 # ################################################################################
 

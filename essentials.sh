@@ -698,7 +698,6 @@ case $yn11 in
         sudo cp ~/binaries/mopidy/mopidy.conf /etc/mopidy/mopidy.conf
         # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf 
         sudo sed -i "s,home_path,"$HOME",g" /etc/mopidy/mopidy.conf
-        sudo sed -i "s,domain_name,"$domain_name",g" /etc/mopidy/mopidy.conf
         sudo mv /usr/lib/systemd/system/mopidy.service ~/.mopidy.service.old
         sudo cp ~/binaries/mopidy/system/mopidy.service /usr/lib/systemd/system/mopidy.service
         # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/system/mopidy.service" -o /usr/lib/systemd/system/mopidy.service
@@ -730,6 +729,7 @@ case $yn11 in
             read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
             echo "CloudFlare Zone ID is: $cloudflare_zone_id"
         fi
+        sudo sed -i "s,domain_name,"$domain_name",g" /etc/mopidy/mopidy.conf
         mopidy_cf_data=$(echo "{\"type\":\"CNAME\",\"name\":\"media."$sub_domain"\",\"content\":\"$domain_name\",\"ttl\":180,\"proxied\":false}")
         echo "new payload is $mopidy_cf_data"
         curl "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records" \
