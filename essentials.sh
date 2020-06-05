@@ -571,7 +571,7 @@ case $yn12 in
     Y|y|yes) 
         echo "Installing HomeAssistant Ecosystem"
         sudo apt install -y jq 
-        cp -r ~/binaries/smarthome ~/smarthome
+        cp -r ~/binaries/smarthome ~
         sudo chown -R $USER: ~/smarthome && sudo chmod -R +rw ~/smarthome
         # Domain Setup
         read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
