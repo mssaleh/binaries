@@ -17,7 +17,7 @@ case $yn1 in
         echo "Installing packages"
         sudo apt install -y \
         adduser alac-decoder alsa-topology-conf alsa-ucm-conf alsa-base alsa-tools \
-        alsa-utils linux-sound-base apparmor-utils apport apt apt-offline \
+        alsa-utils linux-sound-base apparmor-utils apport apt apt-offline dnsutils\
         apt-show-versions apt-transport-https apt-utils at avahi-daemon base-files base-passwd \
         bash bcache-tools btrfs-progs build-essential byobu bzip2 ca-certificates cloud-guest-utils \
         cloud-init cloud-initramfs-copymods cloud-initramfs-dyn-netconf console-setup curl dash dbus \
@@ -575,12 +575,11 @@ case $yn12 in
         echo "CloudFlare Token is: $cloudflare_token"
         read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
         echo "CloudFlare Zone ID is: $cloudflare_zone_id"
-        public_ip=$(curl --silent https://api.ipify.org) || exit 1
+        public_ip=$(dig @resolver1.opendns.com ANY myip.opendns.com +short)
         curl -X POST \"https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records\" \
              -H \"Content-Type: application/json\" \
              -H \"Authorization: Bearer "$cloudflare_token"\" \
              --data "{\"type\":\"A\",\"name\":\""$sub_domain"\",\"content\":\""$public_ip"\",\"ttl\":120,\"proxied\":false}"
-
         curl -X GET "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records?type=A" \
              -H "Authorization: Bearer "$cloudflare_token"" -H "Content-Type:application/json" > /tmp/djson
         domain_record_id=$(cat /tmp/djson | jq -r ".result[] | select(.name==\""$domain_name"\") | .id")
@@ -690,9 +689,7 @@ case $yn11 in
         sudo mopidyctl config 
         sudo mopidyctl local scan
         sudo systemctl status mopidy
-
         sudo apt clean
-
         # Mopidy Subdomain
         echo "Setting Up Mopidy Subdomain.."
         curl -X POST \"https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records\" \
@@ -701,11 +698,9 @@ case $yn11 in
              --data "{\"type\":\"CNAME\",\"name\":\"media."$sub_domain"\",\"content\":\""$domain_name"\",\"ttl\":120,\"proxied\":false}"
         sed -i "s/domain_name/$domain_name/g" ~/smarthome/letsencrypt/config/nginx/proxy-confs/mopidy.subdomain.conf
         docker restart letsencrypt
-
         echo "Mopidy Installed"
         break
         ;;
-
     N|n|no) 
         break
         ;;
@@ -766,7 +761,6 @@ case $yn13 in
         echo "AdGuardHome Installed"
         break
         ;;
-
     N|n|no) 
         break
         ;;
@@ -809,7 +803,6 @@ case $yn10 in
         sudo groupadd bluetooth
         sudo usermod -aG video,audio,bluetooth,avahi root
         sudo usermod -aG video,audio,bluetooth,avahi $USER
-
         # Shinobi Subdomain
         echo "Setting Up Shinobi Subdomain.."
         curl -X POST \"https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records\" \
@@ -818,7 +811,6 @@ case $yn10 in
              --data "{\"type\":\"CNAME\",\"name\":\"cctv."$sub_domain"\",\"content\":\""$domain_name"\",\"ttl\":120,\"proxied\":false}"
         sed -i "s/domain_name/$domain_name/g" ~/smarthome/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf
         docker restart letsencrypt
-
         echo "Shinobi Installed"
         break
         ;;

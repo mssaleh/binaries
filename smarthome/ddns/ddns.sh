@@ -10,10 +10,12 @@ IP_RECORD="/tmp/ip-record"
 RECORDED_IP=`cat $IP_RECORD`
 
 # Fetch the current public IP address
-PUBLIC_IP=$(curl --silent https://api.ipify.org) || exit 1
+PUBLIC_IP=$(dig @resolver1.opendns.com ANY myip.opendns.com +short)
+# PUBLIC_IP=$(curl --silent https://api.ipify.org) || exit 1
+# PUBLIC_IP=$(curl -s http://checkip.dyndns.com | sed -e 's/.*Current IP Address: //' -e 's/<.*$//')
 
 #If the public ip has not changed, nothing needs to be done, exit.
-if [ "$PUBLIC_IP" = "$RECORDED_IP" ]; then
+if [ "$PUBLIC_IP" == "$RECORDED_IP" ]; then
     exit 0
 fi
 
