@@ -564,7 +564,7 @@ case $yn12 in
     Y|y|yes) 
         echo "Installing HomeAssistant Ecosystem"
         sudo apt install -y jq 
-        cd ~ && git clone "https://github.com/mssaleh/binaries.git" 
+        cd ~ && git clone "https://mssaleh@github.com/mssaleh/binaries.git" 
         cp -r ~/binaries/smarthome ~/smarthome
         sudo chown -R $USER: ~/smarthome && sudo chmod -R +rw ~/smarthome
         # Domain Setup
