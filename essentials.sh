@@ -22,7 +22,7 @@ case $yn1 in
         bash bcache-tools btrfs-progs build-essential byobu bzip2 ca-certificates cloud-guest-utils \
         cloud-init cloud-initramfs-copymods cloud-initramfs-dyn-netconf console-setup curl dash dbus \
         debconf debconf-i18n diffutils dirmngr e2fsprogs efibootmgr eject ethtool faac \
-        fdisk ffmpeg findutils firmware-b43-installer fonts-ubuntu-console frei0r-plugins fwupd \
+        fdisk findutils firmware-b43-installer fonts-ubuntu-console frei0r-plugins fwupd \
         gdisk git gnupg gnupg2 gnupg-agent grep grub-efi-amd64 grub-efi-amd64-signed gstreamer1.0-alsa \
         gstreamer1.0-plugins-bad gstreamer1.0-plugins-good gstreamer1.0-plugins-rtp gstreamer1.0-pulseaudio \
         gstreamer1.0-rtsp gzip hddtemp hostname htop hwinfo init intel-gpu-tools \
@@ -160,7 +160,7 @@ case $yn5 in
     Y|y|yes) 
         echo "Installing Non-free FFMPEG" 
         sudo apt update && sudo apt install -y \
-        autoconf automake autotools-dev cmake cmake-data comerr-dev flite1-dev frei0r-plugins-dev \
+        autoconf automake autotools-dev cmake cmake-data comerr-dev ffmpeg flite1-dev frei0r-plugins-dev \
         ghc gir1.2-freedesktop gir1.2-gdkpixbuf-2.0 gir1.2-harfbuzz-0.0 gir1.2-ibus-1.0 gir1.2-rsvg-2.0 \
         icu-devtools krb5-multidev ladspa-sdk libaom-dev libasound2-dev libass-dev libauthen-sasl-perl \
         libavutil-dev libblkid-dev libbs2b-dev libbsd-dev libcaca-dev libcairo-script-interpreter2 \
@@ -703,11 +703,21 @@ case $yn11 in
         sudo apt clean
         # Mopidy Subdomain
         echo "Setting Up Mopidy Subdomain.."
-        curl -X POST \"https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records\" \
-             -H \"Content-Type: application/json\" \
-             -H \"Authorization: Bearer "$cloudflare_token"\" \
-             --data "{\"type\":\"CNAME\",\"name\":\"media."$sub_domain"\",\"content\":\""$domain_name"\",\"ttl\":120,\"proxied\":false}"
-        sed -i "s/domain_name/$domain_name/g" ~/smarthome/letsencrypt/config/nginx/proxy-confs/mopidy.subdomain.conf
+        read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
+        domain_name=""$sub_domain".smart-home.app"
+        echo "Setting up for: $domain_name"
+        read -p "Enter CloudFlare Token:  " cloudflare_token
+        echo "CloudFlare Token is: $cloudflare_token"
+        read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
+        echo "CloudFlare Zone ID is: $cloudflare_zone_id"
+        mopidy_cf_data=$(echo "{\"type\":\"CNAME\",\"name\":\"media."$sub_domain"\",\"content\":\"$domain_name\",\"ttl\":180,\"proxied\":false}")
+        echo "new payload is $mopidy_cf_data"
+        curl "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records" \
+        -X POST -H "Content-Type: application/json" \
+        -H "Authorization: Bearer "$cloudflare_token"" \
+        --data "$mopidy_cf_data" || exit 1
+        sed -i "s/domain_name/$domain_name/g" ~/smarthome/letsencrypt/config/nginx/proxy-confs/mopidy.subdomain.conf.smpl
+        mv ~/smarthome/letsencrypt/config/nginx/proxy-confs/mopidy.subdomain.conf.smpl ~/smarthome/letsencrypt/config/nginx/proxy-confs/mopidy.subdomain.conf
         docker restart letsencrypt
         echo "Mopidy Installed"
         break
@@ -760,16 +770,24 @@ case $yn13 in
         sudo ~/smarthome/AdGuardHome/AdGuardHome -s start
         sudo ~/smarthome/AdGuardHome/AdGuardHome -s status
         rm -rf ~/smarthome/AdGuardHome_linux_amd64.tar.gz
-
         # AdGuard Subdomain
         echo "Setting Up AdGuard Subdomain.."
-        curl -X POST \"https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records\" \
-             -H \"Content-Type: application/json\" \
-             -H \"Authorization: Bearer "$cloudflare_token"\" \
-             --data "{\"type\":\"CNAME\",\"name\":\"adguard."$sub_domain"\",\"content\":\""$domain_name"\",\"ttl\":120,\"proxied\":false}"
-        sed -i "s/domain_name/$domain_name/g" ~/smarthome/letsencrypt/config/nginx/proxy-confs/adguard.subdomain.conf 
+        read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
+        domain_name=""$sub_domain".smart-home.app"
+        echo "Setting up for: $domain_name"
+        read -p "Enter CloudFlare Token:  " cloudflare_token
+        echo "CloudFlare Token is: $cloudflare_token"
+        read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
+        echo "CloudFlare Zone ID is: $cloudflare_zone_id"
+        adguard_cf_data=$(echo "{\"type\":\"CNAME\",\"name\":\"adguard."$sub_domain"\",\"content\":\"$domain_name\",\"ttl\":180,\"proxied\":false}")
+        echo "new payload is $adguard_cf_data"
+        curl "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records" \
+        -X POST -H "Content-Type: application/json" \
+        -H "Authorization: Bearer "$cloudflare_token"" \
+        --data "$adguard_cf_data" || exit 1
+        sed -i "s/domain_name/$domain_name/g" ~/smarthome/letsencrypt/config/nginx/proxy-confs/adguard.subdomain.conf.smpl
+        mv ~/smarthome/letsencrypt/config/nginx/proxy-confs/adguard.subdomain.conf.smpl ~/smarthome/letsencrypt/config/nginx/proxy-confs/adguard.subdomain.conf
         docker restart letsencrypt
-
         echo "AdGuardHome Installed"
         break
         ;;
@@ -817,16 +835,25 @@ case $yn10 in
         sudo usermod -aG video,audio,bluetooth,avahi $USER
         # Shinobi Subdomain
         echo "Setting Up Shinobi Subdomain.."
-        curl -X POST \"https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records\" \
-             -H \"Content-Type: application/json\" \
-             -H \"Authorization: Bearer "$cloudflare_token"\" \
-             --data "{\"type\":\"CNAME\",\"name\":\"cctv."$sub_domain"\",\"content\":\""$domain_name"\",\"ttl\":120,\"proxied\":false}"
-        sed -i "s/domain_name/$domain_name/g" ~/smarthome/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf
+        read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
+        domain_name=""$sub_domain".smart-home.app"
+        echo "Setting up for: $domain_name"
+        read -p "Enter CloudFlare Token:  " cloudflare_token
+        echo "CloudFlare Token is: $cloudflare_token"
+        read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
+        echo "CloudFlare Zone ID is: $cloudflare_zone_id"
+        shinobi_cf_data=$(echo "{\"type\":\"CNAME\",\"name\":\"cctv."$sub_domain"\",\"content\":\"$domain_name\",\"ttl\":180,\"proxied\":false}")
+        echo "new payload is $shinobi_cf_data"
+        curl "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records" \
+        -X POST -H "Content-Type: application/json" \
+        -H "Authorization: Bearer "$cloudflare_token"" \
+        --data "$shinobi_cf_data" || exit 1
+        sed -i "s/domain_name/$domain_name/g" ~/smarthome/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf.smpl
+        mv ~/smarthome/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf.smpl ~/smarthome/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf
         docker restart letsencrypt
         echo "Shinobi Installed"
         break
         ;;
-
     N|n|no) 
         break
         ;;
