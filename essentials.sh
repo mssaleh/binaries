@@ -593,6 +593,16 @@ case $yn12 in
         domain_record_id=$(cat /tmp/djson | jq -r ".result[] | select(.name==\""$domain_name"\") | .id")
         rm -Rf /tmp/djson
         echo "Domain: $domain_name has been setup with Domain Record ID: $domain_record_id"
+        # HomeAssistant Config
+        sed -i "s/ha_domain_name/$domain_name/g" ~/smarthome/homeassistant/config/configuration.yaml
+        sudo mysql -e "CREATE DATABASE IF NOT EXISTS homeassistant" 
+        read -p "Enter password for HomeAssistant Database:  " homeassistant_db_pw 
+        homeassistant_db_pw=${homeassistant_db_pw:-homeassistant} 
+        echo "using password:  $homeassistant_db_pw" 
+        sudo mysql -e "CREATE USER IF NOT EXISTS 'homeassistant'@'127.0.0.1' IDENTIFIED BY '$homeassistant_db_pw'" 
+        sudo mysql -e "GRANT ALL PRIVILEGES ON homeassistant.* TO 'homeassistant'@'127.0.0.1'" 
+        sudo mysql -e "FLUSH PRIVILEGES" 
+        sed -i "s/ha_mariadb_pw/$homeassistant_db_pw/g" ~/smarthome/homeassistant/config/configuration.yaml
         # DDNS
         echo "Setting Up Cloudflare DDNS for $domain_name.."
         sed -i "s/cf_token/$cloudflare_token/g" ~/smarthome/ddns/ddns.sh
@@ -703,13 +713,19 @@ case $yn11 in
         sudo apt clean
         # Mopidy Subdomain
         echo "Setting Up Mopidy Subdomain.."
-        read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
-        domain_name=""$sub_domain".smart-home.app"
-        echo "Setting up for: $domain_name"
-        read -p "Enter CloudFlare Token:  " cloudflare_token
-        echo "CloudFlare Token is: $cloudflare_token"
-        read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
-        echo "CloudFlare Zone ID is: $cloudflare_zone_id"
+        if [ $sub_domain == '' ]; then
+            read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
+            domain_name=""$sub_domain".smart-home.app"
+            echo "Setting up for: $domain_name"
+        fi
+        if [ $cloudflare_token == '' ]; then
+            read -p "Enter CloudFlare Token:  " cloudflare_token
+            echo "CloudFlare Token is: $cloudflare_token"
+        fi
+        if [ $cloudflare_zone_id == '' ]; then
+            read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
+            echo "CloudFlare Zone ID is: $cloudflare_zone_id"
+        fi
         mopidy_cf_data=$(echo "{\"type\":\"CNAME\",\"name\":\"media."$sub_domain"\",\"content\":\"$domain_name\",\"ttl\":180,\"proxied\":false}")
         echo "new payload is $mopidy_cf_data"
         curl "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records" \
@@ -774,13 +790,19 @@ case $yn13 in
         rm -rf ~/smarthome/AdGuardHome_linux_amd64.tar.gz
         # AdGuard Subdomain
         echo "Setting Up AdGuard Subdomain.."
-        read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
-        domain_name=""$sub_domain".smart-home.app"
-        echo "Setting up for: $domain_name"
-        read -p "Enter CloudFlare Token:  " cloudflare_token
-        echo "CloudFlare Token is: $cloudflare_token"
-        read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
-        echo "CloudFlare Zone ID is: $cloudflare_zone_id"
+        if [ $sub_domain == '' ]; then
+            read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
+            domain_name=""$sub_domain".smart-home.app"
+            echo "Setting up for: $domain_name"
+        fi
+        if [ $cloudflare_token == '' ]; then
+            read -p "Enter CloudFlare Token:  " cloudflare_token
+            echo "CloudFlare Token is: $cloudflare_token"
+        fi
+        if [ $cloudflare_zone_id == '' ]; then
+            read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
+            echo "CloudFlare Zone ID is: $cloudflare_zone_id"
+        fi
         adguard_cf_data=$(echo "{\"type\":\"CNAME\",\"name\":\"adguard."$sub_domain"\",\"content\":\"$domain_name\",\"ttl\":180,\"proxied\":false}")
         echo "new payload is $adguard_cf_data"
         curl "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records" \
@@ -821,7 +843,7 @@ case $yn10 in
         sudo mysql -e "CREATE DATABASE IF NOT EXISTS ccio" 
         read -p "Enter password for Shinobi Database:  " shinobi_db_pw 
         shinobi_db_pw=${shinobi_db_pw:-majesticflame} 
-        echo $shinobi_db_pw 
+        echo "using password:  $shinobi_db_pw" 
         sudo mysql -e "CREATE USER IF NOT EXISTS 'majesticflame'@'127.0.0.1' IDENTIFIED BY '$shinobi_db_pw'" 
         sudo mysql -e "GRANT ALL PRIVILEGES ON ccio.* TO 'majesticflame'@'127.0.0.1'" 
         sudo mysql -e "FLUSH PRIVILEGES" 
@@ -837,13 +859,19 @@ case $yn10 in
         sudo usermod -aG video,audio,bluetooth,avahi $USER
         # Shinobi Subdomain
         echo "Setting Up Shinobi Subdomain.."
-        read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
-        domain_name=""$sub_domain".smart-home.app"
-        echo "Setting up for: $domain_name"
-        read -p "Enter CloudFlare Token:  " cloudflare_token
-        echo "CloudFlare Token is: $cloudflare_token"
-        read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
-        echo "CloudFlare Zone ID is: $cloudflare_zone_id"
+        if [ $sub_domain == '' ]; then
+            read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
+            domain_name=""$sub_domain".smart-home.app"
+            echo "Setting up for: $domain_name"
+        fi
+        if [ $cloudflare_token == '' ]; then
+            read -p "Enter CloudFlare Token:  " cloudflare_token
+            echo "CloudFlare Token is: $cloudflare_token"
+        fi
+        if [ $cloudflare_zone_id == '' ]; then
+            read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
+            echo "CloudFlare Zone ID is: $cloudflare_zone_id"
+        fi
         shinobi_cf_data=$(echo "{\"type\":\"CNAME\",\"name\":\"cctv."$sub_domain"\",\"content\":\"$domain_name\",\"ttl\":180,\"proxied\":false}")
         echo "new payload is $shinobi_cf_data"
         curl "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records" \
@@ -867,4 +895,3 @@ case $yn10 in
         echo "If you require it. You can re-run the script."
         ;;
 esac
-

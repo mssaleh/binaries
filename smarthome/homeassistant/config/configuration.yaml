@@ -1,0 +1,122 @@
+homeassistant:
+#### Include packages
+  packages: !include_dir_named packages
+#### Customization files
+#   customize: !include customize.yaml
+#   customize_glob: !include customize_glob.yaml
+#   customize_domain: {}
+
+#### Config ####################################################################
+config:
+# cloud:
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+# scene: !include scenes.yaml
+
+#### Voice & Media #############################################################
+media_player:
+notify:
+tts:
+  - platform: google_translate
+ffmpeg:
+wake_on_lan:
+
+#### UI ########################################################################
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 127.0.0.1
+    - 172.17.0.0/16
+    - 172.18.0.0/16
+    - 172.19.0.0/16
+  cors_allowed_origins:
+    - https://google.com
+    - https://cast.home-assistant.io
+    - https://media.ha_domain_name
+    - https://cctv.ha_domain_name
+    - https://adguard.ha_domain_name
+
+#  ssl_certificate: /ssl/fullchain.pem
+#  ssl_key: /ssl/privkey.pem
+
+frontend:
+  themes: !include_dir_merge_named themes
+
+panel_iframe:
+  cctv:
+    title: 'CCTV'
+    icon: 'mdi:cctv'
+    url: 'https://cctv.ha_domain_name/'
+  media:
+    title: 'Media Player'
+    icon: 'mdi:music-box'
+    url: 'https://media.ha_domain_name/muse/'
+  adguard:
+    title: 'AdGuard'
+    icon: 'mdi:shield-home-outline'
+    url: 'https://adguard.ha_domain_name/'
+#   movies:
+#     title: 'Find Movies'
+#     icon: 'mdi:theater'
+#     url: 'https://ha_domain_name/radarr'
+#   tv_shows:
+#     title: 'Find TV Shows'
+#     icon: 'mdi:television-box'
+#     url: 'https://ha_domain_name/sonarr'
+#   downloader:
+#     title: 'Downloader'
+#     icon: 'mdi:cloud-download'
+#     url: 'https://ha_domain_name/transmission'
+
+# conversation:
+person:
+mobile_app:
+zone:
+
+#### Discovery #################################################################
+ssdp:
+zeroconf:
+discovery:
+
+#### Maintain ##################################################################
+system_health:
+updater:
+logger:
+  default: warn
+
+recorder:
+  db_url: mysql://homeassistant:ha_mariadb_pw@127.0.0.1/homeassistant?charset=utf8
+  exclude:
+    entities:
+      - sensor.date_time
+      - sensor.time
+      - sensor.time_date
+      - sensor.date_time_iso
+      - sensor.prayers
+history:
+  exclude:
+    entities:
+      - sensor.date_time
+      - sensor.time
+      - sensor.time_date
+      - sensor.date_time_iso
+      - sensor.prayers
+logbook:
+  exclude:
+    entities:
+      - sensor.date_time
+      - sensor.time
+      - sensor.time_date
+      - sensor.date_time_iso
+      - sensor.prayers
+
+#### Time & Date ###############################################################
+sensor:
+  - platform: time_date
+    display_options:
+      - 'time'
+      - 'date'
+      - 'date_time'
+      - 'time_date'
+      - 'date_time_iso'
