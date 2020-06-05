@@ -743,10 +743,11 @@ read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn13
 case $yn13 in
     Y|y|yes) 
         echo "Installing AdGuardHome"
-        cd ~
+        cd ~/smarthome
         curl -L https://static.adguard.com/adguardhome/release/AdGuardHome_linux_amd64.tar.gz -o ~/smarthome/AdGuardHome_linux_amd64.tar.gz
         tar xvf ~/smarthome/AdGuardHome_linux_amd64.tar.gz
-        sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.old
+        mkdir -p ~/smarthome/netplan_backup
+        sudo mv /etc/netplan/*.yaml ~/smarthome/netplan_backup
         sudo cp ~/binaries/netplan/static_ip.yaml /etc/netplan/static_ip.yaml
         # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/netplan/static_ip.yaml" -o /etc/netplan/static_ip.yaml
         eth_if=$(ip -4 -o a | awk '{print $2}' | cut -d/ -f1 | grep -v lo | head -n1)
@@ -765,10 +766,11 @@ case $yn13 in
         sudo mv /etc/resolv.conf /etc/resolv.conf.backup
         sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
         sudo systemctl reload-or-restart systemd-resolved
-        sudo chmod a+x ~/AdGuardHome/AdGuardHome
-        sudo ~/smarthome/AdGuardHome/AdGuardHome -s install
-        sudo ~/smarthome/AdGuardHome/AdGuardHome -s start
-        sudo ~/smarthome/AdGuardHome/AdGuardHome -s status
+        sudo chmod a+x ~/smarthome/AdGuardHome/AdGuardHome
+        cd ~/smarthome/AdGuardHome
+        sudo ./AdGuardHome -s install
+        sudo ./AdGuardHome -s start
+        sudo ./AdGuardHome -s status
         rm -rf ~/smarthome/AdGuardHome_linux_amd64.tar.gz
         # AdGuard Subdomain
         echo "Setting Up AdGuard Subdomain.."
