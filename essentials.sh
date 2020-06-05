@@ -346,9 +346,12 @@ case $yn6 in
         echo "Installing Pulseaudio" 
         sudo apt update && sudo apt install -y apulse avahi-daemon pulseaudio pulsemixer \
         gstreamer1.0-pulseaudio pulseaudio-module-zeroconf pulseaudio-utils libpulse-mainloop-glib0 
-        sudo mv /etc/pulse/default.pa /etc/pulse/default.old 
-        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/pulseaudio/default.pa" -o /etc/pulse/default.pa
-        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/pulseaudio/client.conf" -o /etc/pulse/client.conf
+        sudo mv /etc/pulse/default.pa /etc/pulse/default.old
+        sudo mv /etc/pulse/client.conf /etc/pulse/client.old
+        sudo cp ~/binaries/pulseaudio/default.pa /etc/pulse/default.pa
+        sudo cp ~/binaries/pulseaudio/client.conf /etc/pulse/client.conf
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/pulseaudio/default.pa" -o /etc/pulse/default.pa
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/pulseaudio/client.conf" -o /etc/pulse/client.conf
         pulseaudio --kill 
         pulseaudio --start 
         sleep 5
@@ -432,10 +435,12 @@ case $yn8 in
     Y|y|yes) 
         echo "Installing Aircast" 
         sudo curl -L "https://raw.githubusercontent.com/philippe44/AirConnect/master/bin/aircast-x86-64" -o /usr/local/bin/aircast 
-        sudo chmod +x /usr/local/bin/aircast 
-        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/aircast/aircast.service" -o /usr/lib/systemd/user/aircast.service 
+        sudo chmod +x /usr/local/bin/aircast
+        sudo cp ~/binaries/aircast/aircast.service /usr/lib/systemd/user/aircast.service
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/aircast/aircast.service" -o /usr/lib/systemd/user/aircast.service 
         sudo mkdir -p /etc/aircast 
-        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/aircast/aircast.xml" -o /etc/aircast/aircast.xml 
+        sudo cp ~/binaries/aircast/aircast.xml /etc/aircast/aircast.xml
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/aircast/aircast.xml" -o /etc/aircast/aircast.xml 
         systemctl --user daemon-reload 
         sudo systemctl daemon-reload 
         systemctl --user enable aircast.service 
@@ -524,8 +529,10 @@ case $yn9 in
         libmosquitto1 libpopt0 libpulse0 libsndfile1 libsoxr0 libssl1.1 libstdc++6 
         sudo rm -Rf ~/shairport ~/.cache/* 
         sudo mv /etc/shairport-sync.conf /etc/shairport-sync.old 
-        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.conf" -o /etc/shairport-sync.conf 
-        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.service" -o /usr/lib/systemd/user/shairport-sync.service 
+        sudo cp ~/binaries/shairport-sync/shairport-sync.conf /etc/shairport-sync.conf
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.conf" -o /etc/shairport-sync.conf 
+        sudo cp ~/binaries/shairport-sync/shairport-sync.service /usr/lib/systemd/user/shairport-sync.service
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.service" -o /usr/lib/systemd/user/shairport-sync.service 
         systemctl --user daemon-reload 
         sudo systemctl daemon-reload 
         sudo systemctl restart avahi-daemon.service
@@ -661,21 +668,25 @@ case $yn11 in
         sudo chmod -R a+rw ~/media/m3u
         # # run mopidy as user
         # sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old
-        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o ~/.config/mopidy/mopidy.conf
+        # sudo cp ~/binaries/mopidy/mopidy.conf /etc/mopidy/mopidy.conf
+        # # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o ~/.config/mopidy/mopidy.conf
         # sudo sed -i "s,home_path,"$HOME",g" ~/.config/mopidy/mopidy.conf
-        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/user/mopidy.service" -o /usr/lib/systemd/user/mopidy.service
+        # sudo cp ~/binaries/mopidy/user/mopidy.service /usr/lib/systemd/user/mopidy.service
+        # # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/user/mopidy.service" -o /usr/lib/systemd/user/mopidy.service
         # systemctl --user daemon-reload 
         # systemctl --user enable mopidy.service
         # systemctl --user restart mopidy.service
         # sleep 2
         # systemctl --user status mopidy.service
         # run mopidy as system
-        sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old 
-        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf 
+        sudo mv /etc/mopidy/mopidy.conf /etc/mopidy/mopidy.old
+        sudo cp ~/binaries/mopidy/mopidy.conf /etc/mopidy/mopidy.conf
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/mopidy.conf" -o /etc/mopidy/mopidy.conf 
         sudo sed -i "s,home_path,"$HOME",g" /etc/mopidy/mopidy.conf
         sudo sed -i "s,domain_name,"$domain_name",g" /etc/mopidy/mopidy.conf
         sudo mv /usr/lib/systemd/system/mopidy.service ~/.mopidy.service.old
-        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/system/mopidy.service" -o /usr/lib/systemd/system/mopidy.service
+        sudo cp ~/binaries/mopidy/system/mopidy.service /usr/lib/systemd/system/mopidy.service
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/mopidy/system/mopidy.service" -o /usr/lib/systemd/system/mopidy.service
         sudo systemctl daemon-reload
         sudo systemctl reset-failed
         sudo systemctl enable mopidy 
@@ -725,7 +736,8 @@ case $yn13 in
         curl -L https://static.adguard.com/adguardhome/release/AdGuardHome_linux_amd64.tar.gz -o ~/smarthome/AdGuardHome_linux_amd64.tar.gz
         tar xvf ~/smarthome/AdGuardHome_linux_amd64.tar.gz
         sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.old
-        sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/netplan/static_ip.yaml" -o /etc/netplan/static_ip.yaml
+        sudo cp ~/binaries/netplan/static_ip.yaml /etc/netplan/static_ip.yaml
+        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/netplan/static_ip.yaml" -o /etc/netplan/static_ip.yaml
         eth_if=$(ip -4 -o a | awk '{print $2}' | cut -d/ -f1 | grep -v lo | head -n1)
         lan_ip=$(ip -4 -o a | awk '{print $4}' | cut -d/ -f1 | grep -v 127.0.0.1 | head -n1)
         lan_gateway=$(route -n | grep 'UG[ \t]' | awk '{print $2}')
