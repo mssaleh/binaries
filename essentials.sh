@@ -201,11 +201,11 @@ case $yn5 in
         x11proto-core-dev x11proto-dev x11proto-input-dev x11proto-randr-dev x11proto-scrnsaver-dev \
         x11proto-xext-dev x11proto-xf86vidmode-dev x11proto-xinerama-dev xml2 xorg-sgml-doctools \
         xtrans-dev yasm libxml2 libflite1 libgsm1 libssl-dev 
-        mkdir -p ~/ffmpeg_sources ~/bin  
-        cd ~/ffmpeg_sources  
+        mkdir -p ~/ffmpeg_sources ~/bin
+        cd ~/ffmpeg_sources
         wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.2.3.tar.bz2
-        tar xjvf ffmpeg.tar.bz2  
-        cd ffmpeg  
+        tar xjvf ffmpeg.tar.bz2
+        cd ffmpeg-4.2.3
         PATH="/usr/local/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
         --toolchain=hardened \
         --prefix="$HOME/ffmpeg_build" \
