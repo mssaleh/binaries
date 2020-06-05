@@ -588,6 +588,7 @@ case $yn12 in
         -X POST -H "Content-Type: application/json" \
         -H "Authorization: Bearer "$cloudflare_token"" \
         --data "$cf_new_data" || exit 1
+        echo "Obtaining Record ID from CloudFlare"
         curl "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records?type=A" \
         -X GET -H "Authorization: Bearer "$cloudflare_token"" -H "Content-Type:application/json" > /tmp/djson || exit 1
         domain_record_id=$(cat /tmp/djson | jq -r ".result[] | select(.name==\""$domain_name"\") | .id")
@@ -716,16 +717,16 @@ case $yn11 in
         sudo apt clean
         # Mopidy Subdomain
         echo "Setting Up Mopidy Subdomain.."
-        if [ $sub_domain == '' ]; then
+        if [ $sub_domain -eq '' ]; then
             read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
             domain_name=""$sub_domain".smart-home.app"
             echo "Setting up for: $domain_name"
         fi
-        if [ $cloudflare_token == '' ]; then
+        if [ $cloudflare_token -eq '' ]; then
             read -p "Enter CloudFlare Token:  " cloudflare_token
             echo "CloudFlare Token is: $cloudflare_token"
         fi
-        if [ $cloudflare_zone_id == '' ]; then
+        if [ $cloudflare_zone_id -eq '' ]; then
             read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
             echo "CloudFlare Zone ID is: $cloudflare_zone_id"
         fi
@@ -793,16 +794,16 @@ case $yn13 in
         rm -rf ~/smarthome/AdGuardHome_linux_amd64.tar.gz
         # AdGuard Subdomain
         echo "Setting Up AdGuard Subdomain.."
-        if [ $sub_domain == '' ]; then
+        if [ $sub_domain -eq '' ]; then
             read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
             domain_name=""$sub_domain".smart-home.app"
             echo "Setting up for: $domain_name"
         fi
-        if [ $cloudflare_token == '' ]; then
+        if [ $cloudflare_token -eq '' ]; then
             read -p "Enter CloudFlare Token:  " cloudflare_token
             echo "CloudFlare Token is: $cloudflare_token"
         fi
-        if [ $cloudflare_zone_id == '' ]; then
+        if [ $cloudflare_zone_id -eq '' ]; then
             read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
             echo "CloudFlare Zone ID is: $cloudflare_zone_id"
         fi
@@ -862,16 +863,16 @@ case $yn10 in
         sudo usermod -aG video,audio,bluetooth,avahi $USER
         # Shinobi Subdomain
         echo "Setting Up Shinobi Subdomain.."
-        if [ $sub_domain == '' ]; then
+        if [ $sub_domain -eq '' ]; then
             read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
             domain_name=""$sub_domain".smart-home.app"
             echo "Setting up for: $domain_name"
         fi
-        if [ $cloudflare_token == '' ]; then
+        if [ $cloudflare_token -eq '' ]; then
             read -p "Enter CloudFlare Token:  " cloudflare_token
             echo "CloudFlare Token is: $cloudflare_token"
         fi
-        if [ $cloudflare_zone_id == '' ]; then
+        if [ $cloudflare_zone_id -eq '' ]; then
             read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
             echo "CloudFlare Zone ID is: $cloudflare_zone_id"
         fi
