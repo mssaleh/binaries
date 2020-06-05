@@ -12,7 +12,7 @@ config:
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
-# scene: !include scenes.yaml
+scene: !include scenes.yaml
 
 #### Voice & Media #############################################################
 media_player:
@@ -44,10 +44,10 @@ frontend:
   themes: !include_dir_merge_named themes
 
 panel_iframe:
-  cctv:
-    title: 'CCTV'
-    icon: 'mdi:cctv'
-    url: 'https://cctv.ha_domain_name/'
+  # cctv:
+  #   title: 'CCTV'
+  #   icon: 'mdi:cctv'
+  #   url: 'https://cctv.ha_domain_name/'
   media:
     title: 'Media Player'
     icon: 'mdi:music-box'
@@ -94,6 +94,7 @@ recorder:
       - sensor.time_date
       - sensor.date_time_iso
       - sensor.prayers
+      - sensor.moonphases
 history:
   exclude:
     entities:
@@ -102,6 +103,7 @@ history:
       - sensor.time_date
       - sensor.date_time_iso
       - sensor.prayers
+      - sensor.moonphases
 logbook:
   exclude:
     entities:
@@ -110,6 +112,7 @@ logbook:
       - sensor.time_date
       - sensor.date_time_iso
       - sensor.prayers
+      - sensor.moonphases
 
 #### Time & Date ###############################################################
 sensor:
