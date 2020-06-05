@@ -582,12 +582,14 @@ case $yn12 in
         read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
         echo "CloudFlare Zone ID is: $cloudflare_zone_id"
         public_ip=$(dig @resolver1.opendns.com ANY myip.opendns.com +short)
-        curl -X POST \"https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records\" \
-             -H \"Content-Type: application/json\" \
-             -H \"Authorization: Bearer "$cloudflare_token"\" \
-             --data "{\"type\":\"A\",\"name\":\""$sub_domain"\",\"content\":\""$public_ip"\",\"ttl\":120,\"proxied\":false}"
-        curl -X GET "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records?type=A" \
-             -H "Authorization: Bearer "$cloudflare_token"" -H "Content-Type:application/json" > /tmp/djson
+        cf_new_data=$(echo "{\"type\":\"A\",\"name\":\"$sub_domain\",\"content\":\"$public_ip\",\"ttl\":180,\"proxied\":false}")
+        echo "data payload is $cf_new_data"
+        curl "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records" \
+        -X POST -H "Content-Type: application/json" \
+        -H "Authorization: Bearer "$cloudflare_token"" \
+        --data "$cf_new_data" || exit 1
+        curl "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records?type=A" \
+        -X GET -H "Authorization: Bearer "$cloudflare_token"" -H "Content-Type:application/json" > /tmp/djson || exit 1
         domain_record_id=$(cat /tmp/djson | jq -r ".result[] | select(.name==\""$domain_name"\") | .id")
         rm -Rf /tmp/djson
         echo "Domain: $domain_name has been setup with Domain Record ID: $domain_record_id"
@@ -596,7 +598,6 @@ case $yn12 in
         sed -i "s/cf_token/$cloudflare_token/g" ~/smarthome/ddns/ddns.sh
         sed -i "s/cf_zone_id/$cloudflare_zone_id/g" ~/smarthome/ddns/ddns.sh
         sed -i "s/cf_record_name/$sub_domain/g" ~/smarthome/ddns/ddns.sh
-        sed -i "s/cf_record_id/$domain_record_id/g" ~/smarthome/ddns/ddns.sh
         chmod 750 ~/smarthome/ddns/ddns.sh
         sh ~/smarthome/ddns/ddns.sh
         (crontab -l 2>/dev/null && echo "*/5 * * * * ~/smarthome/ddns/ddns.sh") | crontab -

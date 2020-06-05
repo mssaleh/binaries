@@ -1,9 +1,16 @@
 #/usr/bin/env bash
 
-AUTH_TOKEN=cf_token
-ZONE_ID=cf_zone_id
-A_RECORD_NAME="cf_record_name"
-A_RECORD_ID=cf_record_id
+cloudflare_zone_id=cf_zone_id
+cloudflare_token=cf_token
+sub_domain="cf_record_name"
+domain_name=cf_record_name.smart-home.app
+
+# Retrieve Record ID
+curl "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records?type=A" \
+-X GET -H "Authorization: Bearer "$cloudflare_token"" -H "Content-Type:application/json" > /tmp/djson || exit 1
+domain_record_id=$(cat /tmp/djson | jq -r ".result[] | select(.name==\""$domain_name"\") | .id")
+rm -Rf /tmp/djson
+echo "Domain: $domain_name has Record ID: $domain_record_id"
 
 # Retrieve the last recorded public IP address
 IP_RECORD="/tmp/ip-record"
@@ -24,16 +31,12 @@ fi
 echo $PUBLIC_IP > $IP_RECORD
 
 # Record the new public IP address on Cloudflare using API v4
-RECORD=$(cat <<EOF
-{ "type": "A",
-  "name": "$A_RECORD_NAME",
-  "content": "$PUBLIC_IP",
-  "ttl": 180,
-  "proxied": false }
-EOF
-)
-curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records/$A_RECORD_ID" \
+cf_record_update=$(echo "{\"type\":\"A\",\"name\":\"$sub_domain\",\"content\":\"$PUBLIC_IP\",\"ttl\":180,\"proxied\":false}")
+
+curl "https://api.cloudflare.com/client/v4/zones/$cloudflare_zone_id/dns_records/$domain_record_id" \
      -X PUT \
-     -H "Authorization: Bearer $AUTH_TOKEN" \
+     -H "Authorization: Bearer $cloudflare_token" \
      -H "Content-Type:application/json" \
-     -d "$RECORD"
+     --data "$cf_record_update" || exit 1
+
+exit 0

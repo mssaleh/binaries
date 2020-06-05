@@ -31,6 +31,8 @@ services:
     image: eclipse-mosquitto
     container_name: mosquitto
     user: "1000:1000"
+    depends_on:
+      - "letsencrypt"
     volumes:
       - ./letsencrypt/config/keys/letsencrypt:/keys:ro
       - /etc/localtime:/etc/localtime:ro
@@ -45,6 +47,8 @@ services:
   homeassistant:
     container_name: home-assistant
     image: homeassistant/home-assistant:stable
+    depends_on:
+      - "letsencrypt"
     volumes:
       - ./homeassistant/config:/config
       - ./letsencrypt/config/keys/letsencrypt:/ssl:ro
