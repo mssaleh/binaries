@@ -349,7 +349,7 @@ case $yn5 in
         libharfbuzz-dev libharfbuzz-gobject0 libharfbuzz-icu0 libhtml-form-perl libhtml-format-perl \
         libhtml-parser-perl libhtml-tagset-perl libhtml-tree-perl libhttp-cookies-perl \
         libhttp-daemon-perl libhttp-date-perl libhttp-message-perl libhttp-negotiate-perl libibus-1.0-5 \
-        libibus-1.0-dev libice-dev libice6 libicu-dev libidn2-dev libiec61883-dev libio-html-perl \
+        libibus-1.0-dev libice-dev libicu-dev libidn2-dev libiec61883-dev libio-html-perl \
         libio-socket-ssl-perl libjack-jackd2-dev libjsoncpp1 libkadm5clnt-mit11 libkadm5srv-mit11 \
         libkdb5-9 libkrb5-dev liblilv-dev libltdl-dev liblwp-mediatypes-perl liblwp-protocol-https-perl \
         libmailtools-perl libmfx-dev libmount-dev libmp3lame-dev libmpg123-dev libmysofa-dev \
@@ -360,7 +360,7 @@ case $yn5 in
         libpcre32-3 libpcrecpp0v5 libpgm-dev libpixman-1-dev libpng-dev libpng-tools libpthread-stubs0-dev \
         libpulse-dev libraw1394-dev libraw1394-tools librhash0 librsvg2-dev \
         librubberband-dev libsdl2-dev libselinux1-dev libsepol1-dev libserd-dev libset-scalar-perl \
-        libshine-dev libslang2-dev libsm-dev libsm6 libsnappy-dev libsndio-dev libsodium-dev \
+        libshine-dev libslang2-dev libsm-dev libsnappy-dev libsndio-dev libsodium-dev \
         libsord-dev libsoxr-dev libspeex-dev libsratom-dev libssh-dev libssl-dev libswresample-dev \
         libswscale-dev libtasn1-6-dev libtasn1-doc libtext-unidecode-perl libtheora-dev libtimedate-perl \
         libtool libtry-tiny-perl libtwolame-dev libunbound8 liburi-perl libva-dev libva-glx2 \
@@ -640,7 +640,6 @@ case $yn12 in
         docker restart mosquitto
         # Clean-Up
         sudo apt clean
-        sudo rm -Rf ~/binaries
         echo "HomeAssistant Ecosystem Installed"
         break
         ;;
@@ -886,6 +885,33 @@ case $yn10 in
         mv ~/smarthome/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf.smpl ~/smarthome/letsencrypt/config/nginx/proxy-confs/shinobi.subdomain.conf
         docker restart letsencrypt
         echo "Shinobi Installed"
+        break
+        ;;
+    N|n|no) 
+        break
+        ;;
+    A|a|abort) 
+        exit
+        ;;
+    *) 
+        echo "Skipping."
+        echo "If you require it. You can re-run the script."
+        ;;
+esac
+
+echo "================================"
+echo "   Install Plex Media Server    "
+echo "================================"
+echo "Do you wish to install Plex Media Server?"
+read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn15
+case $yn15 in
+    Y|y|yes) 
+        echo "Installing Plex Media Server"
+        echo "deb https://downloads.plex.tv/repo/deb public main" | sudo tee /etc/apt/sources.list.d/plexmediaserver.list
+        curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -
+        sudo apt update && sudo apt install -y plexmediaserver
+        sudo apt clean
+        echo "Plex Media Server Installed"
         break
         ;;
     N|n|no) 
