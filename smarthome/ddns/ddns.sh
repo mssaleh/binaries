@@ -3,8 +3,9 @@
 cloudflare_zone_id=cf_zone_id
 cloudflare_token=cf_token
 sub_domain="cf_record_name"
-domain_name=cf_record_name.smart-home.app
 
+# FQDN
+domain_name=$sub_domain.smart-home.app
 # Retrieve Record ID
 curl "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records?type=A" \
 -X GET -H "Authorization: Bearer "$cloudflare_token"" -H "Content-Type:application/json" > /tmp/djson || exit 1
