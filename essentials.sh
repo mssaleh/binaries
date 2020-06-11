@@ -34,8 +34,8 @@ case $yn1 in
         libudev-dev libwebpdemux2 linux-generic lm-sensors locales lsb-release lsmount lvm2 \
         mawk mdadm mediainfo mesa-utils-extra mount ncdu ncurses-base ncurses-bin netbase netcat-openbsd \
         netplan.io nvme-cli open-iscsi openjdk-8-jdk-headless openjdk-8-jre-headless openssh-server \
-        openssl open-vm-tools overlayroot passwd patch perl pkg-config pollinate procps \
-        python3 python3-dev python3-nacl python3-pip \
+        openssl open-vm-tools overlayroot passwd patch perl pkg-config pollinate procps python3-dateutil \
+        python3 python3-dev python3-nacl python3-pip intel-cmt-cat isal ipmitool kacpimon libigfxcmrt7 libmfx-tools \
         python3-pymacaroons rsyslog screen sensible-utils shim-signed software-properties-common \
         sosreport sudo sysvinit-utils tmux tzdata ubuntu-keyring ubuntu-restricted-extras ubuntu-standard \
         ubuntu-sounds udev unzip update-notifier-common vim vim-tiny virtualenv wget whiptail xfsprogs zip zlib1g-dev
