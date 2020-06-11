@@ -10,6 +10,7 @@ ConditionUser=!root
 ExecStart=/usr/local/bin/aircast -l 1000:2000 -Z -r -x /etc/aircast/aircast.xml
 Restart=on-failure
 RestartSec=30
+Environment=PULSE_SERVER="tcp:127.0.0.1"
 
 [Install]
 WantedBy=default.target

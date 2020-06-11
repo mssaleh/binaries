@@ -10,6 +10,7 @@ ConditionUser=!root
 ExecStart=/usr/local/bin/shairport-sync
 Restart=on-failure
 RestartSec=30
+Environment=PULSE_SERVER="tcp:127.0.0.1"
 
 [Install]
 WantedBy=default.target

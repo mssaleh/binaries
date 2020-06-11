@@ -573,6 +573,16 @@ case $yn12 in
         sudo apt install -y jq 
         cp -r ~/binaries/smarthome ~
         sudo chown -R $USER: ~/smarthome && sudo chmod -R +rw ~/smarthome
+        sudo pip3 install hass-configurator
+        sudo mkdir -p /etc/configurator
+        sudo cp ~/binaries/configurator/settings.conf /etc/configurator/settings.conf
+        sudo cp ~/binaries/configurator/configurator.service /usr/lib/systemd/user/configurator.service
+        systemctl --user daemon-reload 
+        sudo systemctl daemon-reload 
+        systemctl --user enable configurator.service
+        systemctl --user start configurator.service
+        sleep 3
+        systemctl --user status configurator.service
         # Domain Setup
         read -p "Enter your sub-domain: (e.g. only: user , if domain is user.smart-home.app):  " sub_domain
         domain_name=""$sub_domain".smart-home.app"
