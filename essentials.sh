@@ -438,8 +438,8 @@ case $yn8 in
         sudo chmod +x /usr/local/bin/aircast
         sudo cp ~/binaries/aircast/aircast.service /usr/lib/systemd/user/aircast.service
         # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/aircast/aircast.service" -o /usr/lib/systemd/user/aircast.service 
-        sudo mkdir -p /etc/aircast 
-        sudo cp ~/binaries/aircast/aircast.xml /etc/aircast/aircast.xml
+        # sudo mkdir -p /etc/aircast 
+        # sudo cp ~/binaries/aircast/aircast.xml /etc/aircast/aircast.xml
         # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/aircast/aircast.xml" -o /etc/aircast/aircast.xml 
         systemctl --user daemon-reload 
         sudo systemctl daemon-reload 

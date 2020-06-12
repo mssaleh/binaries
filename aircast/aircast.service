@@ -7,7 +7,7 @@ After=avahi-daemon.service
 ConditionUser=!root
 
 [Service]
-ExecStart=/usr/local/bin/aircast -l 1000:2000 -Z -r -x /etc/aircast/aircast.xml
+ExecStart=/usr/local/bin/aircast -Z -r -I -l 1000:2000
 Restart=on-failure
 RestartSec=30
 Environment=PULSE_SERVER="tcp:127.0.0.1"
