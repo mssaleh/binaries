@@ -609,6 +609,7 @@ case $yn12 in
         echo "Alarm System PIN is:  $homeassistant_alarm_pin"
         sed -i "s/secret_alarm_code/$homeassistant_alarm_pin/g" ~/smarthome/homeassistant/config/secrets.yaml
         sed -i "s/ha_domain_name/$domain_name/g" ~/smarthome/homeassistant/config/configuration.yaml
+        # HomeAssistant DB
         sudo mysql -e "CREATE DATABASE IF NOT EXISTS homeassistant" 
         read -p "Enter password for HomeAssistant Database:  " homeassistant_db_pw 
         homeassistant_db_pw=${homeassistant_db_pw:-homeassistant} 
