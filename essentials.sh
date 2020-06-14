@@ -503,7 +503,7 @@ case $yn9 in
         pwrsv2=$(cat /sys/module/snd_hda_intel/parameters/power_save_controller)
         if [ $pwrsv2 = 'Y' ]; then
         echo "N" | sudo tee /sys/module/snd_hda_intel/parameters/power_save_controller
-        echo "options snd_hda_intel power_save_controller=0" | sudo tee -a /etc/modprobe.d/audio_disable_powersave.conf
+        echo "options snd_hda_intel power_save_controller=N" | sudo tee -a /etc/modprobe.d/audio_disable_powersave.conf
         fi
         sudo groupadd bluetooth
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
