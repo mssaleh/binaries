@@ -2,7 +2,6 @@
 <aircast>
 <common>
 <enabled>1</enabled>
-<drift>1</drift>
 <stop_receiver>0</stop_receiver>
 <media_volume>1.0000</media_volume>
 <latency></latency>

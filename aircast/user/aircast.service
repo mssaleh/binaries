@@ -1,8 +1,8 @@
 [Unit]
-Description=Aircast Bridge
-#Requires=pulseaudio.service
+Description=AirCast bridge
+After=network-online.target
+Wants=network-online.target
 #After=pulseaudio.service
-After=dbus.service
 After=avahi-daemon.service
 #ConditionUser=!root
 
