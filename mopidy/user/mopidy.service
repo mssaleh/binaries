@@ -13,7 +13,7 @@ After=shairport-sync.service
 After=alsa-restore.service
 
 [Service]
-ExecStartPre=/bin/sleep 3
+#ExecStartPre=/bin/sleep 3
 ExecStartPre=/bin/mkdir -p /var/cache/mopidy
 ExecStartPre=/bin/chown -R $USER:audio /var/cache/mopidy
 ExecStart=/usr/bin/mopidy --config $HOME/.config/mopidy/mopidy.conf

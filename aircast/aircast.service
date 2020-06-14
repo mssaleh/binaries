@@ -1,16 +1,16 @@
 [Unit]
 Description=Aircast Bridge
-Requires=pulseaudio.service
-After=pulseaudio.service
+#Requires=pulseaudio.service
+#After=pulseaudio.service
 After=dbus.service
 After=avahi-daemon.service
-ConditionUser=!root
+#ConditionUser=!root
 
 [Service]
 ExecStart=/usr/local/bin/aircast -Z -r -I -l 1000:2000
 Restart=on-failure
 RestartSec=30
-Environment=PULSE_SERVER="tcp:127.0.0.1"
+#Environment=PULSE_SERVER="tcp:127.0.0.1"
 
 [Install]
 WantedBy=default.target
