@@ -24,7 +24,7 @@ case $yn1 in
         debconf debconf-i18n diffutils dirmngr e2fsprogs efibootmgr eject ethtool faac \
         fdisk findutils firmware-b43-installer fonts-ubuntu-console frei0r-plugins fwupd \
         gdisk git gnupg gnupg2 gnupg-agent grep grub-efi-amd64 grub-efi-amd64-signed gstreamer1.0-alsa \
-        gstreamer1.0-plugins-bad gstreamer1.0-plugins-good gstreamer1.0-plugins-rtp gstreamer1.0-pulseaudio \
+        gstreamer1.0-plugins-bad gstreamer1.0-plugins-good gstreamer1.0-plugins-rtp \
         gstreamer1.0-rtsp gzip hddtemp hostname htop hwinfo init intel-gpu-tools \
         intel-media-va-driver-non-free intel-opencl-icd iproute2 iputils-ping isc-dhcp-client jq kbd \
         kmod less libasound2-plugins-extra libauthen-pam-perl libavahi-compat-libdnssd-dev libavdevice58 \
@@ -436,20 +436,34 @@ case $yn8 in
         echo "Installing Aircast" 
         sudo curl -L "https://raw.githubusercontent.com/philippe44/AirConnect/master/bin/aircast-x86-64" -o /usr/local/bin/aircast 
         sudo chmod +x /usr/local/bin/aircast
-        sudo cp ~/binaries/aircast/aircast.service /usr/lib/systemd/user/aircast.service
-        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/aircast/aircast.service" -o /usr/lib/systemd/user/aircast.service 
-        # sudo mkdir -p /etc/aircast 
-        # sudo cp ~/binaries/aircast/aircast.xml /etc/aircast/aircast.xml
-        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/aircast/aircast.xml" -o /etc/aircast/aircast.xml 
-        systemctl --user daemon-reload 
+        ### System Service
+        sudo cp ~/binaries/aircast/system/aircast.service /usr/lib/systemd/system/aircast.service
         sudo systemctl daemon-reload 
-        systemctl --user enable aircast.service 
-        systemctl --user restart aircast.service 
+        sudo systemctl enable aircast.service
+        sudo systemctl start aircast.service
         sleep 3
-        systemctl --user status aircast.service 
+        sudo systemctl status aircast.service
+        ### User Service
+        # sudo cp ~/binaries/aircast/user/aircast.service /usr/lib/systemd/user/aircast.service
+        # systemctl --user daemon-reload 
+        # systemctl --user enable aircast.service 
+        # systemctl --user restart aircast.service 
+        # sleep 3
+        # systemctl --user status aircast.service 
         sudo groupadd bluetooth
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
+        ##### Disable Intel Audio Power Saving
+        pwrsv1=$(cat /sys/module/snd_hda_intel/parameters/power_save)
+        if [ $pwrsv1 = '1' ]; then
+        echo "0" | sudo tee /sys/module/snd_hda_intel/parameters/power_save
+        echo "options snd_hda_intel power_save=0" | sudo tee -a /etc/modprobe.d/audio_disable_powersave.conf
+        fi
+        pwrsv2=$(cat /sys/module/snd_hda_intel/parameters/power_save_controller)
+        if [ $pwrsv2 = 'Y' ]; then
+        echo "N" | sudo tee /sys/module/snd_hda_intel/parameters/power_save_controller
+        echo "options snd_hda_intel power_save_controller=0" | sudo tee -a /etc/modprobe.d/audio_disable_powersave.conf
+        fi
         echo "Aircast Installed"
         break
         ;;
@@ -472,81 +486,103 @@ echo "Do you wish to install shairport-sync?"
 read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn9
 case $yn9 in
     Y|y|yes) 
-        echo "Installing shairport-sync" 
-        sudo apt install -y --no-install-recommends \
-        autoconf automake autotools-dev avahi-daemon build-essential \
-        git libaacs-dev libasound2-dev libauthen-sasl-perl libavahi-client-dev \
-        libconfig-dev libconfig-doc libdaemon-dev libdata-dump-perl libfaac0 \
-        libfaac-dev libfdk-aac-dev libfile-listing-perl libflac-dev \
-        libfont-afm-perl libhtml-format-perl libhtml-form-perl libhtml-tree-perl \
-        libhttp-cookies-perl libhttp-daemon-perl libhttp-negotiate-perl \
-        libio-socket-ssl-perl libltdl-dev liblwp-protocol-https-perl \
-        libmailtools-perl libmbedcrypto3 libmbedtls12 libmbedtls-dev \
-        libmbedx509-0 libnet-http-perl libnet-smtp-ssl-perl libogg-dev \
-        libpopt-dev libpulse-dev libpulse-mainloop-glib0 libsndfile1-dev \
-        libsoxr-dev libsoxr-lsr0 libssl-dev libtool libtry-tiny-perl \
-        libvo-aacenc-dev libvorbis-dev libwww-perl \
-        libwww-robotrules-perl libxml-parser-perl m4 xmltoman 
-        mkdir -p ~/shairport 
-        cd ~/shairport  
-        git clone "https://github.com/mikebrady/alac.git" 
-        cd ~/shairport/alac  
-        autoreconf -fi  
-        ./configure  
-        make  
-        sudo make install  
-        sudo ldconfig  
-        cd ~/shairport  
-        git clone "https://github.com/mikebrady/shairport-sync.git"  
-        cd ~/shairport/shairport-sync  
-        autoreconf -fi  
-        ./configure --sysconfdir=/etc --with-alsa --with-pa --with-avahi --with-ssl=openssl --with-metadata --with-soxr --with-stdout --with-pipe --with-convolution --with-apple-alac  
-        make  
-        sudo make install  
-        sudo apt purge -y \
-        autoconf automake autotools-dev libaacs-dev libasound2-dev \
-        libauthen-sasl-perl libblkid-dev libconfig-dev libconfig-doc \
-        libdaemon-dev libdata-dump-perl libencode-locale-perl \
-        libfaac-dev libfdk-aac-dev libfile-listing-perl libflac-dev \
-        libfont-afm-perl libglib2.0-dev libglib2.0-dev-bin \
-        libhtml-form-perl libhtml-format-perl libhtml-parser-perl \
-        libhtml-tagset-perl libhtml-tree-perl libhttp-cookies-perl \
-        libhttp-daemon-perl libhttp-date-perl libhttp-message-perl \
-        libhttp-negotiate-perl libio-html-perl libio-socket-ssl-perl \
-        libltdl-dev liblwp-mediatypes-perl liblwp-protocol-https-perl \
-        libmailtools-perl libmbedcrypto3 libmbedtls-dev libmbedtls12 \
-        libmbedx509-0 libmount-dev libnet-http-perl libnet-smtp-ssl-perl \
-        libogg-dev libpcre16-3 libpcre2-16-0 libpcre2-32-0 libpcre2-dev \
-        libpcre2-posix2 libpcre3-dev libpcre32-3 libpcrecpp0v5 \
-        libpopt-dev libpulse-dev libselinux1-dev \
-        libsepol1-dev libsndfile1-dev libsoxr-dev libssl-dev \
-        libtimedate-perl libtool libtry-tiny-perl liburi-perl \
-        libvo-aacenc-dev libvorbis-dev libwww-perl libwww-robotrules-perl \
-        libxml-parser-perl m4 uuid-dev xmltoman
-        sudo apt install -y --no-install-recommends \
-        avahi-daemon libasound2 libavahi-client3 libavahi-common3 \
-        libc6 libconfig9 libdaemon0 libgcc-s1 libglib2.0-0 libjack-jackd2-0 \
-        libmosquitto1 libpopt0 libpulse0 libsndfile1 libsoxr0 libssl1.1 libstdc++6 
-        sudo rm -Rf ~/shairport ~/.cache/* 
+        echo "Installing shairport-sync"
+        sudo apt install shairport-sync
         sudo mv /etc/shairport-sync.conf /etc/shairport-sync.old 
         sudo cp ~/binaries/shairport-sync/shairport-sync.conf /etc/shairport-sync.conf
-        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.conf" -o /etc/shairport-sync.conf 
-        sudo cp ~/binaries/shairport-sync/shairport-sync.service /usr/lib/systemd/user/shairport-sync.service
-        # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.service" -o /usr/lib/systemd/user/shairport-sync.service 
-        systemctl --user daemon-reload 
-        sudo systemctl daemon-reload 
-        sudo systemctl restart avahi-daemon.service
-        sleep 2
-        sudo systemctl status avahi-daemon.service
-        systemctl --user enable shairport-sync.service 
-        systemctl --user restart shairport-sync.service 
-        sleep 2
-        systemctl --user status shairport-sync.service 
-        sudo apt clean
+        sudo systemctl enable shairport-sync.service
+        sudo systemctl restart shairport-sync.service
+        sleep 3
+        sudo systemctl status shairport-sync.service
+        ##### Disable Intel Audio Power Saving
+        pwrsv1=$(cat /sys/module/snd_hda_intel/parameters/power_save)
+        if [ $pwrsv1 = '1' ]; then
+        echo "0" | sudo tee /sys/module/snd_hda_intel/parameters/power_save
+        echo "options snd_hda_intel power_save=0" | sudo tee -a /etc/modprobe.d/audio_disable_powersave.conf
+        fi
+        pwrsv2=$(cat /sys/module/snd_hda_intel/parameters/power_save_controller)
+        if [ $pwrsv2 = 'Y' ]; then
+        echo "N" | sudo tee /sys/module/snd_hda_intel/parameters/power_save_controller
+        echo "options snd_hda_intel power_save_controller=0" | sudo tee -a /etc/modprobe.d/audio_disable_powersave.conf
+        fi
         sudo groupadd bluetooth
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
         sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
-        sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi shairport-sync
+        ##### Compile and Install from Source
+        # sudo apt install -y --no-install-recommends \
+        # autoconf automake autotools-dev avahi-daemon build-essential \
+        # git libaacs-dev libasound2-dev libauthen-sasl-perl libavahi-client-dev \
+        # libconfig-dev libconfig-doc libdaemon-dev libdata-dump-perl libfaac0 \
+        # libfaac-dev libfdk-aac-dev libfile-listing-perl libflac-dev \
+        # libfont-afm-perl libhtml-format-perl libhtml-form-perl libhtml-tree-perl \
+        # libhttp-cookies-perl libhttp-daemon-perl libhttp-negotiate-perl \
+        # libio-socket-ssl-perl libltdl-dev liblwp-protocol-https-perl \
+        # libmailtools-perl libmbedcrypto3 libmbedtls12 libmbedtls-dev \
+        # libmbedx509-0 libnet-http-perl libnet-smtp-ssl-perl libogg-dev \
+        # libpopt-dev libpulse-dev libpulse-mainloop-glib0 libsndfile1-dev \
+        # libsoxr-dev libsoxr-lsr0 libssl-dev libtool libtry-tiny-perl \
+        # libvo-aacenc-dev libvorbis-dev libwww-perl \
+        # libwww-robotrules-perl libxml-parser-perl m4 xmltoman 
+        # mkdir -p ~/shairport 
+        # cd ~/shairport  
+        # git clone "https://github.com/mikebrady/alac.git" 
+        # cd ~/shairport/alac  
+        # autoreconf -fi  
+        # ./configure  
+        # make  
+        # sudo make install  
+        # sudo ldconfig  
+        # cd ~/shairport  
+        # git clone "https://github.com/mikebrady/shairport-sync.git"  
+        # cd ~/shairport/shairport-sync  
+        # autoreconf -fi  
+        # ./configure --sysconfdir=/etc --with-alsa --with-pa --with-avahi --with-ssl=openssl --with-metadata --with-soxr --with-stdout --with-pipe --with-convolution --with-apple-alac  
+        # make  
+        # sudo make install  
+        # sudo apt purge -y \
+        # autoconf automake autotools-dev libaacs-dev libasound2-dev \
+        # libauthen-sasl-perl libblkid-dev libconfig-dev libconfig-doc \
+        # libdaemon-dev libdata-dump-perl libencode-locale-perl \
+        # libfaac-dev libfdk-aac-dev libfile-listing-perl libflac-dev \
+        # libfont-afm-perl libglib2.0-dev libglib2.0-dev-bin \
+        # libhtml-form-perl libhtml-format-perl libhtml-parser-perl \
+        # libhtml-tagset-perl libhtml-tree-perl libhttp-cookies-perl \
+        # libhttp-daemon-perl libhttp-date-perl libhttp-message-perl \
+        # libhttp-negotiate-perl libio-html-perl libio-socket-ssl-perl \
+        # libltdl-dev liblwp-mediatypes-perl liblwp-protocol-https-perl \
+        # libmailtools-perl libmbedcrypto3 libmbedtls-dev libmbedtls12 \
+        # libmbedx509-0 libmount-dev libnet-http-perl libnet-smtp-ssl-perl \
+        # libogg-dev libpcre16-3 libpcre2-16-0 libpcre2-32-0 libpcre2-dev \
+        # libpcre2-posix2 libpcre3-dev libpcre32-3 libpcrecpp0v5 \
+        # libpopt-dev libpulse-dev libselinux1-dev \
+        # libsepol1-dev libsndfile1-dev libsoxr-dev libssl-dev \
+        # libtimedate-perl libtool libtry-tiny-perl liburi-perl \
+        # libvo-aacenc-dev libvorbis-dev libwww-perl libwww-robotrules-perl \
+        # libxml-parser-perl m4 uuid-dev xmltoman
+        # sudo apt install -y --no-install-recommends \
+        # avahi-daemon libasound2 libavahi-client3 libavahi-common3 \
+        # libc6 libconfig9 libdaemon0 libgcc-s1 libglib2.0-0 libjack-jackd2-0 \
+        # libmosquitto1 libpopt0 libpulse0 libsndfile1 libsoxr0 libssl1.1 libstdc++6 
+        # sudo rm -Rf ~/shairport ~/.cache/* 
+        # sudo mv /etc/shairport-sync.conf /etc/shairport-sync.old 
+        # sudo cp ~/binaries/shairport-sync/shairport-sync.conf /etc/shairport-sync.conf
+        # # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.conf" -o /etc/shairport-sync.conf 
+        # sudo cp ~/binaries/shairport-sync/shairport-sync.service /usr/lib/systemd/user/shairport-sync.service
+        # # sudo curl -L "https://raw.githubusercontent.com/mssaleh/binaries/master/shairport-sync/shairport-sync.service" -o /usr/lib/systemd/user/shairport-sync.service 
+        # systemctl --user daemon-reload 
+        # sudo systemctl daemon-reload 
+        # sudo systemctl restart avahi-daemon.service
+        # sleep 2
+        # sudo systemctl status avahi-daemon.service
+        # systemctl --user enable shairport-sync.service 
+        # systemctl --user restart shairport-sync.service 
+        # sleep 2
+        # systemctl --user status shairport-sync.service 
+        # sudo apt clean
+        # sudo groupadd bluetooth
+        # sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi root
+        # sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi $USER
+        # sudo usermod -aG pulse,pulse-access,audio,bluetooth,avahi shairport-sync
         echo "shairport-sync Installed"
         break
         ;;
@@ -936,3 +972,5 @@ case $yn15 in
         echo "If you require it. You can re-run the script."
         ;;
 esac
+
+
