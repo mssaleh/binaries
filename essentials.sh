@@ -216,7 +216,7 @@ echo "Do you wish to install FFMPEG?"
 read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn5
 case $yn5 in
     Y|y|yes) 
-        echo "Installing Non-free FFMPEG" 
+        echo "Installing Non-free FFMPEG"
         sudo apt update && sudo apt install -y \
         autoconf automake autotools-dev cmake cmake-data comerr-dev ffmpeg flite1-dev frei0r-plugins-dev \
         ghc gir1.2-freedesktop gir1.2-gdkpixbuf-2.0 gir1.2-harfbuzz-0.0 gir1.2-ibus-1.0 gir1.2-rsvg-2.0 \
@@ -261,12 +261,12 @@ case $yn5 in
         xtrans-dev yasm libxml2 libflite1 libgsm1 libssl-dev 
         mkdir -p ~/ffmpeg_sources ~/bin
         cd ~/ffmpeg_sources
-        wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.2.3.tar.bz2
+        wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.3.tar.bz2
         tar xjvf ffmpeg.tar.bz2
-        cd ffmpeg-4.2.3
-        PATH="/usr/local/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
+        cd ffmpeg-4.3
+        LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH" PATH="/usr/local/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
         --toolchain=hardened \
-        --prefix="$HOME/ffmpeg_build" \
+        --prefix="/usr/local" \
         --pkg-config-flags=" --static" \
         --extra-cflags="-I$HOME/ffmpeg_build/include" \
         --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
@@ -339,7 +339,7 @@ case $yn5 in
         icu-devtools krb5-multidev ladspa-sdk libaom-dev libasound2-dev libass-dev libauthen-sasl-perl \
         libavutil-dev libblkid-dev libbs2b-dev libbsd-dev libcaca-dev libcairo-script-interpreter2 \
         libcairo2-dev libcdio-cdda-dev libcdio-dev libcdio-paranoia-dev libchromaprint-dev libcodec2-dev \
-        libcurl4-gnutls-dev libdata-dump-perl libdc1394-25 libdc1394-dev libdrm-dev libegl-dev \
+        libcurl4-gnutls-dev libdata-dump-perl libdc1394-dev libdrm-dev libegl-dev \
         libegl1-mesa-dev libencode-locale-perl libfcgi-perl libfdk-aac-dev libfile-listing-perl libfont-afm-perl \
         libfontconfig1-dev libfreetype-dev libfreetype6-dev libfribidi-dev libgdk-pixbuf2.0-dev \
         libghc-gnutls-dev libghc-monads-tf-dev libgl-dev libgl1-mesa-dev libgles-dev libgles1 \
@@ -375,6 +375,11 @@ case $yn5 in
         x11proto-core-dev x11proto-dev x11proto-input-dev x11proto-randr-dev x11proto-scrnsaver-dev \
         x11proto-xext-dev x11proto-xf86vidmode-dev x11proto-xinerama-dev xml2 xorg-sgml-doctools \
         xtrans-dev yasm
+        mkdir -p ~/backup/usr/lib/x86_64-linux-gnu
+        cd /usr/lib/x86_64-linux-gnu/
+        sudo mv libalac* libavcodec* libavdevice* libavfilter* libavformat* libavutil* libpostproc* libswresample* libswscale* ~/backup/usr/lib/x86_64-linux-gnu/
+        cd /usr/local/lib/
+        sudo cp -P libalac* libavcodec* libavdevice* libavfilter* libavformat* libavutil* libpostproc* libswresample* libswscale* /usr/lib/x86_64-linux-gnu/
         sudo apt purge -y ffmpeg && sudo apt autoremove --purge -y && sudo apt autoclean && sudo apt clean 
         sudo rm -Rf ~/ffmpeg_build/* ~/ffmpeg_sources/* ~/.cache/* 
         ffmpeg -hwaccels 
