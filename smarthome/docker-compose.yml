@@ -24,7 +24,7 @@ services:
       - ./letsencrypt/config:/config
     ports:
       - 443:443
-      - 80:80
+      - "80:80"
     restart: unless-stopped
 
   mosquitto:
@@ -163,3 +163,21 @@ services:
       - 51413:51413
       - 51413:51413/udp
     restart: unless-stopped
+
+  # routr:
+  #   image: fonoster/routr
+  #   container_name: routr
+  #   restart: unless-stopped
+  #   environment:
+  #     - EXTERN_ADDR=192.168.0.5
+  #     - DATA_SOURCE_PROVIDER=files_data_provider
+  #     - REST_SERVICE_UNSECURED=true
+  #   volumes:
+  #     - ./routr/config:/opt/routr/config
+  #   ports:
+  #     - "4567:4567"
+  #     - "5060:5060"
+  #     - 5060:5060/udp
+  #     - "5061:5061"
+  #     - "5062:5062"
+  #     - 5062:5062/udp
