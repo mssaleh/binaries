@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-sudo apt install pi-bluetooth python3-bluez libbluetooth-dev bluez-tools bluez bluez-hcidump bluetooth
+sudo apt install pi-bluetooth python3-bluez libbluetooth-dev bluez-tools bluez bluez-hcidump bluetooth python3-virtualenv
 cd miscale-mqtt-bridge
 virtualenv -p python3 .venv
 source .venv/bin/activate
