@@ -1,0 +1,13 @@
+[Unit]
+Description=MiScale MQTT bridge
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/miscale-mqtt-bridge
+ExecStart=/home/pi/miscale-mqtt-bridge/service.sh
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
