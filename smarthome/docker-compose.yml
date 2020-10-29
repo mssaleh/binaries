@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   letsencrypt:
-    image: linuxserver/letsencrypt
+    image: linuxserver/swag
     container_name: letsencrypt
     cap_add:
       - NET_ADMIN
@@ -83,86 +83,86 @@ services:
       # - CHECK_URL=https://hc-ping.com/4b04555b-57bc-4147-83bd-919e3bc0a1ce
     restart: unless-stopped
 
-  bazarr:
-    image: linuxserver/bazarr
-    container_name: bazarr
-    depends_on:
-      - "letsencrypt"
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Asia/Dubai
-      - UMASK_SET=002
-    volumes:
-      - ./letsencrypt/config/keys:/keys
-      - ./bazarr/config:/config
-      - ~/media/movies:/movies
-      - ~/media/tv:/tv
-    ports:
-      - 6767:6767
-    restart: unless-stopped
+#   bazarr:
+#     image: linuxserver/bazarr
+#     container_name: bazarr
+#     depends_on:
+#       - "letsencrypt"
+#     environment:
+#       - PUID=1000
+#       - PGID=1000
+#       - TZ=Asia/Dubai
+#       - UMASK_SET=002
+#     volumes:
+#       - ./letsencrypt/config/keys:/keys
+#       - ./bazarr/config:/config
+#       - ~/media/movies:/movies
+#       - ~/media/tv:/tv
+#     ports:
+#       - 6767:6767
+#     restart: unless-stopped
 
-  sonarr:
-    image: linuxserver/sonarr
-    container_name: sonarr
-    depends_on:
-      - "letsencrypt"
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Asia/Dubai
-      - UMASK_SET=002
-    volumes:
-      - ./letsencrypt/config/keys:/keys
-      - ./sonarr/data:/config
-      - ~/media/tv:/tv
-      - ~/downloads:/downloads
-    ports:
-      - 8989:8989
-    restart: unless-stopped
+#   sonarr:
+#     image: linuxserver/sonarr
+#     container_name: sonarr
+#     depends_on:
+#       - "letsencrypt"
+#     environment:
+#       - PUID=1000
+#       - PGID=1000
+#       - TZ=Asia/Dubai
+#       - UMASK_SET=002
+#     volumes:
+#       - ./letsencrypt/config/keys:/keys
+#       - ./sonarr/data:/config
+#       - ~/media/tv:/tv
+#       - ~/downloads:/downloads
+#     ports:
+#       - 8989:8989
+#     restart: unless-stopped
 
-  radarr:
-    image: linuxserver/radarr
-    container_name: radarr
-    depends_on:
-      - "letsencrypt"
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Asia/Dubai
-      - UMASK_SET=002
-    volumes:
-      - ./letsencrypt/config/keys:/keys
-      - ./radarr/data:/config
-      - ~/media/movies:/movies
-      - ~/downloads:/downloads
-    ports:
-      - 7878:7878
-    restart: unless-stopped
+#   radarr:
+#     image: linuxserver/radarr
+#     container_name: radarr
+#     depends_on:
+#       - "letsencrypt"
+#     environment:
+#       - PUID=1000
+#       - PGID=1000
+#       - TZ=Asia/Dubai
+#       - UMASK_SET=002
+#     volumes:
+#       - ./letsencrypt/config/keys:/keys
+#       - ./radarr/data:/config
+#       - ~/media/movies:/movies
+#       - ~/downloads:/downloads
+#     ports:
+#       - 7878:7878
+#     restart: unless-stopped
 
-  transmission:
-    image: linuxserver/transmission
-    container_name: transmission
-    depends_on:
-      - "letsencrypt"
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Asia/Dubai
-      - USER=bader
-      - PASS=bdrnh2020!D
-    volumes:
-      - ./letsencrypt/config/keys:/keys
-      - ./transmission/data:/config
-      - ~/downloads:/downloads
-      - ./transmission/watch:/watch
-      - ~/media/movies:/movies
-      - ~/media/tv:/tv
-    ports:
-      - 9091:9091
-      - 51413:51413
-      - 51413:51413/udp
-    restart: unless-stopped
+#   transmission:
+#     image: linuxserver/transmission
+#     container_name: transmission
+#     depends_on:
+#       - "letsencrypt"
+#     environment:
+#       - PUID=1000
+#       - PGID=1000
+#       - TZ=Asia/Dubai
+#       - USER=bader
+#       - PASS=bdrnh2020!D
+#     volumes:
+#       - ./letsencrypt/config/keys:/keys
+#       - ./transmission/data:/config
+#       - ~/downloads:/downloads
+#       - ./transmission/watch:/watch
+#       - ~/media/movies:/movies
+#       - ~/media/tv:/tv
+#     ports:
+#       - 9091:9091
+#       - 51413:51413
+#       - 51413:51413/udp
+#     restart: unless-stopped
 
   # routr:
   #   image: fonoster/routr
