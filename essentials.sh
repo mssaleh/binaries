@@ -6,6 +6,7 @@ sudo snap remove lxd
 sudo snap remove core18
 sudo snap remove snapd
 sudo apt purge -y snapd lxd-agent-loader ubuntu-advantage-tools multipath-tools landscape-common
+crontab -e
 
 echo "=========================="
 echo " Install Useful Packages "
@@ -126,7 +127,7 @@ case $yn2 in
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" 
         sudo apt update && sudo apt install -y docker-ce 
         sudo usermod -aG docker $USER 
-        sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose 
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose 
         sudo chmod +x /usr/local/bin/docker-compose 
         sudo usermod -aG audio,avahi docker
         docker -v 
@@ -632,7 +633,7 @@ case $yn12 in
         echo "CloudFlare Token is: $cloudflare_token"
         read -p "Enter CloudFlare Zone ID:  " cloudflare_zone_id
         echo "CloudFlare Zone ID is: $cloudflare_zone_id"
-        public_ip=$(dig @resolver1.opendns.com ANY myip.opendns.com +short)
+        public_ip=$(curl --silent https://api.ipify.org)
         cf_new_data=$(echo "{\"type\":\"A\",\"name\":\"$sub_domain\",\"content\":\"$public_ip\",\"ttl\":180,\"proxied\":false}")
         echo "data payload is $cf_new_data"
         curl "https://api.cloudflare.com/client/v4/zones/"$cloudflare_zone_id"/dns_records" \
