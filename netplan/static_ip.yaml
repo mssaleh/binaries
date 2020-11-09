@@ -4,9 +4,58 @@ network:
   ethernets:
     enp3s0:
       dhcp4: false
-      dhcp6: false
+      dhcp6: true
       addresses:
         - local_ip/24
       gateway4: local_gateway
       nameservers:
           addresses: [8.8.8.8, 1.1.1.1, 208.67.222.222]
+
+    enx000ec6589bef:
+      dhcp4: false
+      dhcp6: true
+      addresses:
+        - 192.168.1.4/24
+        - 192.168.0.4/24
+        - 192.168.2.4/24
+      #gateway4: 192.168.1.1
+      routes:
+       - to: 0.0.0.0/0
+         via: 192.168.1.1
+         metric: 100
+       - to: 0.0.0.0/0
+         via: 192.168.0.1
+         metric: 200
+       - to: 0.0.0.0/0
+         via: 192.168.2.1
+         metric: 300
+      nameservers:
+          addresses: [8.8.8.8, 1.1.1.1, 208.67.222.222]
+
+    enxa0cec80c603b:
+      dhcp4: false
+      dhcp6: true
+      addresses:
+        - 192.168.1.6/24
+        - 192.168.0.6/24
+        - 192.168.2.6/24
+      #gateway4: 192.168.1.1
+      routes:
+       - to: 0.0.0.0/0
+         via: 192.168.1.1
+         metric: 100
+       - to: 0.0.0.0/0
+         via: 192.168.0.1
+         metric: 200
+       - to: 0.0.0.0/0
+         via: 192.168.2.1
+         metric: 300
+      nameservers:
+          addresses: [8.8.8.8, 1.1.1.1, 208.67.222.222]
+  wifis:
+    wlo2:
+      dhcp4: true
+      dhcp6: true
+      access-points:
+        "MSS_nomap":
+          password: "mdsh4everG"
