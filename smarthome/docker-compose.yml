@@ -52,6 +52,7 @@ services:
     volumes:
       - ./homeassistant/config:/config
       - ./letsencrypt/config/keys/letsencrypt:/ssl:ro
+      - ~/media:/media
     environment:
       - TZ=Asia/Dubai
     restart: unless-stopped
@@ -60,6 +61,35 @@ services:
 #      - /dev/ttyUSB0:/dev/ttyUSB0
 #      - /dev/ttyUSB1:/dev/ttyUSB1
 #      - /dev/ttyACM0:/dev/ttyACM0
+
+  homebridge:
+    image: oznu/homebridge:latest
+    container_name: homebridge
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - TZ=Asia/Dubai
+      - PGID=1000
+      - PUID=1000
+      - PACKAGES=openssh
+      - HOMEBRIDGE_CONFIG_UI=1
+      - HOMEBRIDGE_CONFIG_UI_PORT=8088
+    volumes:
+      - ./homebridge:/homebridge
+
+#   zigbee2mqttAssistant:
+#     image: carldebilly/zigbee2mqttassistant
+#     container_name: zigbee2mqttAssistant
+#     depends_on:
+#       - "mosquitto"
+#     environment:
+#       - Z2MA_SETTINGS__MQTTSERVER=172.17.0.1
+#       - Z2MA_SETTINGS__MQTTUSERNAME=xxxxxxxx
+#       - Z2MA_SETTINGS__MQTTPASSWORD=xxxxxxxx
+#       - TZ=Asia/Dubai
+#     ports:
+#       - 8880:80
+#     restart: unless-stopped
 
   rclone:
     container_name: rclone
