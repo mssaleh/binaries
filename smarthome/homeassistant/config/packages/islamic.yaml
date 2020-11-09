@@ -14,37 +14,30 @@ sensor:
         icon_template: mdi:islam
         friendly_name: التقويم الهجري
         value_template: '{{ states.sensor.prayers.attributes.data.date.hijri["date"] }}'
-        entity_id: sensor.prayers
       azan_fajr:
         icon_template: mdi:islam
         friendly_name: الفجر
         value_template: '{{ states.sensor.prayers.attributes.data.timings["Fajr"] }}'
-        entity_id: sensor.prayers
       azan_sunrise:
         icon_template: mdi:islam
         friendly_name: الشروق
         value_template: '{{ states.sensor.prayers.attributes.data.timings["Sunrise"] }}'
-        entity_id: sensor.prayers
       azan_dhuhr:
         icon_template: mdi:islam
         friendly_name: الظهر
         value_template: '{{ states.sensor.prayers.attributes.data.timings["Dhuhr"] }}'
-        entity_id: sensor.prayers
       azan_asr:
         icon_template: mdi:islam
         friendly_name: العصر
         value_template: '{{ states.sensor.prayers.attributes.data.timings["Asr"] }}'
-        entity_id: sensor.prayers
       azan_maghrib:
         icon_template: mdi:islam
         friendly_name: المغرب
         value_template: '{{ states.sensor.prayers.attributes.data.timings["Maghrib"] }}'
-        entity_id: sensor.prayers
       azan_isha:
         icon_template: mdi:islam
         friendly_name: العشاء
         value_template: '{{ states.sensor.prayers.attributes.data.timings["Isha"] }}'
-        entity_id: sensor.prayers
 
 # sensor:
   - platform: template
