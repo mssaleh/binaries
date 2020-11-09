@@ -2,6 +2,16 @@ media_player:
   - platform: mpd
     host: 127.0.0.1
     name: "Audio System"
+    port: 6606
+
+  - platform: mpd
+    host: 127.0.0.1
+    name: "Alerts"
+    port: 6600
+
+  - platform: snapcast
+    host: 127.0.0.1
+    port: 1705
 
 #   - platform: snapcast
 #     host: !secret snapcast_server
