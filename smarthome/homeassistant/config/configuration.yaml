@@ -2,9 +2,9 @@ homeassistant:
 #### Include packages
   packages: !include_dir_named packages
 #### Customization files
-#   customize: !include customize.yaml
-#   customize_glob: !include customize_glob.yaml
-#   customize_domain: {}
+  customize: !include customize.yaml
+  customize_glob: !include customize_glob.yaml
+  customize_domain: {}
 
 #### Config ####################################################################
 config:
@@ -13,15 +13,26 @@ group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
+api:
+websocket_api:
+input_text:
+input_select:
+input_boolean:
+input_number:
+input_datetime:
+counter:
+timer:
 
 #### Voice & Media #############################################################
+image:
 media_player:
+media_source:
+media_extractor:
 notify:
 tts:
   - platform: google_translate
 ffmpeg:
 wake_on_lan:
-
 #### UI ########################################################################
 http:
   use_x_forwarded_for: true
@@ -104,6 +115,8 @@ history:
       - sensor.date_time_iso
       - sensor.prayers
       - sensor.moonphases
+    domains:
+      - group
 logbook:
   exclude:
     entities:
@@ -113,6 +126,8 @@ logbook:
       - sensor.date_time_iso
       - sensor.prayers
       - sensor.moonphases
+    domains:
+      - group
 
 #### Time & Date ###############################################################
 sensor:
