@@ -667,7 +667,7 @@ case $yn12 in
         sed -i "s/cf_record_name/$sub_domain/g" ~/smarthome/ddns/ddns.sh
         chmod 750 ~/smarthome/ddns/ddns.sh
         sh ~/smarthome/ddns/ddns.sh
-        (crontab -l 2>/dev/null && echo "*/5 * * * * ~/smarthome/ddns/ddns.sh") | crontab -
+        (crontab -l 2>/dev/null && echo "*/5 * * * * ~/smarthome/ddns/ddns.sh > /dev/null 2>&1") | crontab -
         # Letsencrypt
         echo "Setting Up Letsencrypt SSL Certificate for $domain_name.."
         sed -i "s/domain_name/$domain_name/g" ~/smarthome/docker-compose.yml 
