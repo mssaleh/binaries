@@ -16,30 +16,15 @@ read -p "Press (Y)es (N)o (A)bort or any other key to skip...   " yn1
 case $yn1 in
     Y|y|yes) 
         echo "Installing packages"
-        sudo apt install -y \
-        adduser alac-decoder alsa-topology-conf alsa-ucm-conf alsa-base alsa-tools \
-        alsa-utils linux-sound-base apparmor-utils apport apt apt-offline dnsutils\
-        apt-show-versions apt-transport-https apt-utils at avahi-daemon base-files base-passwd \
-        bash bcache-tools btrfs-progs build-essential byobu bzip2 ca-certificates cloud-guest-utils \
-        cloud-init cloud-initramfs-copymods cloud-initramfs-dyn-netconf console-setup curl dash dbus \
-        debconf debconf-i18n diffutils dirmngr e2fsprogs efibootmgr eject ethtool faac \
-        fdisk findutils firmware-b43-installer fonts-ubuntu-console frei0r-plugins fwupd \
-        gdisk git gnupg gnupg2 gnupg-agent grep grub-efi-amd64 grub-efi-amd64-signed gstreamer1.0-alsa \
-        gstreamer1.0-plugins-bad gstreamer1.0-plugins-good gstreamer1.0-plugins-rtp \
-        gstreamer1.0-rtsp gzip hddtemp hostname htop hwinfo init intel-gpu-tools \
-        intel-media-va-driver-non-free intel-opencl-icd iproute2 iputils-ping isc-dhcp-client jq kbd \
-        kmod less libasound2-plugins-extra libauthen-pam-perl libavahi-compat-libdnssd-dev libavdevice58 \
-        libavfilter-extra libavresample4 libavresample4  libcdio-cdda2 libcdio-cdda2  libcdio-paranoia2 \
-        libcdio-paranoia2  libdebconfclient0 libfdisk1 libfdk-aac1 libffi-dev libio-pty-perl libmfx1 \
-        libmfx1 libnet-ssleay-perl libpam-runtime libpython3-dev libsodium23 libsoxr-lsr0 libsoxr-lsr0 \
-        libudev-dev libwebpdemux2 linux-generic lm-sensors locales lsb-release lsmount lvm2 \
-        mawk mdadm mediainfo mesa-utils-extra mount ncdu ncurses-base ncurses-bin netbase netcat-openbsd \
-        netplan.io nvme-cli open-iscsi openjdk-8-jdk-headless openjdk-8-jre-headless openssh-server \
-        openssl open-vm-tools overlayroot passwd patch perl pkg-config pollinate procps python3-dateutil \
-        python3 python3-dev python3-nacl python3-pip intel-cmt-cat isal ipmitool kacpimon libigfxcmrt7 libmfx-tools \
-        python3-pymacaroons rsyslog screen sensible-utils shim-signed software-properties-common \
-        sosreport sudo sysvinit-utils tmux tzdata ubuntu-keyring ubuntu-restricted-extras ubuntu-standard \
-        ubuntu-sounds udev unzip update-notifier-common vim vim-tiny virtualenv wget whiptail xfsprogs zip zlib1g-dev
+        sudo apt install -y alac-decoder alsa-topology-conf alsa-ucm-conf alsa-base alsa-tools alsa-utils linux-sound-base \
+        dnsutils apt-transport-https apt-utils avahi-daemon build-essential ca-certificates curl diffutils dirmngr ethtool \
+        faac frei0r-plugins git gnupg2 gnupg-agent grep gstreamer1.0-alsa gstreamer1.0-plugins-bad gstreamer1.0-plugins-good \
+        gstreamer1.0-plugins-rtp gstreamer1.0-rtsp hddtemp hwinfo intel-gpu-tools intel-media-va-driver-non-free intel-opencl-icd \
+        jq less libasound2-plugins-extra libauthen-pam-perl libavahi-compat-libdnssd-dev libavfilter-extra libcdio-cdda2 \
+        libcdio-paranoia2 libffi-dev libio-pty-perl libmfx1 libsoxr-lsr0 lsmount mediainfo mesa-utils-extra ncdu ncurses-base \
+        ncurses-bin netbase netcat-openbsd netplan.io openjdk-8-jdk-headless openjdk-8-jre-headless openssl perl pkg-config \
+        python3 python3-dev python3-nacl python3-pip intel-cmt-cat ipmitool libmfx-tools python3-pymacaroons screen sensible-utils \
+        software-properties-common tzdata unzip virtualenv whiptail xfsprogs zip zlib1g-dev
         sudo apt clean 
         echo "Packages Installed"
         break
