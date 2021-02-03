@@ -21,8 +21,8 @@ case $yn1 in
         faac frei0r-plugins git gnupg2 gnupg-agent grep gstreamer1.0-alsa gstreamer1.0-plugins-bad gstreamer1.0-plugins-good \
         gstreamer1.0-plugins-rtp gstreamer1.0-rtsp hddtemp hwinfo intel-gpu-tools intel-media-va-driver-non-free intel-opencl-icd \
         jq less libasound2-plugins-extra libauthen-pam-perl libavahi-compat-libdnssd-dev libavfilter-extra libcdio-cdda2 \
-        libcdio-paranoia2 libffi-dev libio-pty-perl libmfx1 libsoxr-lsr0 lsmount mediainfo mesa-utils-extra ncdu ncurses-base \
-        ncurses-bin netbase netcat-openbsd netplan.io openjdk-8-jdk-headless openjdk-8-jre-headless openssl perl pkg-config \
+        libcdio-paranoia2 libffi-dev libio-pty-perl libmfx1 libsoxr-lsr0 lsmount mediainfo mesa-utils-extra ncdu \
+        ncurses-bin netbase netcat-openbsd openjdk-8-jdk-headless openjdk-8-jre-headless openssl perl pkg-config \
         python3 python3-dev python3-nacl python3-pip intel-cmt-cat ipmitool libmfx-tools python3-pymacaroons screen sensible-utils \
         software-properties-common tzdata unzip virtualenv whiptail xfsprogs zip zlib1g-dev
         sudo apt clean 
@@ -112,9 +112,8 @@ case $yn2 in
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" 
         sudo apt update && sudo apt install -y docker-ce 
         sudo usermod -aG docker $USER 
-        sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose 
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.28.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose 
         sudo chmod +x /usr/local/bin/docker-compose 
-        sudo usermod -aG audio,avahi docker
         docker -v 
         echo "Docker Installed. System will reboot now." 
         echo "After Reboot, re-run this script and skip (answer with No) the first two steps (including Docker)"
