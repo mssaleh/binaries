@@ -1,5 +1,5 @@
 [Unit]  
-Description=AirCast bridge  
+Description=AirCast Bridge  
 After=network-online.target  
 Wants=network-online.target  
 #After=pulseaudio.service
