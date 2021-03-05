@@ -1,7 +1,7 @@
 [Unit]  
-Description=AirCast Bridge  
-After=network-online.target  
-Wants=network-online.target  
+Description=AirCast Bridge
+After=network-online.target
+Wants=network-online.target
 #After=pulseaudio.service
 After=avahi-daemon.service
 
