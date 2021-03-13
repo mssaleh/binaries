@@ -15,7 +15,7 @@ services:
       - DNSPLUGIN=cloudflare
       ## - PROPAGATION= #optional
       ## - DUCKDNSTOKEN= #optional
-      - EMAIL= mssaleh@live.com
+      - EMAIL= email_address
       ## - DHLEVEL=2048
       ## - ONLY_SUBDOMAINS=false #optional
       ## - EXTRA_DOMAINS= #optional
