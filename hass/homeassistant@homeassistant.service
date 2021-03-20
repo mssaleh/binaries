@@ -6,7 +6,7 @@ After=network-online.target
 Type=simple
 User=%i
 WorkingDirectory=/home/%i/.homeassistant
-ExecStart=/srv/homeassistant/bin/hass -c "/home/%i/.homeassistant"
+ExecStart=hass_path/bin/hass -c "/home/%i/.homeassistant"
 Restart=on-failure
 RestartSec=30s
 
