@@ -1,7 +1,6 @@
 [Unit]
 Description=HASS-Configurator
 After=network.target
-After=avahi-daemon.service
 
 [Service]
 Type=simple
@@ -25,10 +24,10 @@ Type=simple
 # Environment=HC_ALLOWED_NETWORKS=192.168.1.0/24,127.0.0.1
 
 # Set the path to your configurator.py location
-# WorkingDirectory=/usr/local/lib/python3.8/dist-packages/hass_configurator/
+# WorkingDirectory=/usr/local/lib/python_version/dist-packages/hass_configurator/
 
 # You can also save your static options in a JSON formatted conf-file
-ExecStart=/usr/bin/python3 /usr/local/lib/python3.8/dist-packages/hass_configurator/configurator.py /etc/configurator/settings.conf
+ExecStart=/usr/bin/python3 /usr/local/lib/python_version/dist-packages/hass_configurator/configurator.py /etc/configurator/settings.conf
 Restart=always
 RestartSec=30
 
