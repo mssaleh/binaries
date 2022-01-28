@@ -1,0 +1,89 @@
+quantum:
+  packages: !include_dir_named packages
+
+# Configure a default setup of Quantum (frontend, api, etc)
+# default_config:
+
+# automation:
+counter:
+dhcp:
+energy:
+frontend:
+history:
+input_boolean:
+input_datetime:
+input_number:
+input_select:
+input_text:
+logbook:
+map:
+# media_source:
+# mobile_app:
+network:
+person:
+# scene:
+# script:
+ssdp:
+sun:
+system_health:
+tag:
+timer:
+usb:
+# updater:
+webhook:
+zeroconf:
+zone:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+logger:
+  default: warn
+
+#panel_iframe:
+#  chat:
+#    title: "Support"
+#    url: "/local/chat-panel.html"
+#    icon: mdi:face-agent
+
+
+#panel_custom:
+# - name: chat-panel
+#  # url_path needs to be unique for each panel_custom config
+#   url_path: chat-panel
+#   sidebar_title: Chat
+#   sidebar_icon: mdi:face-agent
+#   # module_url: /local/chat-panel.js
+#   js_url: /local/chat-panel.js
+#   embed_iframe: true
+#   trust_external_script: true
+#   require_admin: false
+#    # config:
+#    #  # Data you want to make available to panel
+#    #  hello: world
+
+http:
+  cors_allowed_origins:
+    - https://google.com
+    - https://support.smartcube.me
+    - https://code.jquery.com
+    - https://unpkg.com
+    - https://office.smartcube.me
+    - https://chat.smartcube.me
+    - https://quantum.smartcube.dev
+    - https://office.smartcube.dev
+
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 10.147.17.0/24
+    - 10.233.64.0/18
+    - 192.168.1.0/24
+    - 172.17.0.0/16
+    - 172.18.0.0/16
+    - 172.19.0.0/16
